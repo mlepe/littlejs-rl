@@ -54,8 +54,9 @@ src/
 │   ├── game.ts             # Main game class
 │   ├── gameObject.ts       # Base game object (extends LJS.EngineObject)
 │   ├── gameCharacter.ts    # Character classes
-│   ├── world.ts            # World/level management
-│   ├── location.ts         # Location handling
+│   ├── world.ts            # World management (map of locations)
+│   ├── location.ts         # Location (map of tiles)
+│   ├── tile.ts             # Tile types and data structures
 │   ├── global.ts           # Global constants/utilities
 │   ├── ecs.ts              # ECS core system
 │   ├── entities.ts         # Entity factory functions
@@ -69,13 +70,15 @@ src/
 │   │   ├── stats.ts
 │   │   ├── player.ts
 │   │   └── input.ts
-│   └── systems/            # ECS systems (logic)
-│       ├── index.ts
-│       ├── renderSystem.ts
-│       ├── movementSystem.ts
-│       ├── aiSystem.ts
-│       ├── inputSystem.ts
-│       └── playerMovementSystem.ts
+│   ├── systems/            # ECS systems (logic)
+│   │   ├── index.ts
+│   │   ├── renderSystem.ts
+│   │   ├── movementSystem.ts
+│   │   ├── aiSystem.ts
+│   │   ├── inputSystem.ts
+│   │   └── playerMovementSystem.ts
+│   └── examples/           # Usage examples
+│       └── worldExample.ts
 └── assets/
     ├── img/
     ├── music/
@@ -224,6 +227,62 @@ export function movementSystem(ecs: ECS, dx: number, dy: number): void {
 - `createNPC(ecs, x, y)` - Passive wandering NPC
 - `createFleeingCreature(ecs, x, y)` - Creature that flees from player
 
+### Using the World System
+
+```typescript
+import World from './ts/world';
+import { TileType, createTile } from './ts/tile';
+import { createPlayer, createEnemy } from './ts/entities';
+
+// Create world: 10x10 locations, each 50x50 tiles
+const world = new World(10, 10, 50, 50);
+
+// Set starting location
+world.setCurrentLocation(5, 5);
+const location = world.getCurrentLocation();
+
+// Create entities
+const playerId = createPlayer(ecs, 25, 25);
+location.addEntity(25, 25, playerId);
+
+// Customize tiles
+location.setTile(20, 20, createTile(TileType.WATER));
+
+// Move entity between tiles
+location.moveEntity(25, 25, 26, 25, playerId);
+
+// Travel to different location
+world.setCurrentLocation(5, 6);
+
+// Memory management
+world.unloadAllExceptCurrent();
+```
+
+### Tile Types
+
+```typescript
+enum TileType {
+  VOID = 0,        // Empty space
+  FLOOR = 1,       // Walkable floor
+  WALL = 2,        // Solid wall
+  DOOR_OPEN = 3,   // Open door
+  DOOR_CLOSED = 4, // Closed door
+  STAIRS_UP = 5,   // Stairs going up
+  STAIRS_DOWN = 6, // Stairs going down
+  WATER = 7,       // Water terrain
+  GRASS = 8        // Grass terrain
+}
+```
+
+## World & Tile System
+
+### Architecture Overview
+
+The world system uses a hierarchical structure:
+- **World**: Grid of locations (e.g., 10x10 locations)
+- **Location**: Grid of tiles (e.g., 50x50 tiles per location)
+- **Tile**: Individual cell with type, walkability, and entity tracking
+
 ## Environment Variables
 
 Available via `process.env`:
@@ -327,6 +386,9 @@ if (health) {
 8. Keep game logic in systems, not in GameObject classes
 9. Use entity factory functions from `entities.ts` to create game entities
 10. Process systems in the correct order in the game loop (input → movement → AI → collision → combat → render)
+11. Use `World` for location management and lazy loading
+12. Track entities on tiles using `Location.addEntity()` and `Location.removeEntity()`
+13. Use `createTile()` helper to create properly configured tiles
 
 ### Game Loop with Systems
 
