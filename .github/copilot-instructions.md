@@ -58,16 +58,24 @@ src/
 │   ├── location.ts         # Location handling
 │   ├── global.ts           # Global constants/utilities
 │   ├── ecs.ts              # ECS core system
+│   ├── entities.ts         # Entity factory functions
 │   ├── components/         # ECS components (data only)
 │   │   ├── index.ts
 │   │   ├── position.ts
 │   │   ├── health.ts
 │   │   ├── render.ts
-│   │   └── movable.ts
+│   │   ├── movable.ts
+│   │   ├── ai.ts
+│   │   ├── stats.ts
+│   │   ├── player.ts
+│   │   └── input.ts
 │   └── systems/            # ECS systems (logic)
 │       ├── index.ts
 │       ├── renderSystem.ts
-│       └── movementSystem.ts
+│       ├── movementSystem.ts
+│       ├── aiSystem.ts
+│       ├── inputSystem.ts
+│       └── playerMovementSystem.ts
 └── assets/
     ├── img/
     ├── music/
@@ -110,6 +118,48 @@ export function movementSystem(ecs: ECS, dx: number, dy: number): void {
 - Use `LJS.Color` for colors
 - Use `LJS.TileInfo` for sprite information
 
+### Available Components
+
+**Core Components:**
+- `PositionComponent` - x, y coordinates
+- `HealthComponent` - current, max health
+- `RenderComponent` - tileInfo, color, size (LittleJS rendering)
+- `MovableComponent` - speed
+
+**Character Components:**
+- `StatsComponent` - strength, defense, speed
+- `PlayerComponent` - isPlayer tag
+- `InputComponent` - moveX, moveY, action
+
+**AI Components:**
+- `AIComponent` - type (passive/aggressive/patrol/fleeing), detectionRange, state, target
+
+### Available Systems
+
+**Core Systems:**
+- `renderSystem(ecs)` - Renders all entities with position and render components
+- `movementSystem(ecs, dx, dy)` - Moves entities with position and movable components
+
+**Player Systems:**
+- `inputSystem(ecs)` - Captures keyboard input for player entities
+- `playerMovementSystem(ecs)` - Moves player based on input and stats
+
+**AI Systems:**
+- `aiSystem(ecs, playerEntityId)` - Handles AI behaviors (aggressive, passive, fleeing, patrol)
+
+### Available Entity Types
+
+**Player:**
+- `createPlayer(ecs, x, y)` - Creates player with input, stats, and rendering
+
+**Enemies:**
+- `createEnemy(ecs, x, y)` - Aggressive enemy with AI
+- `createBoss(ecs, x, y)` - Boss enemy with enhanced stats
+
+**NPCs:**
+- `createNPC(ecs, x, y)` - Passive wandering NPC
+- `createFleeingCreature(ecs, x, y)` - Creature that flees from player
+
 ## Environment Variables
 
 Available via `process.env`:
@@ -137,6 +187,24 @@ export interface [Name]Component {
 }
 ```
 
+### Entity Factory Functions
+
+Create in `src/ts/entities.ts` with entity creation functions:
+
+```typescript
+export function createPlayer(ecs: ECS, x: number, y: number): number {
+  const playerId = ecs.createEntity();
+  // Add components: player, position, health, stats, input, render, movable
+  return playerId;
+}
+
+export function createEnemy(ecs: ECS, x: number, y: number): number {
+  const enemyId = ecs.createEntity();
+  // Add components: position, health, stats, ai, render, movable
+  return enemyId;
+}
+```
+
 ### New Systems
 
 Create in `src/ts/systems/` with function definition:
@@ -155,6 +223,16 @@ export function [name]System(ecs: ECS, ...params): void {
 const entityId = ecs.createEntity();
 ecs.addComponent<PositionComponent>(entityId, 'position', { x: 0, y: 0 });
 ecs.addComponent<HealthComponent>(entityId, 'health', { current: 100, max: 100 });
+```
+
+### Using Entity Factory
+
+```typescript
+import { createPlayer, createEnemy, createNPC } from './ts/entities';
+
+const playerId = createPlayer(ecs, 5, 5);
+const enemyId = createEnemy(ecs, 10, 10);
+const npcId = createNPC(ecs, 15, 8);
 ```
 
 ### Querying Entities
@@ -183,6 +261,32 @@ if (health) {
 6. Always handle undefined when getting components
 7. Use LittleJS utilities for game-specific functionality (vectors, colors, tiles)
 8. Keep game logic in systems, not in GameObject classes
+9. Use entity factory functions from `entities.ts` to create game entities
+10. Process systems in the correct order in the game loop (input → movement → AI → collision → combat → render)
+
+### Game Loop with Systems
+
+```typescript
+import { 
+  inputSystem, 
+  playerMovementSystem, 
+  aiSystem, 
+  renderSystem 
+} from './ts/systems';
+
+// In your game update loop
+function update() {
+  inputSystem(ecs);              // Handle player input
+  playerMovementSystem(ecs);     // Move player based on input
+  aiSystem(ecs, playerId);       // AI behaviors for NPCs/enemies
+  // collisionSystem(ecs);        // Handle collisions
+  // combatSystem(ecs);           // Handle combat
+}
+
+function render() {
+  renderSystem(ecs);             // Render all entities
+}
+```
 
 ## Testing
 
