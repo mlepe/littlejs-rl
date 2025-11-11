@@ -9,8 +9,10 @@
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
-const path = require('path');
+
+const path = require('node:path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: 'production',
@@ -26,10 +28,15 @@ module.exports = {
   devServer: {
     static: './dist',
     hot: true,
+    port: process.env.PORT || 8080,
+    host: process.env.HOST || 'localhost',
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Hot Module Replacement',
+    }),
+    new Dotenv({
+      systemvars: true,
     }),
   ],
   output: {

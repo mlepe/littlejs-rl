@@ -33,7 +33,7 @@ export default class Character extends GameObject {
 }
 
 export class Player extends Character {
-  constructor(
+  /*constructor(
     position: LJS.Vector2,
     size: LJS.Vector2 | undefined,
     tileInfo: LJS.TileInfo | undefined,
@@ -42,5 +42,5 @@ export class Player extends Character {
     renderOrder: number | undefined
   ) {
     super(position, size, tileInfo, angle, color, renderOrder);
-  }
+  }*/
 }

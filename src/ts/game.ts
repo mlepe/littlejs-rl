@@ -14,10 +14,12 @@ import * as LJS from 'littlejsengine';
 
 import GameObject from './gameObject';
 import { Player } from './gameCharacter';
-import Tileset from '../assets/img/tileset.png';
+import Tileset from 'process.env.ASSET_PATH/img/tileset.png';
 import World from './world';
 
 export default class Game {
+  static readonly isDebug = process.env.GAME_DEBUG === 'true';
+  static readonly version = process.env.GAME_VERSION;
   player: GameObject;
   world: World;
   entities: GameObject[];
