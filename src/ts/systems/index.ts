@@ -12,3 +12,6 @@
 
 export * from './renderSystem';
 export * from './movementSystem';
+export * from './aiSystem';
+export * from './inputSystem';
+export * from './playerMovementSystem';
