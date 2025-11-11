@@ -2,3 +2,4 @@ LittleJS
 littlejsengine
 littlejs
 littlejs-rl
+LittleJS
