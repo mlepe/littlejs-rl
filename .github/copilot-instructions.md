@@ -82,6 +82,70 @@ src/
     └── sounds/
 ```
 
+I'll update the copilot-instructions.md file to reflect the new ECS structure with entities, AI, and player systems. 
+
+Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+
+Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+
+Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+
+Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+
+Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+
+Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+
+Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+
+Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+
+Now let me add information about the available components and systems: 
+
+Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+
+Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+
+Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+
+Perfect! I've successfully updated the copilot-instructions.md file with all the recent changes. Here's a summary of what was added:
+
+## Updates Made:
+
+1. **Updated Project Structure** - Added:
+   - `entities.ts` file
+   - New components: ai.ts, `stats.ts`, `player.ts`, `input.ts`
+   - New systems: `aiSystem.ts`, `inputSystem.ts`, `playerMovementSystem.ts`
+
+2. **Added Entity Factory Functions Section** - Shows how to create entity factory functions
+
+3. **Added "Using Entity Factory" Section** - Demonstrates importing and using entity creation functions
+
+4. **Added "Available Components" Section** - Lists all available components:
+   - Core components (position, health, render, movable)
+   - Character components (stats, player, input)
+   - AI components
+
+5. **Added "Available Systems" Section** - Lists all available systems:
+   - Core systems (render, movement)
+   - Player systems (input, playerMovement)
+   - AI systems
+
+6. **Added "Available Entity Types" Section** - Lists all entity factory functions:
+   - Player
+   - Enemies (enemy, boss)
+   - NPCs (NPC, fleeing creature)
+
+7. **Added "Game Loop with Systems" Section** - Shows the proper system execution order in the game loop
+
+8. **Updated Best Practices** - Added two new items:
+   - Use entity factory functions from `entities.ts`
+   - Process systems in correct order
+
+The copilot-instructions.md file now comprehensively documents your complete ECS architecture with all components, systems, and entity factories!
+
+Made changes.
+
 ## Architecture Patterns
 
 ### ECS (Entity Component System)
