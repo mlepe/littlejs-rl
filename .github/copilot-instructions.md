@@ -245,11 +245,22 @@ const location = world.getCurrentLocation();
 const playerId = createPlayer(ecs, 25, 25);
 location.addEntity(25, 25, playerId);
 
-// Customize tiles
+// Customize tiles with color
 location.setTile(20, 20, createTile(TileType.WATER));
 
-// Move entity between tiles
-location.moveEntity(25, 25, 26, 25, playerId);
+// Check walkability (uses LittleJS collision layer)
+if (location.isWalkable(26, 25)) {
+  location.moveEntity(25, 25, 26, 25, playerId);
+}
+
+// Test collision with Vector2 position
+const playerPos = vec2(25.5, 25.5);
+if (location.isWalkableWorld(playerPos)) {
+  // Player can move here
+}
+
+// Use LittleJS collision test for entities
+const canMove = !location.tileCollisionTest(playerPos, vec2(1, 1));
 
 // Travel to different location
 world.setCurrentLocation(5, 6);
@@ -389,6 +400,9 @@ if (health) {
 11. Use `World` for location management and lazy loading
 12. Track entities on tiles using `Location.addEntity()` and `Location.removeEntity()`
 13. Use `createTile()` helper to create properly configured tiles
+14. Use `Location.tileCollisionTest()` for LittleJS physics integration
+15. Prefer `Vector2` methods (`isWalkableWorld`, `addEntityWorld`) when working with world positions
+16. Use `renderDebug()` to visualize collision tiles during development
 
 ### Game Loop with Systems
 

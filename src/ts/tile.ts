@@ -10,6 +10,8 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
+import * as LJS from 'littlejsengine';
+
 export enum TileType {
   VOID = 0, // Empty space
   FLOOR = 1, // Walkable floor
@@ -27,24 +29,100 @@ export interface Tile {
   walkable: boolean;
   transparent: boolean; // For line of sight
   spriteIndex: number; // Index in tileset
+  color: LJS.Color; // Tile color/tint
   entities: number[]; // ECS entity IDs on this tile
 }
 
-export function createTile(type: TileType): Tile {
-  const walkable =
-    type === TileType.FLOOR ||
-    type === TileType.DOOR_OPEN ||
-    type === TileType.GRASS ||
-    type === TileType.STAIRS_UP ||
-    type === TileType.STAIRS_DOWN;
+export interface TileProperties {
+  readonly walkable: boolean;
+  readonly transparent: boolean;
+  readonly collisionValue: number; // 0 = no collision, 1 = solid
+  readonly color: LJS.Color;
+}
 
-  const transparent = type !== TileType.WALL && type !== TileType.DOOR_CLOSED;
+// Tile type properties lookup
+const TILE_PROPERTIES: Record<TileType, TileProperties> = {
+  [TileType.VOID]: {
+    walkable: false,
+    transparent: true,
+    collisionValue: 0,
+    color: LJS.BLACK,
+  },
+  [TileType.FLOOR]: {
+    walkable: true,
+    transparent: true,
+    collisionValue: 0,
+    color: LJS.rgb(0.5, 0.5, 0.5),
+  },
+  [TileType.WALL]: {
+    walkable: false,
+    transparent: false,
+    collisionValue: 1,
+    color: LJS.rgb(0.3, 0.3, 0.3),
+  },
+  [TileType.DOOR_OPEN]: {
+    walkable: true,
+    transparent: true,
+    collisionValue: 0,
+    color: LJS.rgb(0.6, 0.4, 0.2),
+  },
+  [TileType.DOOR_CLOSED]: {
+    walkable: false,
+    transparent: false,
+    collisionValue: 1,
+    color: LJS.rgb(0.5, 0.3, 0.1),
+  },
+  [TileType.STAIRS_UP]: {
+    walkable: true,
+    transparent: true,
+    collisionValue: 0,
+    color: LJS.rgb(0.7, 0.7, 0.3),
+  },
+  [TileType.STAIRS_DOWN]: {
+    walkable: true,
+    transparent: true,
+    collisionValue: 0,
+    color: LJS.rgb(0.6, 0.6, 0.2),
+  },
+  [TileType.WATER]: {
+    walkable: false,
+    transparent: true,
+    collisionValue: 0,
+    color: LJS.rgb(0.2, 0.4, 0.8),
+  },
+  [TileType.GRASS]: {
+    walkable: true,
+    transparent: true,
+    collisionValue: 0,
+    color: LJS.rgb(0.3, 0.7, 0.3),
+  },
+};
+
+export function getTileProperties(type: TileType): TileProperties {
+  return TILE_PROPERTIES[type];
+}
+
+export function createTile(type: TileType, color?: LJS.Color): Tile {
+  const props = getTileProperties(type);
 
   return {
     type,
-    walkable,
-    transparent,
+    walkable: props.walkable,
+    transparent: props.transparent,
     spriteIndex: type,
+    color: color || props.color,
     entities: [],
   };
+}
+
+export function isTileWalkable(type: TileType): boolean {
+  return getTileProperties(type).walkable;
+}
+
+export function isTileTransparent(type: TileType): boolean {
+  return getTileProperties(type).transparent;
+}
+
+export function getTileCollisionValue(type: TileType): number {
+  return getTileProperties(type).collisionValue;
 }
