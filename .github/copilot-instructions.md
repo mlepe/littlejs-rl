@@ -87,9 +87,9 @@ src/
 
 I'll update the copilot-instructions.md file to reflect the new ECS structure with entities, AI, and player systems. 
 
-Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+Edit [](file:///c%3A/Users/melpe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
 
-Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
+Edit [](file:///c%3A/Users/melpe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
 
 Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
 
