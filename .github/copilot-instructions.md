@@ -370,6 +370,7 @@ game.changeLocation(worldX, worldY);
 ### Debug Features
 
 The Game class automatically shows debug info when `GAME_DEBUG=true`:
+
 - FPS counter
 - Current location
 - Player position
@@ -489,13 +490,14 @@ if (health) {
 9. Use entity factory functions from `entities.ts` to create game entities
 10. Process systems in the correct order in the game loop (input → movement → AI → collision → combat → render)
 11. Use `World` for location management and lazy loading
-12. Track entities on tiles using `Location.addEntity()` and `Location.removeEntity()`
+12. **Use ECS as single source of truth** - Don't store entity positions in tiles, use `spatialSystem` queries
 13. Use `createTile()` helper to create properly configured tiles
 14. Use `Location.tileCollisionTest()` for LittleJS physics integration
-15. Prefer `Vector2` methods (`isWalkableWorld`, `addEntityWorld`) when working with world positions
+15. Prefer `Vector2` methods (`isWalkableWorld`) when working with world positions
 16. Use `renderDebug()` to visualize collision tiles during development
 17. Use `Game.getInstance()` to access the singleton game instance
 18. Access ECS, World, and Player through Game class getters instead of global variables
+19. **Always use `create_file` tool for creating markdown/documentation files** - Never use `echo` or `node -e` on Windows
 
 ### Game Loop with Systems
 

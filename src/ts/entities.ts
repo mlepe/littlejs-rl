@@ -14,6 +14,7 @@ import * as LJS from 'littlejsengine';
 
 import {
   HealthComponent,
+  LocationComponent,
   MovableComponent,
   PositionComponent,
   RenderComponent,
@@ -27,13 +28,23 @@ import { StatsComponent } from './components/stats';
 
 /**
  * Create a player entity
+ * @param worldX - World location X coordinate
+ * @param worldY - World location Y coordinate
  */
-export function createPlayer(ecs: ECS, x: number, y: number): number {
+export function createPlayer(
+  ecs: ECS,
+  x: number,
+  y: number,
+  worldX: number,
+  worldY: number
+): number {
   const playerId = ecs.createEntity();
 
   ecs.addComponent<PlayerComponent>(playerId, 'player', { isPlayer: true });
 
   ecs.addComponent<PositionComponent>(playerId, 'position', { x, y });
+
+  ecs.addComponent<LocationComponent>(playerId, 'location', { worldX, worldY });
 
   ecs.addComponent<HealthComponent>(playerId, 'health', {
     current: 100,
@@ -65,11 +76,21 @@ export function createPlayer(ecs: ECS, x: number, y: number): number {
 
 /**
  * Create an enemy entity with AI
+ * @param worldX - World location X coordinate
+ * @param worldY - World location Y coordinate
  */
-export function createEnemy(ecs: ECS, x: number, y: number): number {
+export function createEnemy(
+  ecs: ECS,
+  x: number,
+  y: number,
+  worldX: number,
+  worldY: number
+): number {
   const enemyId = ecs.createEntity();
 
   ecs.addComponent<PositionComponent>(enemyId, 'position', { x, y });
+
+  ecs.addComponent<LocationComponent>(enemyId, 'location', { worldX, worldY });
 
   ecs.addComponent<HealthComponent>(enemyId, 'health', {
     current: 50,
@@ -101,11 +122,21 @@ export function createEnemy(ecs: ECS, x: number, y: number): number {
 
 /**
  * Create a passive NPC
+ * @param worldX - World location X coordinate
+ * @param worldY - World location Y coordinate
  */
-export function createNPC(ecs: ECS, x: number, y: number): number {
+export function createNPC(
+  ecs: ECS,
+  x: number,
+  y: number,
+  worldX: number,
+  worldY: number
+): number {
   const npcId = ecs.createEntity();
 
   ecs.addComponent<PositionComponent>(npcId, 'position', { x, y });
+
+  ecs.addComponent<LocationComponent>(npcId, 'location', { worldX, worldY });
 
   ecs.addComponent<HealthComponent>(npcId, 'health', {
     current: 30,
@@ -137,11 +168,24 @@ export function createNPC(ecs: ECS, x: number, y: number): number {
 
 /**
  * Create a fleeing creature
+ * @param worldX - World location X coordinate
+ * @param worldY - World location Y coordinate
  */
-export function createFleeingCreature(ecs: ECS, x: number, y: number): number {
+export function createFleeingCreature(
+  ecs: ECS,
+  x: number,
+  y: number,
+  worldX: number,
+  worldY: number
+): number {
   const creatureId = ecs.createEntity();
 
   ecs.addComponent<PositionComponent>(creatureId, 'position', { x, y });
+
+  ecs.addComponent<LocationComponent>(creatureId, 'location', {
+    worldX,
+    worldY,
+  });
 
   ecs.addComponent<HealthComponent>(creatureId, 'health', {
     current: 20,
@@ -173,11 +217,21 @@ export function createFleeingCreature(ecs: ECS, x: number, y: number): number {
 
 /**
  * Create a boss enemy with enhanced stats
+ * @param worldX - World location X coordinate
+ * @param worldY - World location Y coordinate
  */
-export function createBoss(ecs: ECS, x: number, y: number): number {
+export function createBoss(
+  ecs: ECS,
+  x: number,
+  y: number,
+  worldX: number,
+  worldY: number
+): number {
   const bossId = ecs.createEntity();
 
   ecs.addComponent<PositionComponent>(bossId, 'position', { x, y });
+
+  ecs.addComponent<LocationComponent>(bossId, 'location', { worldX, worldY });
 
   ecs.addComponent<HealthComponent>(bossId, 'health', {
     current: 200,

@@ -24,13 +24,16 @@ export enum TileType {
   GRASS = 8, // Grass terrain
 }
 
+/**
+ * Tile - Pure terrain/tile data (no entity storage)
+ * Entity positions are stored in ECS PositionComponent instead
+ */
 export interface Tile {
   type: TileType;
   walkable: boolean;
   transparent: boolean; // For line of sight
   spriteIndex: number; // Index in tileset
   color: LJS.Color; // Tile color/tint
-  entities: number[]; // ECS entity IDs on this tile
 }
 
 export interface TileProperties {
@@ -111,7 +114,6 @@ export function createTile(type: TileType, color?: LJS.Color): Tile {
     transparent: props.transparent,
     spriteIndex: type,
     color: color || props.color,
-    entities: [],
   };
 }
 

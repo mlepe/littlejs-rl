@@ -4,7 +4,7 @@
  * File Created: Tuesday, 11th November 2025 4:12:02 am
  * Author: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
- * Last Modified: Monday, 11th November 2025 11:00:00 pm
+ * Last Modified: Tuesday, 12th November 2025 12:30:00 am
  * Modified By: Matthieu LEPERLIER (m.leperlier42@gmail.com>)
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
@@ -16,13 +16,17 @@ import { Tile, TileType, createTile } from './tile';
 
 import Global from './global';
 
+/**
+ * Location - Represents a single map/level in the game world
+ * Handles tile data and rendering, but NOT entity storage (ECS handles that)
+ */
 export default class Location {
   readonly name: string;
   readonly width: number;
   readonly height: number;
   readonly worldPosition: LJS.Vector2;
 
-  private readonly tiles: Map<string, Tile>; // "x,y" -> Tile
+  private readonly tiles: Map<string, Tile>; // "x,y" -> Tile (without entity tracking)
   private readonly tileLayer: LJS.TileLayer;
   private readonly collisionLayer: LJS.TileCollisionLayer;
 
@@ -98,50 +102,9 @@ export default class Location {
     return this.tiles.get(this.getKey(x, y));
   }
 
-  // Add entity to tile
-  addEntity(x: number, y: number, entityId: number): boolean {
-    if (!this.isWalkable(x, y)) return false;
-
-    const tile = this.getTile(x, y);
-    if (!tile) return false;
-
-    tile.entities.push(entityId);
-    return true;
-  }
-
-  // Add entity at world position (works with Vector2)
-  addEntityWorld(worldPos: LJS.Vector2, entityId: number): boolean {
-    return this.addEntity(
-      Math.floor(worldPos.x),
-      Math.floor(worldPos.y),
-      entityId
-    );
-  }
-
-  // Remove entity from tile
-  removeEntity(x: number, y: number, entityId: number): void {
-    const tile = this.getTile(x, y);
-    if (!tile) return;
-
-    const index = tile.entities.indexOf(entityId);
-    if (index > -1) {
-      tile.entities.splice(index, 1);
-    }
-  }
-
-  // Move entity from one tile to another
-  moveEntity(
-    fromX: number,
-    fromY: number,
-    toX: number,
-    toY: number,
-    entityId: number
-  ): boolean {
-    if (!this.addEntity(toX, toY, entityId)) {
-      return false;
-    }
-    this.removeEntity(fromX, fromY, entityId);
-    return true;
+  // Get tile type at position (convenience method)
+  getTileType(x: number, y: number): TileType | undefined {
+    return this.getTile(x, y)?.type;
   }
 
   // Generate procedural dungeon/location
@@ -218,14 +181,21 @@ export default class Location {
     }
   }
 
-  // Get all entities at a position
-  getEntitiesAt(x: number, y: number): number[] {
-    const tile = this.getTile(x, y);
-    return tile ? [...tile.entities] : [];
+  // Get center position of location (useful for spawning)
+  getCenter(): LJS.Vector2 {
+    return LJS.vec2(Math.floor(this.width / 2), Math.floor(this.height / 2));
   }
 
-  // Get all entities at world position (works with Vector2)
-  getEntitiesAtWorld(worldPos: LJS.Vector2): number[] {
-    return this.getEntitiesAt(Math.floor(worldPos.x), Math.floor(worldPos.y));
+  // Find random walkable position (useful for spawning enemies)
+  findRandomWalkablePosition(): LJS.Vector2 | null {
+    const maxAttempts = 100;
+    for (let i = 0; i < maxAttempts; i++) {
+      const x = Math.floor(Math.random() * this.width);
+      const y = Math.floor(Math.random() * this.height);
+      if (this.isWalkable(x, y)) {
+        return LJS.vec2(x, y);
+      }
+    }
+    return null;
   }
 }
