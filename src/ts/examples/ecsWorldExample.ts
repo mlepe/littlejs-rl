@@ -10,19 +10,18 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
-import * as LJS from 'littlejsengine';
+import { LocationComponent, PositionComponent } from '../components';
+import { createEnemy, createNPC, createPlayer } from '../entities';
+import {
+  getEntitiesAt,
+  getEntitiesInLocation,
+  getEntitiesInRadius,
+  getNearestEntity,
+  isPositionOccupied,
+} from '../systems/spatialSystem';
 
 import ECS from '../ecs';
 import World from '../world';
-import { createPlayer, createEnemy, createNPC } from '../entities';
-import {
-  getEntitiesAt,
-  getEntitiesInRadius,
-  getEntitiesInLocation,
-  isPositionOccupied,
-  getNearestEntity,
-} from '../systems/spatialSystem';
-import { PositionComponent, LocationComponent } from '../components';
 
 /**
  * ECS-First World Example
