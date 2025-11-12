@@ -47,6 +47,58 @@ import { PositionComponent } from './components';
 
 ## Project Structure
 
+## File Creation Best Practices
+
+### Creating Documentation/Markdown Files
+
+**ALWAYS use `create_file` tool for creating new markdown or documentation files.**
+
+❌ **DO NOT use these methods (they will fail on Windows):**
+```typescript
+// DON'T: Using echo with complex content
+run_in_terminal({ command: 'echo "content" > file.md' })
+
+// DON'T: Using node -e with inline content  
+run_in_terminal({ command: 'node -e "fs.writeFileSync(...)"' })
+```
+
+✅ **CORRECT way:**
+```typescript
+// DO: Use create_file tool
+create_file({
+  filePath: "c:\\Users\\...\\file.md",
+  content: `# Full Content
+  
+Code blocks, quotes, everything works!
+  `
+})
+```
+
+### Why?
+
+**Windows Command Line Issues:**
+- Complex escaping rules for quotes, backticks, newlines
+- Command line length limits (~8191 chars)
+- Different behavior between CMD and PowerShell
+- Special characters break shell parsing
+
+**create_file is designed for this:**
+- Direct file system write
+- Handles all encoding automatically
+- No shell parsing issues
+- No length limits
+- Works cross-platform
+
+### Fallback Method (Last Resort Only)
+
+If `create_file` demonstrably fails (verify with `read_file`):
+
+1. Create temporary `.js` file with write code
+2. Execute with `node filename.js`
+3. Delete temporary file with `del filename.js`
+
+This works because Node.js handles all escaping internally.
+
 ```ini {"name":"project structure"}
 src/
 ├── index.ts                 # Entry point
