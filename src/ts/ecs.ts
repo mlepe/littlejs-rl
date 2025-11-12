@@ -17,11 +17,26 @@
  * Entities are simple numeric IDs, components are pure data, and systems
  * operate on entities with specific component combinations.
  * 
+ * Architecture:
+ * - Entities: Numeric IDs that group related components
+ * - Components: Pure data structures (no behavior)
+ * - Systems: Functions that process entities with specific components
+ * 
  * @example
  * ```typescript
  * const ecs = new ECS();
+ * 
+ * // Create an entity
  * const entityId = ecs.createEntity();
+ * 
+ * // Add components
  * ecs.addComponent<PositionComponent>(entityId, 'position', { x: 10, y: 20 });
+ * ecs.addComponent<HealthComponent>(entityId, 'health', { current: 100, max: 100 });
+ * 
+ * // Query entities with specific components
+ * const entities = ecs.query('position', 'health');
+ * 
+ * // Access components
  * const pos = ecs.getComponent<PositionComponent>(entityId, 'position');
  * ```
  */
@@ -96,5 +111,41 @@ export default class ECS {
       }
       this.entities.delete(entityId);
     }
+  }
+
+  /**
+   * Check if an entity has a specific component
+   * @param entityId - The entity to check
+   * @param componentName - Name of the component
+   * @returns True if the entity has the component
+   */
+  hasComponent(entityId: number, componentName: string): boolean {
+    return this.entities.get(entityId)?.has(componentName) ?? false;
+  }
+
+  /**
+   * Remove a component from an entity
+   * @param entityId - The entity to remove the component from
+   * @param componentName - Name of the component to remove
+   */
+  removeComponent(entityId: number, componentName: string): void {
+    this.components.get(componentName)?.delete(entityId);
+    this.entities.get(entityId)?.delete(componentName);
+  }
+
+  /**
+   * Get all entities (useful for debugging)
+   * @returns Array of all entity IDs
+   */
+  getAllEntities(): number[] {
+    return Array.from(this.entities.keys());
+  }
+
+  /**
+   * Get the number of entities
+   * @returns Count of entities
+   */
+  getEntityCount(): number {
+    return this.entities.size;
   }
 }

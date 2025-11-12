@@ -25,7 +25,26 @@ import { createPlayer } from './entities';
 
 /**
  * Main Game class - Singleton pattern
- * Manages the ECS, World, and game loop integration with LittleJS
+ * 
+ * Manages the ECS, World, and game loop integration with LittleJS.
+ * This is the central controller for the game, coordinating between:
+ * - Entity Component System (ECS) for game logic
+ * - World and Location management for tile-based maps
+ * - LittleJS engine for rendering and input
+ * 
+ * @example
+ * ```typescript
+ * // Get the game instance
+ * const game = Game.getInstance();
+ * 
+ * // Initialize the game
+ * game.init();
+ * 
+ * // Access game systems
+ * const ecs = game.getECS();
+ * const world = game.getWorld();
+ * const playerId = game.getPlayerId();
+ * ```
  */
 export default class Game {
   private static instance: Game | null = null;

@@ -18,7 +18,32 @@ import Global from './global';
 
 /**
  * Location - Represents a single map/level in the game world
- * Handles tile data and rendering, but NOT entity storage (ECS handles that)
+ * 
+ * Handles tile data and rendering, but NOT entity storage (ECS handles that).
+ * Each location represents a distinct area in the game world with its own:
+ * - Tile map (floors, walls, doors, etc.)
+ * - Collision data for pathfinding and movement
+ * - Visual rendering via LittleJS tile layers
+ * 
+ * Entity positions are stored in the ECS using PositionComponent and
+ * LocationComponent, not in the Location object itself.
+ * 
+ * @example
+ * ```typescript
+ * const location = new Location(vec2(5, 5), 50, 50);
+ * location.generate(); // Create procedural layout
+ * 
+ * // Set custom tiles
+ * location.setTile(10, 10, createTile(TileType.WATER));
+ * 
+ * // Check walkability
+ * if (location.isWalkable(x, y)) {
+ *   // Position is walkable
+ * }
+ * 
+ * // Render
+ * location.render();
+ * ```
  */
 export default class Location {
   readonly name: string;
