@@ -16,3 +16,4 @@ export * from './aiSystem';
 export * from './inputSystem';
 export * from './playerMovementSystem';
 export * from './spatialSystem';
+export * from './relationSystem';

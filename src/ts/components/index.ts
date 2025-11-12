@@ -19,3 +19,4 @@ export * from './stats';
 export * from './player';
 export * from './input';
 export * from './locationComponent';
+export * from './relation';
