@@ -22,7 +22,6 @@ All TypeScript files must include this header comment block:
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
-
 ```
 
 ### Import Organization
@@ -36,7 +35,6 @@ import * as LJS from 'littlejsengine';
 
 import GameObject from './gameObject';
 import { PositionComponent } from './components';
-
 ```
 
 ### Naming Conventions
@@ -45,7 +43,7 @@ import { PositionComponent } from './components';
 - **Files**: camelCase matching class name but lowercase (e.g., `gameObject.ts`, `ecs.ts`)
 - **Interfaces**: PascalCase with "Component" suffix for ECS components (e.g., `PositionComponent`)
 - **Functions**: camelCase (e.g., `renderSystem`, `movementSystem`)
-- __Constants__: UPPER_SNAKE_CASE (e.g., `TILE_SIZE`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `TILE_SIZE`)
 
 ## Project Structure
 
@@ -53,17 +51,16 @@ import { PositionComponent } from './components';
 
 ### Creating Documentation/Markdown Files
 
-__ALWAYS use `create_file` tool for creating new markdown or documentation files.__
+**ALWAYS use `create_file` tool for creating new markdown or documentation files.**
 
 ❌ **DO NOT use these methods (they will fail on Windows):**
 
 ```typescript
 // DON'T: Using echo with complex content
-run_in_terminal({ command: 'echo "content" > file.md' })
+run_in_terminal({ command: 'echo "content" > file.md' });
 
-// DON'T: Using node -e with inline content  
-run_in_terminal({ command: 'node -e "fs.writeFileSync(...)"' })
-
+// DON'T: Using node -e with inline content
+run_in_terminal({ command: 'node -e "fs.writeFileSync(...)"' });
 ```
 
 ✅ **CORRECT way:**
@@ -71,13 +68,12 @@ run_in_terminal({ command: 'node -e "fs.writeFileSync(...)"' })
 ```typescript
 // DO: Use create_file tool
 create_file({
-  filePath: "c:\\Users\\...\\file.md",
+  filePath: 'c:\\Users\\...\\file.md',
   content: `# Full Content
   
 Code blocks, quotes, everything works!
-  `
-})
-
+  `,
+});
 ```
 
 ### Why?
@@ -89,7 +85,7 @@ Code blocks, quotes, everything works!
 - Different behavior between CMD and PowerShell
 - Special characters break shell parsing
 
-__create_file is designed for this:__
+**create_file is designed for this:**
 
 - Direct file system write
 - Handles all encoding automatically
@@ -179,7 +175,6 @@ Perfect! I've successfully updated the copilot-instructions.md file with all the
 ## Updates Made:
 
 1. **Updated Project Structure** - Added:
-
    - `entities.ts` file
    - New components: ai.ts, `stats.ts`, `player.ts`, `input.ts`
    - New systems: `aiSystem.ts`, `inputSystem.ts`, `playerMovementSystem.ts`
@@ -187,26 +182,22 @@ Perfect! I've successfully updated the copilot-instructions.md file with all the
 2. **Added Entity Factory Functions Section** - Shows how to create entity factory functions
 3. **Added "Using Entity Factory" Section** - Demonstrates importing and using entity creation functions
 4. **Added "Available Components" Section** - Lists all available components:
-
    - Core components (position, health, render, movable)
    - Character components (stats, player, input)
    - AI components
 
 5. **Added "Available Systems" Section** - Lists all available systems:
-
    - Core systems (render, movement)
    - Player systems (input, playerMovement)
    - AI systems
 
 6. **Added "Available Entity Types" Section** - Lists all entity factory functions:
-
    - Player
    - Enemies (enemy, boss)
    - NPCs (NPC, fleeing creature)
 
 7. **Added "Game Loop with Systems" Section** - Shows the proper system execution order in the game loop
 8. **Updated Best Practices** - Added two new items:
-
    - Use entity factory functions from `entities.ts`
    - Process systems in correct order
 
@@ -240,7 +231,6 @@ export function movementSystem(ecs: ECS, dx: number, dy: number): void {
     }
   }
 }
-
 ```
 
 ### LittleJS Integration
@@ -346,24 +336,22 @@ world.setCurrentLocation(5, 6);
 
 // Memory management
 world.unloadAllExceptCurrent();
-
 ```
 
 ### Tile Types
 
 ```typescript
 enum TileType {
-  VOID = 0,        // Empty space
-  FLOOR = 1,       // Walkable floor
-  WALL = 2,        // Solid wall
-  DOOR_OPEN = 3,   // Open door
+  VOID = 0, // Empty space
+  FLOOR = 1, // Walkable floor
+  WALL = 2, // Solid wall
+  DOOR_OPEN = 3, // Open door
   DOOR_CLOSED = 4, // Closed door
-  STAIRS_UP = 5,   // Stairs going up
+  STAIRS_UP = 5, // Stairs going up
   STAIRS_DOWN = 6, // Stairs going down
-  WATER = 7,       // Water terrain
-  GRASS = 8        // Grass terrain
+  WATER = 7, // Water terrain
+  GRASS = 8, // Grass terrain
 }
-
 ```
 
 ## World & Tile System
@@ -399,7 +387,6 @@ LJS.engineInit(
   () => game.renderPost(),
   ['tileset.png']
 );
-
 ```
 
 ### Custom World Size
@@ -407,10 +394,9 @@ LJS.engineInit(
 ```typescript
 // Create 20x20 world with 100x100 tile locations
 const game = Game.getInstance(
-  LJS.vec2(20, 20),  // World size
-  LJS.vec2(100, 100)  // Location size
+  LJS.vec2(20, 20), // World size
+  LJS.vec2(100, 100) // Location size
 );
-
 ```
 
 ### Accessing Game Components
@@ -429,7 +415,6 @@ const playerId = game.getPlayerId();
 
 // Get current location
 const location = game.getCurrentLocation();
-
 ```
 
 ### Changing Locations
@@ -437,7 +422,6 @@ const location = game.getCurrentLocation();
 ```typescript
 // Move player to different world location
 game.changeLocation(worldX, worldY);
-
 ```
 
 ### Debug Features
@@ -503,7 +487,6 @@ export function createEnemy(ecs: ECS, x: number, y: number): number {
   // Add components: position, health, stats, ai, render, movable
   return enemyId;
 }
-
 ```
 
 ### New Systems
@@ -524,8 +507,10 @@ export function [name]System(ecs: ECS, ...params): void {
 ```typescript {"name":"entity with components creation"}
 const entityId = ecs.createEntity();
 ecs.addComponent<PositionComponent>(entityId, 'position', { x: 0, y: 0 });
-ecs.addComponent<HealthComponent>(entityId, 'health', { current: 100, max: 100 });
-
+ecs.addComponent<HealthComponent>(entityId, 'health', {
+  current: 100,
+  max: 100,
+});
 ```
 
 ### Using Entity Factory
@@ -536,7 +521,6 @@ import { createPlayer, createEnemy, createNPC } from './ts/entities';
 const playerId = createPlayer(ecs, 5, 5);
 const enemyId = createEnemy(ecs, 10, 10);
 const npcId = createNPC(ecs, 15, 8);
-
 ```
 
 ### Querying Entities
@@ -544,7 +528,6 @@ const npcId = createNPC(ecs, 15, 8);
 ```typescript {"name":"querying entities"}
 // Get all entities with specific components
 const entities = ecs.query('position', 'health', 'render');
-
 ```
 
 ### Accessing Components
@@ -554,7 +537,6 @@ const health = ecs.getComponent<HealthComponent>(entityId, 'health');
 if (health) {
   health.current -= damage;
 }
-
 ```
 
 ## Best Practices
@@ -584,26 +566,26 @@ if (health) {
 ### Game Loop with Systems
 
 ```typescript
-import { 
-  inputSystem, 
-  playerMovementSystem, 
+import {
+  inputSystem,
+  playerMovementSystem,
   aiSystem,
   relationSystem,
-  renderSystem 
+  renderSystem,
 } from './ts/systems';
 
 // In your game update loop
 function update() {
-  inputSystem(ecs);              // Handle player input
-  playerMovementSystem(ecs);     // Move player based on input
-  aiSystem(ecs, playerId);       // AI behaviors for NPCs/enemies
+  inputSystem(ecs); // Handle player input
+  playerMovementSystem(ecs); // Move player based on input
+  aiSystem(ecs, playerId); // AI behaviors for NPCs/enemies
   // collisionSystem(ecs);        // Handle collisions
   // combatSystem(ecs);           // Handle combat
   // relationSystem is called on-demand when events affect relationships
 }
 
 function render() {
-  renderSystem(ecs);             // Render all entities
+  renderSystem(ecs); // Render all entities
 }
 ```
 
@@ -624,7 +606,7 @@ The relation system allows entities to track dynamic relationships with multiple
 ```typescript
 // Relations are auto-initialized in Game.init()
 // Update relation when an event occurs
-relationSystem(ecs, npcId, playerId, 10);  // NPC likes player more
+relationSystem(ecs, npcId, playerId, 10); // NPC likes player more
 relationSystem(ecs, enemyId, playerId, -20); // Enemy dislikes player
 
 // Query relation score
