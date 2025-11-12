@@ -13,8 +13,12 @@
 /**
  * Example usage of World, Location, and Tile system
  * This file demonstrates how to use the tile-based world system
+ *
+ * Note: This uses the ECS-first approach where entities are stored in ECS,
+ * not in Location objects. See ecsWorldExample.ts for more advanced patterns.
  */
 
+import { LocationComponent, PositionComponent } from '../components';
 import { TileType, createTile } from '../tile';
 import { createEnemy, createPlayer } from '../entities';
 
@@ -34,27 +38,27 @@ export function worldSystemExample() {
 
   if (startLocation) {
     // Create player at tile position (25, 25) in the location
-    const playerId = createPlayer(ecs, 25, 25);
-    startLocation.addEntity(25, 25, playerId);
+    // Entity factories now require worldX and worldY parameters
+    const playerId = createPlayer(ecs, 25, 25, 5, 5);
 
     // Create some enemies at different positions
-    const enemy1Id = createEnemy(ecs, 10, 10);
-    startLocation.addEntity(10, 10, enemy1Id);
-
-    const enemy2Id = createEnemy(ecs, 40, 40);
-    startLocation.addEntity(40, 40, enemy2Id);
+    const enemy1Id = createEnemy(ecs, 10, 10, 5, 5);
+    const enemy2Id = createEnemy(ecs, 40, 40, 5, 5);
 
     // Customize some tiles
     startLocation.setTile(20, 20, createTile(TileType.WATER));
     startLocation.setTile(30, 30, createTile(TileType.GRASS));
 
-    // Check what's at a position
-    const entitiesAtPlayerPos = startLocation.getEntitiesAt(25, 25);
-    console.log('Entities at player position:', entitiesAtPlayerPos);
+    // Check entity positions using ECS (entities are stored in ECS, not Location)
+    const playerPos = ecs.getComponent<PositionComponent>(playerId, 'position');
+    console.log('Player position:', playerPos);
 
-    // Move player entity to a new tile
-    const moved = startLocation.moveEntity(25, 25, 26, 25, playerId);
-    console.log('Player moved:', moved);
+    // Move player entity by updating position component
+    if (playerPos && startLocation.isWalkable(26, 25)) {
+      playerPos.x = 26;
+      playerPos.y = 25;
+      console.log('Player moved to:', playerPos);
+    }
   }
 
   // Travel to adjacent location
