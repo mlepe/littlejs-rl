@@ -118,12 +118,18 @@ export default class Game {
       LJS.setCameraPos(LJS.vec2(startX, startY));
     }
 
+    // Initialize relations between all entities
+    this.world.initializeRelations(this.ecs);
+
     this.initialized = true;
 
     if (Game.isDebug) {
       console.log(`Game initialized v${Game.version}`);
       console.log(`Player ID: ${this.playerId}`);
       console.log(`Starting location: ${startLocation?.name}`);
+      console.log(
+        `Initialized relations for ${this.ecs.query('relation').length} entities`
+      );
     }
   }
 

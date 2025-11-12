@@ -25,9 +25,8 @@ import { RelationComponent } from '../components';
  * explicitly when relationship-affecting events occur, passing the entity
  * and targetEntity IDs along with a score delta.
  *
- * Note: Each entity can only track ONE relation at a time with the current
- * ECS implementation. For multiple relations, consider modifying RelationComponent
- * to store a Map<number, RelationData> instead.
+ * The RelationComponent uses a Map to track multiple relationships per entity,
+ * allowing each entity to have unique relationship scores with many other entities.
  *
  * @param ecs - The ECS instance
  * @param entityId - The entity whose relation component to update
@@ -59,24 +58,29 @@ export function relationSystem(
   scoreDelta: number
 ): void {
   // Get the relation component for this entity
-  const relation = ecs.getComponent<RelationComponent>(entityId, 'relation');
+  const relationComponent = ecs.getComponent<RelationComponent>(
+    entityId,
+    'relation'
+  );
 
-  if (!relation) {
+  if (!relationComponent) {
     return;
   }
 
-  // Only update if this relation is tracking the specified target
-  if (relation.targetEntityId !== targetEntityId) {
+  // Get the specific relation data for the target entity
+  const relationData = relationComponent.relations.get(targetEntityId);
+
+  if (!relationData) {
     return;
   }
 
   // Update the relation score
-  relation.relationScore += scoreDelta;
+  relationData.relationScore += scoreDelta;
 
   // Clamp to min/max bounds
-  relation.relationScore = Math.max(
-    relation.minRelationScore,
-    Math.min(relation.relationScore, relation.maxRelationScore)
+  relationData.relationScore = Math.max(
+    relationData.minRelationScore,
+    Math.min(relationData.relationScore, relationData.maxRelationScore)
   );
 }
 
@@ -84,8 +88,8 @@ export function relationSystem(
  * Get Relation Score - Retrieves the current relation score between two entities
  *
  * Helper function to query the relationship score that one entity has toward another.
- * Returns undefined if no relation component exists or if the relation is tracking
- * a different target entity.
+ * Returns undefined if no relation component exists or if the relation to the target
+ * entity has not been initialized.
  *
  * @param ecs - The ECS instance
  * @param entityId - The entity whose perspective we're checking
@@ -107,16 +111,21 @@ export function getRelationScore(
   entityId: number,
   targetEntityId: number
 ): number | undefined {
-  const relation = ecs.getComponent<RelationComponent>(entityId, 'relation');
+  const relationComponent = ecs.getComponent<RelationComponent>(
+    entityId,
+    'relation'
+  );
 
-  if (!relation) {
+  if (!relationComponent) {
     return undefined;
   }
 
-  // Only return score if this relation is tracking the specified target
-  if (relation.targetEntityId !== targetEntityId) {
+  // Get the specific relation data for the target entity
+  const relationData = relationComponent.relations.get(targetEntityId);
+
+  if (!relationData) {
     return undefined;
   }
 
-  return relation.relationScore;
+  return relationData.relationScore;
 }

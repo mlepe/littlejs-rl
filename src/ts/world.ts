@@ -12,7 +12,9 @@
 
 import * as LJS from 'littlejsengine';
 
+import ECS from './ecs';
 import Location from './location';
+import { RelationComponent } from './components';
 
 /**
  * World - Manages a grid of locations (map areas)
@@ -200,5 +202,59 @@ export default class World {
    */
   getLoadedLocationCount(): number {
     return this.locations.size;
+  }
+
+  /**
+   * Initialize relation components for all entities in the world
+   *
+   * Creates relation components for each entity targeting every other entity
+   * with a base score of 0. Should be called once after world generation
+   * and entity creation.
+   *
+   * @param ecs - The ECS instance containing all entities
+   * @param minScore - Minimum relation score (default: -100)
+   * @param maxScore - Maximum relation score (default: 100)
+   *
+   * @example
+   * ```typescript
+   * // After creating all entities in the world
+   * world.initializeRelations(ecs);
+   * ```
+   */
+  initializeRelations(
+    ecs: ECS,
+    minScore: number = -100,
+    maxScore: number = 100
+  ): void {
+    // Get all entities that can have relations (entities with position component)
+    const entities = ecs.query('position');
+
+    // Initialize relation component for each entity
+    for (const entityId of entities) {
+      // Create empty relation component
+      const relationComponent: RelationComponent = {
+        relations: new Map(),
+      };
+
+      // Add relations to all other entities
+      for (const targetId of entities) {
+        // Skip self-relations
+        if (entityId === targetId) continue;
+
+        // Add relation data for this target
+        relationComponent.relations.set(targetId, {
+          relationScore: 0,
+          minRelationScore: minScore,
+          maxRelationScore: maxScore,
+        });
+      }
+
+      // Add the component to the entity
+      ecs.addComponent<RelationComponent>(
+        entityId,
+        'relation',
+        relationComponent
+      );
+    }
   }
 }
