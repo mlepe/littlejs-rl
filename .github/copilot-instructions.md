@@ -22,6 +22,7 @@ All TypeScript files must include this header comment block:
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
+
 ```
 
 ### Import Organization
@@ -35,6 +36,7 @@ import * as LJS from 'littlejsengine';
 
 import GameObject from './gameObject';
 import { PositionComponent } from './components';
+
 ```
 
 ### Naming Conventions
@@ -51,18 +53,21 @@ import { PositionComponent } from './components';
 
 ### Creating Documentation/Markdown Files
 
-**ALWAYS use `create_file` tool for creating new markdown or documentation files.**
+__ALWAYS use `create_file` tool for creating new markdown or documentation files.__
 
 ❌ **DO NOT use these methods (they will fail on Windows):**
+
 ```typescript
 // DON'T: Using echo with complex content
 run_in_terminal({ command: 'echo "content" > file.md' })
 
 // DON'T: Using node -e with inline content  
 run_in_terminal({ command: 'node -e "fs.writeFileSync(...)"' })
+
 ```
 
 ✅ **CORRECT way:**
+
 ```typescript
 // DO: Use create_file tool
 create_file({
@@ -72,17 +77,20 @@ create_file({
 Code blocks, quotes, everything works!
   `
 })
+
 ```
 
 ### Why?
 
 **Windows Command Line Issues:**
+
 - Complex escaping rules for quotes, backticks, newlines
 - Command line length limits (~8191 chars)
 - Different behavior between CMD and PowerShell
 - Special characters break shell parsing
 
-**create_file is designed for this:**
+__create_file is designed for this:__
+
 - Direct file system write
 - Handles all encoding automatically
 - No shell parsing issues
@@ -121,14 +129,16 @@ src/
 │   │   ├── ai.ts
 │   │   ├── stats.ts
 │   │   ├── player.ts
-│   │   └── input.ts
+│   │   ├── input.ts
+│   │   └── relation.ts     # Multi-entity relationship tracking
 │   ├── systems/            # ECS systems (logic)
 │   │   ├── index.ts
 │   │   ├── renderSystem.ts
 │   │   ├── movementSystem.ts
 │   │   ├── aiSystem.ts
 │   │   ├── inputSystem.ts
-│   │   └── playerMovementSystem.ts
+│   │   ├── playerMovementSystem.ts
+│   │   └── relationSystem.ts  # Relationship score management
 │   └── examples/           # Usage examples
 │       ├── worldExample.ts
 │       └── gameUsage.ts
@@ -230,6 +240,7 @@ export function movementSystem(ecs: ECS, dx: number, dy: number): void {
     }
   }
 }
+
 ```
 
 ### LittleJS Integration
@@ -258,6 +269,8 @@ export function movementSystem(ecs: ECS, dx: number, dy: number): void {
 **AI Components:**
 
 - `AIComponent` - type (passive/aggressive/patrol/fleeing), detectionRange, state, target
+- `RelationComponent` - relations Map tracking scores with multiple entities (Map<entityId, RelationData>)
+- `RelationData` - relationScore, minRelationScore, maxRelationScore for individual relationships
 
 ### Available Systems
 
@@ -274,6 +287,8 @@ export function movementSystem(ecs: ECS, dx: number, dy: number): void {
 **AI Systems:**
 
 - `aiSystem(ecs, playerEntityId)` - Handles AI behaviors (aggressive, passive, fleeing, patrol)
+- `relationSystem(ecs, entityId, targetEntityId, scoreDelta)` - Updates relationship scores between entities
+- `getRelationScore(ecs, entityId, targetEntityId)` - Helper to query relationship scores
 
 ### Available Entity Types
 
@@ -331,6 +346,7 @@ world.setCurrentLocation(5, 6);
 
 // Memory management
 world.unloadAllExceptCurrent();
+
 ```
 
 ### Tile Types
@@ -347,6 +363,7 @@ enum TileType {
   WATER = 7,       // Water terrain
   GRASS = 8        // Grass terrain
 }
+
 ```
 
 ## World & Tile System
@@ -382,6 +399,7 @@ LJS.engineInit(
   () => game.renderPost(),
   ['tileset.png']
 );
+
 ```
 
 ### Custom World Size
@@ -392,6 +410,7 @@ const game = Game.getInstance(
   LJS.vec2(20, 20),  // World size
   LJS.vec2(100, 100)  // Location size
 );
+
 ```
 
 ### Accessing Game Components
@@ -410,6 +429,7 @@ const playerId = game.getPlayerId();
 
 // Get current location
 const location = game.getCurrentLocation();
+
 ```
 
 ### Changing Locations
@@ -417,6 +437,7 @@ const location = game.getCurrentLocation();
 ```typescript
 // Move player to different world location
 game.changeLocation(worldX, worldY);
+
 ```
 
 ### Debug Features
@@ -463,6 +484,7 @@ Create in `src/ts/components/` with interface definition:
 export interface [Name]Component {
   // data properties only
 }
+
 ```
 
 ### Entity Factory Functions
@@ -481,6 +503,7 @@ export function createEnemy(ecs: ECS, x: number, y: number): number {
   // Add components: position, health, stats, ai, render, movable
   return enemyId;
 }
+
 ```
 
 ### New Systems
@@ -491,6 +514,7 @@ Create in `src/ts/systems/` with function definition:
 export function [name]System(ecs: ECS, ...params): void {
   // system logic
 }
+
 ```
 
 ## Common Patterns
@@ -501,6 +525,7 @@ export function [name]System(ecs: ECS, ...params): void {
 const entityId = ecs.createEntity();
 ecs.addComponent<PositionComponent>(entityId, 'position', { x: 0, y: 0 });
 ecs.addComponent<HealthComponent>(entityId, 'health', { current: 100, max: 100 });
+
 ```
 
 ### Using Entity Factory
@@ -511,6 +536,7 @@ import { createPlayer, createEnemy, createNPC } from './ts/entities';
 const playerId = createPlayer(ecs, 5, 5);
 const enemyId = createEnemy(ecs, 10, 10);
 const npcId = createNPC(ecs, 15, 8);
+
 ```
 
 ### Querying Entities
@@ -518,6 +544,7 @@ const npcId = createNPC(ecs, 15, 8);
 ```typescript {"name":"querying entities"}
 // Get all entities with specific components
 const entities = ecs.query('position', 'health', 'render');
+
 ```
 
 ### Accessing Components
@@ -527,6 +554,7 @@ const health = ecs.getComponent<HealthComponent>(entityId, 'health');
 if (health) {
   health.current -= damage;
 }
+
 ```
 
 ## Best Practices
@@ -550,6 +578,8 @@ if (health) {
 17. Use `Game.getInstance()` to access the singleton game instance
 18. Access ECS, World, and Player through Game class getters instead of global variables
 19. **Always use `create_file` tool for creating markdown/documentation files** - Never use `echo` or `node -e` on Windows
+20. **Relation system is event-driven** - Call `relationSystem()` when actions affect relationships, not in main loop
+21. Relations are automatically initialized via `world.initializeRelations(ecs)` in `Game.init()`
 
 ### Game Loop with Systems
 
@@ -557,7 +587,8 @@ if (health) {
 import { 
   inputSystem, 
   playerMovementSystem, 
-  aiSystem, 
+  aiSystem,
+  relationSystem,
   renderSystem 
 } from './ts/systems';
 
@@ -568,10 +599,56 @@ function update() {
   aiSystem(ecs, playerId);       // AI behaviors for NPCs/enemies
   // collisionSystem(ecs);        // Handle collisions
   // combatSystem(ecs);           // Handle combat
+  // relationSystem is called on-demand when events affect relationships
 }
 
 function render() {
   renderSystem(ecs);             // Render all entities
+}
+```
+
+### Relation System
+
+The relation system allows entities to track dynamic relationships with multiple other entities. Each entity can have unique relationship scores with every other entity in the world.
+
+**Architecture:**
+
+- `RelationComponent` stores a `Map<number, RelationData>` where keys are target entity IDs
+- Each `RelationData` contains: relationScore, minRelationScore, maxRelationScore
+- Relations are automatically initialized for all entities via `world.initializeRelations(ecs)`
+- Called once in `Game.init()` after entity creation
+- Base score starts at 0, configurable min/max bounds (default: -100 to 100)
+
+**Usage:**
+
+```typescript
+// Relations are auto-initialized in Game.init()
+// Update relation when an event occurs
+relationSystem(ecs, npcId, playerId, 10);  // NPC likes player more
+relationSystem(ecs, enemyId, playerId, -20); // Enemy dislikes player
+
+// Query relation score
+const attitude = getRelationScore(ecs, npcId, playerId);
+if (attitude !== undefined) {
+  if (attitude > 50) console.log('Friendly!');
+  else if (attitude < -20) console.log('Hostile!');
+}
+
+// Access all relations for an entity
+const npcRelations = ecs.getComponent<RelationComponent>(npcId, 'relation');
+if (npcRelations) {
+  for (const [targetId, data] of npcRelations.relations) {
+    console.log(`Relation to ${targetId}: ${data.relationScore}`);
+  }
+}
+
+// Typical usage in combat system
+function combatSystem(ecs: ECS) {
+  // ... combat logic ...
+  if (attackHit) {
+    // Defender now dislikes attacker
+    relationSystem(ecs, defenderId, attackerId, -15);
+  }
 }
 ```
 
