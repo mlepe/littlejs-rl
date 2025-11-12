@@ -4,7 +4,7 @@
  * File Created: Sunday, 9th November 2025 6:22:55 am
  * Author: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
- * Last Modified: Tuesday, 11th November 2025 3:32:19 am
+ * Last Modified: Tuesday, 12th November 2025 1:00:00 am
  * Modified By: Matthieu LEPERLIER (m.leperlier42@gmail.com>)
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
@@ -14,36 +14,51 @@
 
 import * as LJS from 'littlejsengine';
 
+import Game from './ts/game';
 import Tileset from './src/assets/img/tileset.png';
+
+// Get the Game singleton instance
+const game = Game.getInstance();
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameInit() {
-  // called once after the engine starts up
-  // setup the game
+  // Called once after the engine starts up
+  // Initialize the game world, player, and ECS
+  game.init();
+
+  if (Game.isDebug) {
+    console.log('LittleJS Roguelike initialized');
+    console.log(`Debug mode: ${Game.isDebug}`);
+    console.log(`Version: ${Game.version}`);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameUpdate() {
-  // called every frame at 60 frames per second
-  // handle input and update the game state
+  // Called every frame at 60 frames per second
+  // Process all game systems (input, movement, AI)
+  game.update();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameUpdatePost() {
-  // called after physics and objects are updated
-  // setup camera and prepare for render
+  // Called after physics and objects are updated
+  // Post-update logic and cleanup
+  game.updatePost();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameRender() {
-  // called before objects are rendered
-  // draw any background effects that appear behind objects
+  // Called before objects are rendered
+  // Render the current location tiles and entities
+  game.render();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameRenderPost() {
-  // called after objects are rendered
-  // draw effects or hud that appear above all objects
+  // Called after objects are rendered
+  // Render UI, HUD, and debug information
+  game.renderPost();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
