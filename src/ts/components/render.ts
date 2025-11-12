@@ -12,8 +12,16 @@
 
 import * as LJS from 'littlejsengine';
 
+/**
+ * Render Component - Contains visual rendering data for entities
+ *
+ * Used by the renderSystem to draw entities using LittleJS.
+ */
 export interface RenderComponent {
+  /** Sprite tile information from tileset */
   tileInfo: LJS.TileInfo;
+  /** Entity color/tint */
   color: LJS.Color;
+  /** Entity size in tiles */
   size: LJS.Vector2;
 }

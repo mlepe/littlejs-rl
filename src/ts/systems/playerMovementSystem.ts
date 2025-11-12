@@ -18,6 +18,25 @@ import {
 
 import ECS from '../ecs';
 
+/**
+ * Player Movement System - Moves player entities based on input
+ *
+ * Processes all entities with 'player', 'position', 'input', and 'stats' components.
+ * Applies movement based on input direction and player speed from stats.
+ *
+ * Should be called after inputSystem and before aiSystem in the update loop.
+ *
+ * @param ecs - The ECS instance
+ *
+ * @example
+ * ```typescript
+ * function gameUpdate() {
+ *   inputSystem(ecs);
+ *   playerMovementSystem(ecs); // Process player movement
+ *   aiSystem(ecs, playerId);
+ * }
+ * ```
+ */
 export function playerMovementSystem(ecs: ECS): void {
   const playerEntities = ecs.query('player', 'position', 'input', 'stats');
 

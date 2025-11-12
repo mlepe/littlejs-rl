@@ -16,6 +16,24 @@ import { PositionComponent, RenderComponent } from '../components';
 
 import ECS from '../ecs';
 
+/**
+ * Render System - Renders all entities with visual components
+ *
+ * Processes all entities with 'position' and 'render' components.
+ * Creates temporary LittleJS EngineObjects to render each entity.
+ *
+ * Should be called in the gameRender() callback, after location tiles are rendered.
+ *
+ * @param ecs - The ECS instance
+ *
+ * @example
+ * ```typescript
+ * function gameRender() {
+ *   location.render(); // Render tiles first
+ *   renderSystem(ecs); // Then render entities
+ * }
+ * ```
+ */
 export function renderSystem(ecs: ECS): void {
   const entities = ecs.query('position', 'render');
 

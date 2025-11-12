@@ -10,9 +10,18 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
+/**
+ * AI Component - Controls entity behavior and state
+ *
+ * Defines the AI behavior type, detection range, current state, and target.
+ */
 export interface AIComponent {
+  /** AI behavior type */
   type: 'passive' | 'aggressive' | 'patrol' | 'fleeing';
+  /** Distance at which AI detects and reacts to player */
   detectionRange: number;
+  /** Current AI state */
   state: 'idle' | 'pursuing' | 'attacking' | 'fleeing';
-  target?: number; // Entity ID of target
+  /** Entity ID of current target (typically the player) */
+  target?: number;
 }

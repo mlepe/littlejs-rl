@@ -10,8 +10,16 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
+/**
+ * Stats Component - Contains entity combat and movement statistics
+ *
+ * Used by players, enemies, and NPCs for combat calculations and movement.
+ */
 export interface StatsComponent {
+  /** Attack power */
   strength: number;
+  /** Damage reduction */
   defense: number;
+  /** Movement speed multiplier */
   speed: number;
 }

@@ -14,7 +14,28 @@ import { AIComponent, PositionComponent, StatsComponent } from '../components';
 
 import ECS from '../ecs';
 
-// systems/aiSystem.ts
+/**
+ * AI System - Controls NPC and enemy behavior
+ *
+ * Processes all entities with 'position', 'ai', and 'stats' components.
+ * Implements different AI behaviors:
+ * - Aggressive: Pursues and attacks player when in range
+ * - Passive: Wanders randomly, ignores player
+ * - Fleeing: Runs away from player when detected
+ * - Patrol: (Not yet implemented)
+ *
+ * @param ecs - The ECS instance
+ * @param playerEntityId - The player's entity ID for targeting
+ *
+ * @example
+ * ```typescript
+ * function gameUpdate() {
+ *   inputSystem(ecs);
+ *   playerMovementSystem(ecs);
+ *   aiSystem(ecs, playerId); // Process AI after player
+ * }
+ * ```
+ */
 export function aiSystem(ecs: ECS, playerEntityId: number): void {
   const aiEntities = ecs.query('position', 'ai', 'stats');
 

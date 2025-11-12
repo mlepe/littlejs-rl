@@ -15,6 +15,26 @@ import * as LJS from 'littlejsengine';
 import ECS from '../ecs';
 import { InputComponent } from '../components';
 
+/**
+ * Input System - Captures keyboard input for player entities
+ *
+ * Reads keyboard state from LittleJS and updates InputComponent for all
+ * entities with 'player' and 'input' components.
+ *
+ * Supported controls:
+ * - Arrow keys or WASD for movement
+ * - Space for action
+ *
+ * @param ecs - The ECS instance
+ *
+ * @example
+ * ```typescript
+ * function gameUpdate() {
+ *   inputSystem(ecs); // Call first in update loop
+ *   playerMovementSystem(ecs);
+ * }
+ * ```
+ */
 export function inputSystem(ecs: ECS): void {
   const playerEntities = ecs.query('player', 'input');
 

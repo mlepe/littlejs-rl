@@ -27,9 +27,26 @@ import { PlayerComponent } from './components/player';
 import { StatsComponent } from './components/stats';
 
 /**
- * Create a player entity
+ * Create a player entity with all required components
+ *
+ * The player entity includes:
+ * - Position and location tracking
+ * - Health and stats
+ * - Input handling
+ * - Rendering
+ * - Movement capability
+ *
+ * @param ecs - The ECS instance
+ * @param x - Initial X position in tiles
+ * @param y - Initial Y position in tiles
  * @param worldX - World location X coordinate
  * @param worldY - World location Y coordinate
+ * @returns The entity ID of the created player
+ *
+ * @example
+ * ```typescript
+ * const playerId = createPlayer(ecs, 25, 25, 5, 5);
+ * ```
  */
 export function createPlayer(
   ecs: ECS,
@@ -75,9 +92,22 @@ export function createPlayer(
 }
 
 /**
- * Create an enemy entity with AI
+ * Create an enemy entity with aggressive AI
+ *
+ * The enemy will pursue and attack the player when within detection range.
+ * Includes health, stats, AI, rendering, and movement.
+ *
+ * @param ecs - The ECS instance
+ * @param x - Initial X position in tiles
+ * @param y - Initial Y position in tiles
  * @param worldX - World location X coordinate
  * @param worldY - World location Y coordinate
+ * @returns The entity ID of the created enemy
+ *
+ * @example
+ * ```typescript
+ * const enemyId = createEnemy(ecs, 10, 10, 5, 5);
+ * ```
  */
 export function createEnemy(
   ecs: ECS,
@@ -121,9 +151,22 @@ export function createEnemy(
 }
 
 /**
- * Create a passive NPC
+ * Create a passive NPC entity
+ *
+ * NPCs wander randomly and do not attack.
+ * Includes health, stats, passive AI, rendering, and movement.
+ *
+ * @param ecs - The ECS instance
+ * @param x - Initial X position in tiles
+ * @param y - Initial Y position in tiles
  * @param worldX - World location X coordinate
  * @param worldY - World location Y coordinate
+ * @returns The entity ID of the created NPC
+ *
+ * @example
+ * ```typescript
+ * const npcId = createNPC(ecs, 15, 8, 5, 5);
+ * ```
  */
 export function createNPC(
   ecs: ECS,
@@ -167,9 +210,22 @@ export function createNPC(
 }
 
 /**
- * Create a fleeing creature
+ * Create a fleeing creature entity
+ *
+ * Creatures flee from the player when detected.
+ * Fast movement speed, low health. Includes AI, rendering, and movement.
+ *
+ * @param ecs - The ECS instance
+ * @param x - Initial X position in tiles
+ * @param y - Initial Y position in tiles
  * @param worldX - World location X coordinate
  * @param worldY - World location Y coordinate
+ * @returns The entity ID of the created creature
+ *
+ * @example
+ * ```typescript
+ * const creatureId = createFleeingCreature(ecs, 20, 20, 5, 5);
+ * ```
  */
 export function createFleeingCreature(
   ecs: ECS,
@@ -216,9 +272,22 @@ export function createFleeingCreature(
 }
 
 /**
- * Create a boss enemy with enhanced stats
+ * Create a boss enemy entity with enhanced stats
+ *
+ * Powerful enemy with high health, damage, and detection range.
+ * Larger size (2x2), aggressive AI. Suitable for boss encounters.
+ *
+ * @param ecs - The ECS instance
+ * @param x - Initial X position in tiles
+ * @param y - Initial Y position in tiles
  * @param worldX - World location X coordinate
  * @param worldY - World location Y coordinate
+ * @returns The entity ID of the created boss
+ *
+ * @example
+ * ```typescript
+ * const bossId = createBoss(ecs, 25, 25, 6, 6);
+ * ```
  */
 export function createBoss(
   ecs: ECS,

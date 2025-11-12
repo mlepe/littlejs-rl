@@ -10,8 +10,16 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
+/**
+ * Input Component - Stores player input state
+ *
+ * Populated by inputSystem, consumed by playerMovementSystem.
+ */
 export interface InputComponent {
+  /** Horizontal movement input (-1, 0, or 1) */
   moveX: number;
+  /** Vertical movement input (-1, 0, or 1) */
   moveY: number;
+  /** Action button pressed (e.g., attack, interact) */
   action: boolean;
 }

@@ -12,9 +12,17 @@
 
 import * as LJS from 'littlejsengine';
 
+/**
+ * Global constants and configuration
+ *
+ * Contains game-wide constants like screen size and tile dimensions.
+ */
 export namespace Global {
+  /** Screen/viewport size in tiles */
   export const screenSize = LJS.vec2(200, 150);
+  /** Size of each tile in pixels */
   export const tileSize = 16;
+  /** Tile size as Vector2 for convenience */
   export const vTilesize = LJS.vec2(tileSize);
 }
 

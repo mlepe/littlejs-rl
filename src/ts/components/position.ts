@@ -10,7 +10,15 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
+/**
+ * Position Component - Tracks entity position in tile coordinates
+ *
+ * This is the single source of truth for entity locations.
+ * Positions are in tile coordinates, not world pixels.
+ */
 export interface PositionComponent {
+  /** X coordinate in tiles */
   x: number;
+  /** Y coordinate in tiles */
   y: number;
 }

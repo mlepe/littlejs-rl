@@ -10,6 +10,13 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
+/**
+ * Player Component - Tag component to identify player entities
+ *
+ * Used to query for player entities in systems.
+ * This is a "tag" component with no meaningful data.
+ */
 export interface PlayerComponent {
-  isPlayer: true; // Tag component
+  /** Always true, identifies this entity as the player */
+  isPlayer: true;
 }

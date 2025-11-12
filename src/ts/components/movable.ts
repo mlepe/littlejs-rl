@@ -10,6 +10,13 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
+/**
+ * Movable Component - Marks entities that can move
+ *
+ * Contains base movement speed modifier.
+ * Can be combined with stats.speed for final movement calculation.
+ */
 export interface MovableComponent {
+  /** Base movement speed */
   speed: number;
 }

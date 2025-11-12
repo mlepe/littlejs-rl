@@ -14,15 +14,39 @@ import * as LJS from 'littlejsengine';
 
 import Location from './location';
 
+/**
+ * World - Manages a grid of locations (map areas)
+ *
+ * The world consists of a grid of locations, each representing a distinct map area.
+ * Supports lazy loading/unloading of locations to manage memory efficiently.
+ *
+ * @example
+ * ```typescript
+ * const world = new World(10, 10, 50, 50); // 10x10 world, each location is 50x50 tiles
+ * world.setCurrentLocation(5, 5);
+ * const location = world.getCurrentLocation();
+ * ```
+ */
 export default class World {
+  /** Width of the world grid in locations */
   readonly width: number;
+  /** Height of the world grid in locations */
   readonly height: number;
+  /** Width of each location in tiles */
   readonly locationWidth: number;
+  /** Height of each location in tiles */
   readonly locationHeight: number;
 
   private readonly locations: Map<string, Location>;
   private currentLocation: Location | null;
 
+  /**
+   * Create a new world
+   * @param width - Width of world grid in locations (default: 10)
+   * @param height - Height of world grid in locations (default: 10)
+   * @param locationWidth - Width of each location in tiles (default: 50)
+   * @param locationHeight - Height of each location in tiles (default: 50)
+   */
   constructor(
     width: number = 10,
     height: number = 10,
@@ -37,16 +61,31 @@ export default class World {
     this.currentLocation = null;
   }
 
+  /**
+   * Generate a unique key for location coordinates
+   * @private
+   */
   private getKey(x: number, y: number): string {
     return `${x},${y}`;
   }
 
-  // Check if world coordinates are valid
+  /**
+   * Check if world coordinates are within bounds
+   * @param x - World X coordinate
+   * @param y - World Y coordinate
+   * @returns True if coordinates are valid
+   */
   isInBounds(x: number, y: number): boolean {
     return x >= 0 && x < this.width && y >= 0 && y < this.height;
   }
 
-  // Create or get location at world position
+  /**
+   * Get or create a location at the specified world position
+   * @param worldX - World X coordinate
+   * @param worldY - World Y coordinate
+   * @returns The location at the specified position
+   * @throws Error if coordinates are out of bounds
+   */
   getOrCreateLocation(worldX: number, worldY: number): Location {
     if (!this.isInBounds(worldX, worldY)) {
       throw new Error(`World position out of bounds: ${worldX}, ${worldY}`);
@@ -69,27 +108,47 @@ export default class World {
     return location;
   }
 
-  // Get existing location
+  /**
+   * Get an existing location (does not create if missing)
+   * @param worldX - World X coordinate
+   * @param worldY - World Y coordinate
+   * @returns The location, or undefined if not loaded
+   */
   getLocation(worldX: number, worldY: number): Location | undefined {
     return this.locations.get(this.getKey(worldX, worldY));
   }
 
-  // Set current active location
+  /**
+   * Set the current active location
+   * @param worldX - World X coordinate
+   * @param worldY - World Y coordinate
+   */
   setCurrentLocation(worldX: number, worldY: number): void {
     this.currentLocation = this.getOrCreateLocation(worldX, worldY);
   }
 
-  // Get current location
+  /**
+   * Get the current active location
+   * @returns The current location, or null if none set
+   */
   getCurrentLocation(): Location | null {
     return this.currentLocation;
   }
 
-  // Get all loaded locations
+  /**
+   * Get all currently loaded locations
+   * @returns Array of loaded locations
+   */
   getLoadedLocations(): Location[] {
     return Array.from(this.locations.values());
   }
 
-  // Unload location to save memory
+  /**
+   * Unload a location to save memory
+   * Will not unload the current location
+   * @param worldX - World X coordinate
+   * @param worldY - World Y coordinate
+   */
   unloadLocation(worldX: number, worldY: number): void {
     const key = this.getKey(worldX, worldY);
     const location = this.locations.get(key);
@@ -102,7 +161,10 @@ export default class World {
     this.locations.delete(key);
   }
 
-  // Unload all locations except current
+  /**
+   * Unload all locations except the current one
+   * Useful for memory management when traveling far
+   */
   unloadAllExceptCurrent(): void {
     if (!this.currentLocation) return;
 
@@ -123,14 +185,19 @@ export default class World {
     }
   }
 
-  // Render current location
+  /**
+   * Render the current location
+   */
   render(): void {
     if (this.currentLocation) {
       this.currentLocation.render();
     }
   }
 
-  // Get number of loaded locations
+  /**
+   * Get the number of currently loaded locations
+   * @returns Count of loaded locations
+   */
   getLoadedLocationCount(): number {
     return this.locations.size;
   }

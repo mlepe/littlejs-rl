@@ -59,17 +59,31 @@ export default class Location {
     this.collisionLayer.initCollision(layerSize);
   }
 
-  // Convert coordinates to map key
+  /**
+   * Convert tile coordinates to internal map key
+   * @private
+   */
   private getKey(x: number, y: number): string {
     return `${x},${y}`;
   }
 
-  // Check if coordinates are valid
+  /**
+   * Check if tile coordinates are within location bounds
+   * @param x - Tile X coordinate
+   * @param y - Tile Y coordinate
+   * @returns True if coordinates are valid
+   */
   isInBounds(x: number, y: number): boolean {
     return x >= 0 && x < this.width && y >= 0 && y < this.height;
   }
 
-  // Set tile at position
+  /**
+   * Set a tile at the specified position
+   * Updates both visual and collision layers
+   * @param x - Tile X coordinate
+   * @param y - Tile Y coordinate
+   * @param tile - The tile data to set
+   */
   setTile(x: number, y: number, tile: Tile): void {
     if (!this.isInBounds(x, y)) return;
 
@@ -91,23 +105,42 @@ export default class Location {
     this.collisionLayer.setCollisionData(pos, collisionValue);
   }
 
-  // Set tile by type (convenience method)
+  /**
+   * Set tile using a tile type (convenience method)
+   * @param x - Tile X coordinate
+   * @param y - Tile Y coordinate
+   * @param type - The tile type to set
+   */
   setTileType(x: number, y: number, type: TileType): void {
     this.setTile(x, y, createTile(type));
   }
 
-  // Get tile at position
+  /**
+   * Get tile data at the specified position
+   * @param x - Tile X coordinate
+   * @param y - Tile Y coordinate
+   * @returns The tile data, or undefined if out of bounds
+   */
   getTile(x: number, y: number): Tile | undefined {
     if (!this.isInBounds(x, y)) return undefined;
     return this.tiles.get(this.getKey(x, y));
   }
 
-  // Get tile type at position (convenience method)
+  /**
+   * Get tile type at position (convenience method)
+   * @param x - Tile X coordinate
+   * @param y - Tile Y coordinate
+   * @returns The tile type, or undefined if out of bounds
+   */
   getTileType(x: number, y: number): TileType | undefined {
     return this.getTile(x, y)?.type;
   }
 
-  // Generate procedural dungeon/location
+  /**
+   * Generate procedural location content
+   * Creates a simple room layout with walls and floor
+   * Override or extend this method for more complex generation
+   */
   generate(): void {
     // Fill with walls
     for (let x = 0; x < this.width; x++) {
@@ -129,7 +162,12 @@ export default class Location {
     this.setTile(centerX, centerY, createTile(TileType.STAIRS_DOWN));
   }
 
-  // Check if position is walkable using collision layer
+  /**
+   * Check if a tile position is walkable
+   * @param x - Tile X coordinate
+   * @param y - Tile Y coordinate
+   * @returns True if the tile can be walked on
+   */
   isWalkable(x: number, y: number): boolean {
     if (!this.isInBounds(x, y)) return false;
 
@@ -140,18 +178,33 @@ export default class Location {
     return collisionValue === 0;
   }
 
-  // Check if world position is walkable (works with Vector2)
+  /**
+   * Check if a world position is walkable (works with Vector2)
+   * @param worldPos - World position as Vector2
+   * @returns True if the position can be walked on
+   */
   isWalkableWorld(worldPos: LJS.Vector2): boolean {
     return this.isWalkable(Math.floor(worldPos.x), Math.floor(worldPos.y));
   }
 
-  // Get tile collision value at position
+  /**
+   * Get tile collision value at position
+   * @param x - Tile X coordinate
+   * @param y - Tile Y coordinate
+   * @returns Collision value (0 = walkable, 1 = solid)
+   */
   getTileCollision(x: number, y: number): number {
     const pos = LJS.vec2(x, y);
     return this.collisionLayer.getCollisionData(pos);
   }
 
-  // Test if a world space position collides with tiles
+  /**
+   * Test if a world space position collides with tiles
+   * Integrates with LittleJS physics system
+   * @param worldPos - World position to test
+   * @param size - Size of the object (default: 1x1)
+   * @returns True if collision detected
+   */
   tileCollisionTest(
     worldPos: LJS.Vector2,
     size: LJS.Vector2 = LJS.vec2(1, 1)
@@ -159,14 +212,19 @@ export default class Location {
     return this.collisionLayer.collisionTest(worldPos, size);
   }
 
-  // Render using LittleJS
+  /**
+   * Render the location using LittleJS tile layers
+   */
   render(): void {
     this.tileLayer.render();
     // Collision layer can also be rendered if you want to see collision tiles
     // this.collisionLayer.render();
   }
 
-  // Render with debug collision overlay
+  /**
+   * Render with debug collision overlay
+   * Shows collision tiles in semi-transparent red
+   */
   renderDebug(): void {
     this.tileLayer.render();
 
@@ -181,12 +239,20 @@ export default class Location {
     }
   }
 
-  // Get center position of location (useful for spawning)
+  /**
+   * Get the center position of the location
+   * Useful for spawning entities or centering camera
+   * @returns Vector2 position at the center
+   */
   getCenter(): LJS.Vector2 {
     return LJS.vec2(Math.floor(this.width / 2), Math.floor(this.height / 2));
   }
 
-  // Find random walkable position (useful for spawning enemies)
+  /**
+   * Find a random walkable position in the location
+   * Useful for spawning enemies or items
+   * @returns Vector2 position, or null if no walkable tile found
+   */
   findRandomWalkablePosition(): LJS.Vector2 | null {
     const maxAttempts = 100;
     for (let i = 0; i < maxAttempts; i++) {
