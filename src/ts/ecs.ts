@@ -11,8 +11,8 @@
  */
 
 export default class ECS {
-  private entities = new Map<number, Set<string>>();
-  private components = new Map<string, Map<number, any>>();
+  private readonly entities = new Map<number, Set<string>>();
+  private readonly components = new Map<string, Map<number, any>>();
   private nextEntityId = 0;
 
   // Create entity
@@ -49,9 +49,9 @@ export default class ECS {
   removeEntity(entityId: number): void {
     const components = this.entities.get(entityId);
     if (components) {
-      components.forEach((name) => {
+      for (const name of components) {
         this.components.get(name)?.delete(entityId);
-      });
+      }
       this.entities.delete(entityId);
     }
   }

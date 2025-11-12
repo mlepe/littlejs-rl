@@ -19,7 +19,7 @@ import ECS from '../ecs';
 export function renderSystem(ecs: ECS): void {
   const entities = ecs.query('position', 'render');
 
-  entities.forEach((id) => {
+  for (const id of entities) {
     const pos = ecs.getComponent<PositionComponent>(id, 'position');
     const render = ecs.getComponent<RenderComponent>(id, 'render');
 
@@ -35,5 +35,5 @@ export function renderSystem(ecs: ECS): void {
       );
       obj.render();
     }
-  });
+  }
 }

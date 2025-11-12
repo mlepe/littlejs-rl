@@ -106,10 +106,13 @@ export default class Game {
       // Create player entity at center of location
       const startX = Math.floor(startLocation.width / 2);
       const startY = Math.floor(startLocation.height / 2);
-      this.playerId = createPlayer(this.ecs, startX, startY);
-
-      // Add player to location tile
-      startLocation.addEntity(startX, startY, this.playerId);
+      this.playerId = createPlayer(
+        this.ecs,
+        startX,
+        startY,
+        this.currentWorldPos.x,
+        this.currentWorldPos.y
+      );
 
       // Set camera to player position
       LJS.setCameraPos(LJS.vec2(startX, startY));
@@ -232,26 +235,11 @@ export default class Game {
    * Change to a different location
    */
   changeLocation(worldX: number, worldY: number): void {
-    // Remove player from current location
-    const oldLocation = this.world.getCurrentLocation();
-    const playerPos = this.ecs.getComponent<{ x: number; y: number }>(
-      this.playerId,
-      'position'
-    );
-
-    if (oldLocation && playerPos) {
-      oldLocation.removeEntity(playerPos.x, playerPos.y, this.playerId);
-    }
-
     // Change to new location
     this.world.setCurrentLocation(worldX, worldY);
     this.currentWorldPos = LJS.vec2(worldX, worldY);
 
     const newLocation = this.world.getCurrentLocation();
-    if (newLocation && playerPos) {
-      // Add player to new location
-      newLocation.addEntity(playerPos.x, playerPos.y, this.playerId);
-    }
 
     if (Game.isDebug) {
       console.log(`Changed to location: ${newLocation?.name}`);
@@ -259,7 +247,7 @@ export default class Game {
   }
 
   /**
-   * Get the ECS instance (for external systems)
+   * Get the ECS instance
    */
   getECS(): ECS {
     return this.ecs;

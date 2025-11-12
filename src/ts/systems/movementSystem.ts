@@ -16,11 +16,11 @@ import { PositionComponent } from '../components';
 export function movementSystem(ecs: ECS, dx: number, dy: number): void {
   const entities = ecs.query('position', 'movable');
 
-  entities.forEach((id) => {
+  for (const id of entities) {
     const pos = ecs.getComponent<PositionComponent>(id, 'position');
     if (pos) {
       pos.x += dx;
       pos.y += dy;
     }
-  });
+  }
 }
