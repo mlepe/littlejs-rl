@@ -15,7 +15,7 @@
 import * as LJS from 'littlejsengine';
 
 import Game from './ts/game';
-import Tileset from './src/assets/img/tileset.png';
+import Tileset from './assets/img/tileset.png';
 
 // Get the Game singleton instance
 const game = Game.getInstance();

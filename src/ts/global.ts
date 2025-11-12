@@ -27,4 +27,3 @@ export namespace Global {
 }
 
 export default Global;
-export type Global = typeof Global;
