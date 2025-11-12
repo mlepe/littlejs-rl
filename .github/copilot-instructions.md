@@ -51,7 +51,7 @@ import { PositionComponent } from './components';
 src/
 ├── index.ts                 # Entry point
 ├── ts/
-│   ├── game.ts             # Main game class
+│   ├── game.ts             # Main game class (Singleton)
 │   ├── gameObject.ts       # Base game object (extends LJS.EngineObject)
 │   ├── gameCharacter.ts    # Character classes
 │   ├── world.ts            # World management (map of locations)
@@ -78,14 +78,15 @@ src/
 │   │   ├── inputSystem.ts
 │   │   └── playerMovementSystem.ts
 │   └── examples/           # Usage examples
-│       └── worldExample.ts
+│       ├── worldExample.ts
+│       └── gameUsage.ts
 └── assets/
     ├── img/
     ├── music/
     └── sounds/
 ```
 
-I'll update the copilot-instructions.md file to reflect the new ECS structure with entities, AI, and player systems. 
+I'll update the copilot-instructions.md file to reflect the new ECS structure with entities, AI, and player systems.
 
 Edit [](file:///c%3A/Users/melpe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
 
@@ -103,7 +104,7 @@ Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.
 
 Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
 
-Now let me add information about the available components and systems: 
+Now let me add information about the available components and systems:
 
 Edit [](file:///c%3A/Users/mlepe/source/repos/Made%20in%20LittleJS/littlejs-rl/.github/copilot-instructions.md)
 
@@ -116,32 +117,34 @@ Perfect! I've successfully updated the copilot-instructions.md file with all the
 ## Updates Made:
 
 1. **Updated Project Structure** - Added:
+
    - `entities.ts` file
    - New components: ai.ts, `stats.ts`, `player.ts`, `input.ts`
    - New systems: `aiSystem.ts`, `inputSystem.ts`, `playerMovementSystem.ts`
 
 2. **Added Entity Factory Functions Section** - Shows how to create entity factory functions
-
 3. **Added "Using Entity Factory" Section** - Demonstrates importing and using entity creation functions
-
 4. **Added "Available Components" Section** - Lists all available components:
+
    - Core components (position, health, render, movable)
    - Character components (stats, player, input)
    - AI components
 
 5. **Added "Available Systems" Section** - Lists all available systems:
+
    - Core systems (render, movement)
    - Player systems (input, playerMovement)
    - AI systems
 
 6. **Added "Available Entity Types" Section** - Lists all entity factory functions:
+
    - Player
    - Enemies (enemy, boss)
    - NPCs (NPC, fleeing creature)
 
 7. **Added "Game Loop with Systems" Section** - Shows the proper system execution order in the game loop
-
 8. **Updated Best Practices** - Added two new items:
+
    - Use entity factory functions from `entities.ts`
    - Process systems in correct order
 
@@ -188,42 +191,51 @@ export function movementSystem(ecs: ECS, dx: number, dy: number): void {
 ### Available Components
 
 **Core Components:**
+
 - `PositionComponent` - x, y coordinates
 - `HealthComponent` - current, max health
 - `RenderComponent` - tileInfo, color, size (LittleJS rendering)
 - `MovableComponent` - speed
 
 **Character Components:**
+
 - `StatsComponent` - strength, defense, speed
 - `PlayerComponent` - isPlayer tag
 - `InputComponent` - moveX, moveY, action
 
 **AI Components:**
+
 - `AIComponent` - type (passive/aggressive/patrol/fleeing), detectionRange, state, target
 
 ### Available Systems
 
 **Core Systems:**
+
 - `renderSystem(ecs)` - Renders all entities with position and render components
 - `movementSystem(ecs, dx, dy)` - Moves entities with position and movable components
 
 **Player Systems:**
+
 - `inputSystem(ecs)` - Captures keyboard input for player entities
 - `playerMovementSystem(ecs)` - Moves player based on input and stats
 
 **AI Systems:**
+
 - `aiSystem(ecs, playerEntityId)` - Handles AI behaviors (aggressive, passive, fleeing, patrol)
 
 ### Available Entity Types
 
 **Player:**
+
 - `createPlayer(ecs, x, y)` - Creates player with input, stats, and rendering
 
 **Enemies:**
+
 - `createEnemy(ecs, x, y)` - Aggressive enemy with AI
 - `createBoss(ecs, x, y)` - Boss enemy with enhanced stats
 
 **NPCs:**
+
 - `createNPC(ecs, x, y)` - Passive wandering NPC
 - `createFleeingCreature(ecs, x, y)` - Creature that flees from player
 
@@ -287,9 +299,88 @@ enum TileType {
 
 ## World & Tile System
 
+## Game Class (Singleton Pattern)
+
+### Overview
+
+The `Game` class is the main controller that integrates ECS, World, and LittleJS systems. It uses the **Singleton pattern** to ensure only one game instance exists.
+
+### Why Singleton?
+
+- Single source of truth for game state
+- Easy access from anywhere in the codebase
+- Allows for reset/restart functionality
+- Better than static class (allows instance state and testing)
+
+### Basic Usage
+
+```typescript
+import Game from './ts/game';
+import * as LJS from 'littlejsengine';
+
+// Get singleton instance
+const game = Game.getInstance();
+
+// Initialize with LittleJS
+LJS.engineInit(
+  async () => game.init(),
+  () => game.update(),
+  () => game.updatePost(),
+  () => game.render(),
+  () => game.renderPost(),
+  ['tileset.png']
+);
+```
+
+### Custom World Size
+
+```typescript
+// Create 20x20 world with 100x100 tile locations
+const game = Game.getInstance(
+  LJS.vec2(20, 20),  // World size
+  LJS.vec2(100, 100)  // Location size
+);
+```
+
+### Accessing Game Components
+
+```typescript
+const game = Game.getInstance();
+
+// Access ECS for custom entity management
+const ecs = game.getECS();
+
+// Access World for location management
+const world = game.getWorld();
+
+// Get player entity ID
+const playerId = game.getPlayerId();
+
+// Get current location
+const location = game.getCurrentLocation();
+```
+
+### Changing Locations
+
+```typescript
+// Move player to different world location
+game.changeLocation(worldX, worldY);
+```
+
+### Debug Features
+
+The Game class automatically shows debug info when `GAME_DEBUG=true`:
+- FPS counter
+- Current location
+- Player position
+- Entity count
+- Loaded locations
+- Collision visualization
+
 ### Architecture Overview
 
 The world system uses a hierarchical structure:
+
 - **World**: Grid of locations (e.g., 10x10 locations)
 - **Location**: Grid of tiles (e.g., 50x50 tiles per location)
 - **Tile**: Individual cell with type, walkability, and entity tracking
@@ -403,6 +494,8 @@ if (health) {
 14. Use `Location.tileCollisionTest()` for LittleJS physics integration
 15. Prefer `Vector2` methods (`isWalkableWorld`, `addEntityWorld`) when working with world positions
 16. Use `renderDebug()` to visualize collision tiles during development
+17. Use `Game.getInstance()` to access the singleton game instance
+18. Access ECS, World, and Player through Game class getters instead of global variables
 
 ### Game Loop with Systems
 

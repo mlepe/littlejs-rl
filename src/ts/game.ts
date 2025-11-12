@@ -4,7 +4,7 @@
  * File Created: Tuesday, 11th November 2025 3:05:52 am
  * Author: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
- * Last Modified: Tuesday, 11th November 2025 3:06:21 am
+ * Last Modified: Tuesday, 12th November 2025 12:00:00 am
  * Modified By: Matthieu LEPERLIER (m.leperlier42@gmail.com>)
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
@@ -12,46 +12,277 @@
 
 import * as LJS from 'littlejsengine';
 
-import GameObject from './gameObject';
-import { Player } from './gameCharacter';
-import Tileset from 'process.env.ASSET_PATH/img/tileset.png';
-import World from './world';
+import {
+  aiSystem,
+  inputSystem,
+  playerMovementSystem,
+  renderSystem,
+} from './systems';
 
+import ECS from './ecs';
+import World from './world';
+import { createPlayer } from './entities';
+
+/**
+ * Main Game class - Singleton pattern
+ * Manages the ECS, World, and game loop integration with LittleJS
+ */
 export default class Game {
+  private static instance: Game | null = null;
+
+  // Configuration
   static readonly isDebug = process.env.GAME_DEBUG === 'true';
   static readonly version = process.env.GAME_VERSION;
-  player: GameObject;
-  world: World;
-  entities: GameObject[];
-  tiles: any;
 
-  constructor(screenSize: LJS.Vector2, tileSize: number) {
-    this.tiles = [Tileset];
-    this.player = new Player(
-      LJS.vec2(0, 0),
-      LJS.vec2(16, 16),
-      LJS.tile(144),
-      0,
-      LJS.WHITE,
-      10
+  // Core systems
+  private readonly ecs: ECS;
+  private readonly world: World;
+
+  // Game state
+  private playerId: number;
+  private currentWorldPos: LJS.Vector2;
+  private initialized = false;
+
+  /**
+   * Private constructor for singleton pattern
+   * @param worldSize - Size of the world grid (default: 10x10 locations)
+   * @param locationSize - Size of each location (default: 50x50 tiles)
+   */
+  private constructor(
+    worldSize: LJS.Vector2 = LJS.vec2(10, 10),
+    locationSize: LJS.Vector2 = LJS.vec2(50, 50)
+  ) {
+    this.ecs = new ECS();
+    this.world = new World(
+      worldSize.x,
+      worldSize.y,
+      locationSize.x,
+      locationSize.y
     );
-    this.entities = [this.player];
-    this.world = new World();
+    this.currentWorldPos = LJS.vec2(5, 5); // Start in center
+    this.playerId = -1; // Will be set in init
   }
 
-  init() {
-    throw new Error('Method not implemented.');
+  /**
+   * Get singleton instance
+   * @param worldSize - Size of the world grid (only used on first creation)
+   * @param locationSize - Size of each location (only used on first creation)
+   */
+  static getInstance(
+    worldSize?: LJS.Vector2,
+    locationSize?: LJS.Vector2
+  ): Game {
+    Game.instance ??= new Game(worldSize, locationSize);
+    return Game.instance;
   }
-  update() {
-    throw new Error('Method not implemented.');
+
+  /**
+   * Reset the game instance (useful for testing or restarting)
+   */
+  static reset(): void {
+    Game.instance = null;
   }
-  updatePost() {
-    throw new Error('Method not implemented.');
+
+  /**
+   * Initialize the game world and player
+   */
+  init(): void {
+    if (this.initialized) {
+      console.warn('Game already initialized');
+      return;
+    }
+
+    // Set up initial location
+    this.world.setCurrentLocation(
+      this.currentWorldPos.x,
+      this.currentWorldPos.y
+    );
+    const startLocation = this.world.getCurrentLocation();
+
+    if (startLocation) {
+      // Generate the starting location
+      startLocation.generate();
+
+      // Create player entity at center of location
+      const startX = Math.floor(startLocation.width / 2);
+      const startY = Math.floor(startLocation.height / 2);
+      this.playerId = createPlayer(this.ecs, startX, startY);
+
+      // Add player to location tile
+      startLocation.addEntity(startX, startY, this.playerId);
+
+      // Set camera to player position
+      LJS.setCameraPos(LJS.vec2(startX, startY));
+    }
+
+    this.initialized = true;
+
+    if (Game.isDebug) {
+      console.log(`Game initialized v${Game.version}`);
+      console.log(`Player ID: ${this.playerId}`);
+      console.log(`Starting location: ${startLocation?.name}`);
+    }
   }
-  render() {
-    throw new Error('Method not implemented.');
+
+  /**
+   * Main update loop - processes all game systems
+   */
+  update(): void {
+    if (!this.initialized) return;
+
+    // Process systems in order
+    inputSystem(this.ecs); // Capture player input
+    playerMovementSystem(this.ecs); // Move player based on input
+    aiSystem(this.ecs, this.playerId); // AI behaviors for NPCs/enemies
+
+    // Update camera to follow player
+    this.updateCamera();
   }
-  renderPost() {
-    throw new Error('Method not implemented.');
+
+  /**
+   * Post-update logic (after LittleJS updates)
+   */
+  updatePost(): void {
+    if (!this.initialized) return;
+
+    // Clean up destroyed entities
+    // Handle any post-update logic
+  }
+
+  /**
+   * Main render loop
+   */
+  render(): void {
+    if (!this.initialized) return;
+
+    const location = this.world.getCurrentLocation();
+    if (location) {
+      // Render the current location tiles
+      if (Game.isDebug) {
+        location.renderDebug(); // Shows collision overlay
+      } else {
+        location.render();
+      }
+    }
+
+    // Render all entities
+    renderSystem(this.ecs);
+  }
+
+  /**
+   * Post-render logic (overlay rendering)
+   */
+  renderPost(): void {
+    if (!this.initialized) return;
+
+    // Render UI, HUD, etc.
+    if (Game.isDebug) {
+      this.renderDebugInfo();
+    }
+  }
+
+  /**
+   * Update camera to follow player
+   */
+  private updateCamera(): void {
+    const playerPos = this.ecs.getComponent<{ x: number; y: number }>(
+      this.playerId,
+      'position'
+    );
+    if (playerPos) {
+      LJS.setCameraPos(LJS.vec2(playerPos.x, playerPos.y));
+    }
+  }
+
+  /**
+   * Render debug information
+   */
+  private renderDebugInfo(): void {
+    const location = this.world.getCurrentLocation();
+    const playerPos = this.ecs.getComponent<{ x: number; y: number }>(
+      this.playerId,
+      'position'
+    );
+
+    const debugInfo = [
+      `Game v${Game.version}`,
+      `FPS: ${LJS.frame}`,
+      `Location: ${location?.name || 'None'}`,
+      `Player: (${playerPos?.x ?? '?'}, ${playerPos?.y ?? '?'})`,
+      `Entities: ${this.ecs.query('position').length}`,
+      `Loaded Locations: ${this.world.getLoadedLocationCount()}`,
+    ];
+
+    let yPos = 10;
+    for (const info of debugInfo) {
+      LJS.drawTextScreen(
+        info,
+        LJS.vec2(10, yPos),
+        16,
+        LJS.WHITE,
+        2,
+        LJS.BLACK,
+        'left'
+      );
+      yPos += 20;
+    }
+  }
+
+  /**
+   * Change to a different location
+   */
+  changeLocation(worldX: number, worldY: number): void {
+    // Remove player from current location
+    const oldLocation = this.world.getCurrentLocation();
+    const playerPos = this.ecs.getComponent<{ x: number; y: number }>(
+      this.playerId,
+      'position'
+    );
+
+    if (oldLocation && playerPos) {
+      oldLocation.removeEntity(playerPos.x, playerPos.y, this.playerId);
+    }
+
+    // Change to new location
+    this.world.setCurrentLocation(worldX, worldY);
+    this.currentWorldPos = LJS.vec2(worldX, worldY);
+
+    const newLocation = this.world.getCurrentLocation();
+    if (newLocation && playerPos) {
+      // Add player to new location
+      newLocation.addEntity(playerPos.x, playerPos.y, this.playerId);
+    }
+
+    if (Game.isDebug) {
+      console.log(`Changed to location: ${newLocation?.name}`);
+    }
+  }
+
+  /**
+   * Get the ECS instance (for external systems)
+   */
+  getECS(): ECS {
+    return this.ecs;
+  }
+
+  /**
+   * Get the World instance
+   */
+  getWorld(): World {
+    return this.world;
+  }
+
+  /**
+   * Get the player entity ID
+   */
+  getPlayerId(): number {
+    return this.playerId;
+  }
+
+  /**
+   * Get current location
+   */
+  getCurrentLocation() {
+    return this.world.getCurrentLocation();
   }
 }
