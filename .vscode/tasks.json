@@ -1,0 +1,143 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Copilot: Add JSDoc",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Add JSDoc for this element: ${input:elementDescription}"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copilot: Create Component",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Create a new ECS component named ${input:componentName} in src/ts/components/"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copilot: Create System",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Create a new ECS system named ${input:systemName} in src/ts/systems/"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copilot: Create Entity Factory",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Create entity factory function create${input:entityType} in src/ts/entities.ts"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copilot: Explain Selection",
+      "type": "shell",
+      "command": "code",
+      "args": ["chat", "Explain this code: ${selectedText}"],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copilot: Refactor Selection",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Refactor this code to ${input:refactorGoal}: ${selectedText}"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copilot: Add Tests",
+      "type": "shell",
+      "command": "code",
+      "args": ["chat", "Add unit tests for: ${selectedText}"],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copilot: Fix Bug",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Debug and fix this code: ${selectedText}. Issue: ${input:bugDescription}"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "elementDescription",
+      "type": "promptString",
+      "description": "Describe the element (class, function, variable, etc.)"
+    },
+    {
+      "id": "componentName",
+      "type": "promptString",
+      "description": "Component name (PascalCase, e.g., 'Inventory')"
+    },
+    {
+      "id": "systemName",
+      "type": "promptString",
+      "description": "System name (camelCase, e.g., 'inventory')"
+    },
+    {
+      "id": "entityType",
+      "type": "promptString",
+      "description": "Entity type (PascalCase, e.g., 'Merchant')"
+    },
+    {
+      "id": "refactorGoal",
+      "type": "promptString",
+      "description": "What should the refactoring achieve?"
+    },
+    {
+      "id": "bugDescription",
+      "type": "promptString",
+      "description": "Describe the bug or issue"
+    }
+  ]
+}
