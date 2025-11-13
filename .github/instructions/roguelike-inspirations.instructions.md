@@ -13,8 +13,13 @@ The main game inspirations for this project are, in order of importance:
 1. Caves of Qud: The most inspiring elements come from this game.
 2. Elin (and also Elona): Both games, although different, are from the same developer and share many similarities.
 3. Tales of Maj'Eyal: Some elements are interesting in this game, but it is nowhere near as important an influence as Caves of Qud.
-4. Other roguelikes: While many other roguelikes exist, they were not significant influences for this project.
-5. Other genres and games: See the "Other genres inspirations" document for more details.
+4. Cogmind: While not as influential as the top three, it still provides some interesting ideas.
+5. Dwarf Fortress: Some mechanics and systems are inspiring, but it is less directly influential compared to the others.
+6. Dungeon Crawl Stone Soup: A classic roguelike with some interesting features, but not a primary influence.
+7. Quasimorph: Some unique mechanics, but less influential overall.
+8. ADOM (Ancient Domains of Mystery): A classic roguelike with some interesting features, but not a primary influence.
+9. Other roguelikes: While many other roguelikes exist, they were not significant influences for this project.
+10. Other genres and games: See the "Other genres inspirations" document for more details.
 
 ### Inspirations from Caves of Qud
 
