@@ -1,7 +1,26 @@
 {
+  // VS Code Tasks Configuration for LittleJS Roguelike Project
+  //
+  // This file defines custom tasks that integrate with GitHub Copilot Chat
+  // to automate common development workflows for ECS architecture.
+  //
+  // Task Categories:
+  // 1. Documentation tasks - Add JSDoc comments to code
+  // 2. ECS Creation tasks - Create components, systems, and entity factories
+  // 3. Verification tasks - Validate coherence between ECS elements
+  // 4. Composed tasks - Multi-step workflows that run tasks in sequence
+  // 5. Code assistance tasks - Explain, refactor, test, and debug code
+  //
+  // Usage: Run tasks via Command Palette (Ctrl+Shift+P) > "Tasks: Run Task"
+
   "version": "2.0.0",
   "tasks": [
+    // ============================================================================
+    // DOCUMENTATION TASKS
+    // ============================================================================
+
     {
+      // Adds JSDoc documentation to a specific code element
       "label": "Copilot: Add JSDoc",
       "type": "shell",
       "command": "code",
@@ -16,6 +35,7 @@
       "problemMatcher": []
     },
     {
+      // Adds JSDoc documentation to all project files at once
       "label": "Copilot: Add JSDoc to all project files",
       "type": "shell",
       "command": "code",
@@ -30,6 +50,7 @@
       "problemMatcher": []
     },
     {
+      // Updates the main copilot-instructions.md file to reflect recent code changes
       "label": "Copilot: Update copilot-instructions.md based on recent changes",
       "type": "shell",
       "command": "code",
@@ -44,6 +65,7 @@
       "problemMatcher": []
     },
     {
+      // Updates or creates any documentation files based on recent changes
       "label": "Copilot: Update or create documentation or instructions as needed based on recent changes",
       "type": "shell",
       "command": "code",
@@ -57,7 +79,13 @@
       },
       "problemMatcher": []
     },
+
+    // ============================================================================
+    // ECS CREATION TASKS
+    // ============================================================================
+
     {
+      // Creates a new ECS component (data-only interface)
       "label": "Copilot: Create Component",
       "type": "shell",
       "command": "code",
@@ -72,6 +100,7 @@
       "problemMatcher": []
     },
     {
+      // Creates a new ECS system (pure function that operates on components)
       "label": "Copilot: Create System",
       "type": "shell",
       "command": "code",
@@ -86,6 +115,7 @@
       "problemMatcher": []
     },
     {
+      // Creates an entity factory function to spawn entities with specific components
       "label": "Copilot: Create Entity Factory",
       "type": "shell",
       "command": "code",
@@ -100,6 +130,7 @@
       "problemMatcher": []
     },
     {
+      // Creates component, system, and entity factory all at once
       "label": "Copilot: Create Component, System and Entity Factory",
       "type": "shell",
       "command": "code",
@@ -113,7 +144,13 @@
       },
       "problemMatcher": []
     },
+
+    // ============================================================================
+    // VERIFICATION TASKS
+    // ============================================================================
+
     {
+      // Validates that a component and system work together correctly
       "label": "Copilot: Verify that Component and System are coherent",
       "type": "shell",
       "command": "code",
@@ -128,6 +165,7 @@
       "problemMatcher": []
     },
     {
+      // Validates that component, system, and entity factory work together correctly
       "label": "Copilot: Verify that Component, System and Entity Factory are coherent",
       "type": "shell",
       "command": "code",
@@ -141,7 +179,13 @@
       },
       "problemMatcher": []
     },
+
+    // ============================================================================
+    // COMPOSED TASKS (Multi-step workflows)
+    // ============================================================================
+
     {
+      // Runs: Create Component → Create System → Verify coherence
       "label": "Copilot: (Composed) Create Component and System",
       "dependsOn": [
         "Copilot: Create Component",
@@ -151,6 +195,7 @@
       "dependsOrder": "sequence"
     },
     {
+      // Runs: Create Component → Create System → Create Entity Factory → Verify coherence
       "label": "Copilot: (Composed) Create Component, System and Entity Factory",
       "dependsOn": [
         "Copilot: Create Component",
@@ -160,7 +205,13 @@
       ],
       "dependsOrder": "sequence"
     },
+
+    // ============================================================================
+    // CODE ASSISTANCE TASKS
+    // ============================================================================
+
     {
+      // Explains the currently selected code
       "label": "Copilot: Explain Selection",
       "type": "shell",
       "command": "code",
@@ -172,6 +223,7 @@
       "problemMatcher": []
     },
     {
+      // Refactors the selected code according to a specified goal
       "label": "Copilot: Refactor Selection",
       "type": "shell",
       "command": "code",
@@ -186,6 +238,7 @@
       "problemMatcher": []
     },
     {
+      // Generates unit tests for the selected code
       "label": "Copilot: Add Tests",
       "type": "shell",
       "command": "code",
@@ -197,6 +250,7 @@
       "problemMatcher": []
     },
     {
+      // Debugs and fixes issues in the selected code
       "label": "Copilot: Fix Bug",
       "type": "shell",
       "command": "code",
@@ -211,6 +265,12 @@
       "problemMatcher": []
     }
   ],
+
+  // ============================================================================
+  // INPUT VARIABLES
+  // Used by tasks to prompt the user for specific values
+  // ============================================================================
+
   "inputs": [
     {
       "id": "elementDescription",
