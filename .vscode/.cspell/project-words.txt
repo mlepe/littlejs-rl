@@ -24,3 +24,5 @@ Tileset
 uncursing
 usables
 Worldmap
+Cogmind
+Quasimorph
