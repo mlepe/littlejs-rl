@@ -12,3 +12,5 @@ If appropriate, we would like to follow common game development patterns such as
 - Finite State Machines
 - And any other pattern that would improve the project _without the shadow of a doubt_
 - etc.
+
+And follow the best practices in terms of game development.

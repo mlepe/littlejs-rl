@@ -11,6 +11,21 @@ Outside of roguelikes, this project is also inspired by other games and genres.
 - Immersive sims
 - RPG games
 
+### Inspiration from RPG
+
+- Role-playing
+- Main and sidequests
+- Freedom
+- Character customisation
+- Quests
+- Choices affecting the world, story, and ending
+
+### Inspirations from immersive sims
+
+- Immersive world not centered on the player
+- Many different ways to complete a mission
+- Unrestricted level exploration, with many secrets to discover, and also ways to complete the missions and level
+
 ## Inspiring games
 
 - TES: Daggerfall
@@ -43,18 +58,7 @@ Outside of roguelikes, this project is also inspired by other games and genres.
 - Skill progression through use, allowing players to improve skills by practicing them
 - Diverse character builds and playstyles based on skill choices
 - Open-ended gameplay with multiple questlines and factions to join
-
-### Inspiration from RPG
-
-- Role-playing
-- Main and sidequests
-- Freedom
-- Character customisation
-- Quests
-- Choices affecting the world, story, and ending
-
-### Inspirations from immersive sims
-
-- Immersive world not centered on the player
-- Many different ways to complete a mission
-- Unrestricted level exploration, with many secrets to discover, and also ways to complete the missions and level
+- Unique setting with distinct lore and culture
+- Rich lore and world-building through books and in-game texts
+- Meaningful choices affecting the world and story outcomes
+- Non-linear quest design allowing multiple approaches to objectives
