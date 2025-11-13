@@ -13,6 +13,8 @@ The main game inspirations for this project are, in order of importance:
 1. Caves of Qud: The most inspiring elements come from this game.
 2. Elin (and also Elona): Both games, although different, are from the same developer and share many similarities.
 3. Tales of Maj'Eyal: Some elements are interesting in this game, but it is nowhere near as important an influence as Caves of Qud.
+4. Other roguelikes: While many other roguelikes exist, they were not significant influences for this project.
+5. Other genres and games: See the "Other genres inspirations" document for more details.
 
 ### Inspirations from Caves of Qud
 

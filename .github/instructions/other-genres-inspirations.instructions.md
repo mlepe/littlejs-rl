@@ -30,6 +30,8 @@ Outside of roguelikes, this project is also inspired by other games and genres.
 
 - TES: Daggerfall
 - TES: Morrowind
+- Vampire: The Masquerade - Bloodlines
+- Deus Ex
 
 ### Inspirations from TES: Daggerfall
 
@@ -62,3 +64,38 @@ Outside of roguelikes, this project is also inspired by other games and genres.
 - Rich lore and world-building through books and in-game texts
 - Meaningful choices affecting the world and story outcomes
 - Non-linear quest design allowing multiple approaches to objectives
+
+### Vampire: The Masquerade - Bloodlines
+
+- Deep RPG mechanics with character stats, skills, and abilities
+- Faction system with multiple vampire clans, each with unique abilities and playstyles
+- Meaningful player choices affecting story and character relationships
+- Immersive world with rich lore and atmosphere
+- Dialogue options influenced by character stats and clan abilities
+- Exploration of a dark, urban setting with supernatural elements
+- Variety of combat styles, including melee, ranged, and supernatural powers
+- Stealth mechanics allowing for non-combat approaches to missions
+- Side quests and optional content enriching the main storyline
+- Character customization through clan selection and ability choices
+- Original setting based on the World of Darkness universe
+
+### Deus Ex
+
+- Multiple approaches to mission objectives (stealth, combat, hacking, social)
+- Player choice significantly impacting story and world
+- Augmentation system allowing for character customization and diverse playstyles
+- Immersive cyberpunk world with rich lore and atmosphere
+- Meaningful consequences for player actions affecting NPCs and factions
+- Non-linear level design encouraging exploration and multiple paths
+- Hacking mechanics integrated into gameplay for accessing systems and information
+- Deep RPG elements with character stats, skills, and inventory management
+- Variety of weapons and gadgets for different combat styles
+- Side quests and optional content enhancing the main storyline
+- Strong narrative with complex characters and moral dilemmas
+- Dialogue options influenced by character stats and augmentations
+- Dynamic AI behavior responding to player actions and choices
+- Stealth mechanics allowing for non-combat approaches to missions
+- Player freedom to shape their character's identity and role in the world
+- Original setting blending cyberpunk and conspiracy thriller themes
+- Innovative gameplay mechanics combining FPS, RPG, and stealth elements
+- Memorable soundtrack enhancing the immersive experience
