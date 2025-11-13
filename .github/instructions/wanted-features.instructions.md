@@ -1,3 +1,7 @@
+---
+applyTo: '**'
+---
+
 # Wanted features
 
 ## Engine features
