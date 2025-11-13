@@ -9,7 +9,8 @@
   // 2. ECS Creation tasks - Create components, systems, and entity factories
   // 3. Verification tasks - Validate coherence between ECS elements
   // 4. Composed tasks - Multi-step workflows that run tasks in sequence
-  // 5. Code assistance tasks - Explain, refactor, test, and debug code
+  // 5. Interactive tasks - Conversational workflows where Copilot handles conditional logic
+  // 6. Code assistance tasks - Explain, refactor, test, and debug code
   //
   // Usage: Run tasks via Command Palette (Ctrl+Shift+P) > "Tasks: Run Task"
 
@@ -100,6 +101,21 @@
       "problemMatcher": []
     },
     {
+      // Creates a new test ECS component in the test directory
+      "label": "Copilot: Create Test Component",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Create a new ECS component named ${input:componentName}_test in src/ts/test/components/"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
       // Creates a new ECS system (pure function that operates on components)
       "label": "Copilot: Create System",
       "type": "shell",
@@ -107,6 +123,21 @@
       "args": [
         "chat",
         "Create a new ECS system named ${input:systemName} in src/ts/systems/"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      // Creates a new test ECS system in the test directory
+      "label": "Copilot: Create Test System",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Create a new ECS system named ${input:systemName}_test in src/ts/test/systems/"
       ],
       "presentation": {
         "reveal": "never",
@@ -130,13 +161,28 @@
       "problemMatcher": []
     },
     {
-      // Creates component, system, and entity factory all at once
-      "label": "Copilot: Create Component, System and Entity Factory",
+      // Creates a test entity factory function in the test directory
+      "label": "Copilot: Create Test Entity Factory",
       "type": "shell",
       "command": "code",
       "args": [
         "chat",
-        "Create: new ECS component named ${input:componentName} in src/ts/components/, new ECS system named ${input:systemName} in src/ts/systems/, and new entity factory function create${input:entityType} in src/ts/entities.ts"
+        "Create entity factory function create${input:entityType}_test in src/ts/test/entities.ts"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      // Creates an optional entity factory (skips if name is empty)
+      "label": "Copilot: Create Entity Factory (Optional)",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "${input:entityTypeOptional:+ and ECS Entity Factory create${input:entityTypeOptional} in src/ts/entities.ts}Create entity factory function create${input:entityTypeOptional} in src/ts/entities.ts${input:entityTypeOptional:- (skip if empty)}"
       ],
       "presentation": {
         "reveal": "never",
@@ -150,28 +196,13 @@
     // ============================================================================
 
     {
-      // Validates that a component and system work together correctly
-      "label": "Copilot: Verify that Component and System are coherent",
+      // Validates that a component and system (and optionally entity factory) work together correctly
+      "label": "Copilot: Verify Component and System (and optionally Entity Factory) Coherence",
       "type": "shell",
       "command": "code",
       "args": [
         "chat",
-        "Verify that new ECS component named ${input:componentName} in src/ts/components/ and new ECS system named ${input:systemName} in src/ts/systems/ are coherent"
-      ],
-      "presentation": {
-        "reveal": "never",
-        "focus": false
-      },
-      "problemMatcher": []
-    },
-    {
-      // Validates that component, system, and entity factory work together correctly
-      "label": "Copilot: Verify that Component, System and Entity Factory are coherent",
-      "type": "shell",
-      "command": "code",
-      "args": [
-        "chat",
-        "Verify that new ECS component named ${input:componentName} in src/ts/components/, new ECS system named ${input:systemName} in src/ts/systems/, and new entity factory function create${input:entityType} in src/ts/entities.ts are coherent"
+        "Verify that new ECS component named ${input:componentName} in src/ts/components/ and new ECS system named ${input:systemName} in src/ts/systems/${input:entityTypeOptional:+ and ECS Entity Factory create${input:entityTypeOptional} in src/ts/entities.ts} are coherent"
       ],
       "presentation": {
         "reveal": "never",
@@ -190,7 +221,18 @@
       "dependsOn": [
         "Copilot: Create Component",
         "Copilot: Create System",
-        "Copilot: Verify that Component and System are coherent"
+        "Copilot: Verify Component and System Coherence"
+      ],
+      "dependsOrder": "sequence"
+    },
+    {
+      // Runs: Create Component → Create System → Optionally create Entity Factory → Verify coherence
+      "label": "Copilot: (Composed) Create Component and System (and optionally Entity Factory)",
+      "dependsOn": [
+        "Copilot: Create Component",
+        "Copilot: Create System",
+        "Copilot: Create Entity Factory",
+        "Copilot: Verify Component and System (and optionally Entity Factory) Coherence"
       ],
       "dependsOrder": "sequence"
     },
@@ -201,11 +243,90 @@
         "Copilot: Create Component",
         "Copilot: Create System",
         "Copilot: Create Entity Factory",
-        "Copilot: Verify that Component, System and Entity Factory are coherent"
+        "Copilot: Verify Component and System Coherence"
       ],
       "dependsOrder": "sequence"
     },
 
+    // ============================================================================
+    // INTERACTIVE TASKS
+    // ============================================================================
+
+    {
+      // Interactive workflow: Copilot asks which ECS elements to create and handles the conditional logic, and optionally verifies coherence
+      "label": "Copilot: Create ECS Elements and optionally verify coherence (Interactive)",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "I want to create ECS elements. Ask me which ones (component, system, entity factory) and their names, then create them in the appropriate directories (src/ts/components/, src/ts/systems/, src/ts/entities.ts).Ask me if I want to verify coherence between them and do so if I agree."
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      // Interactive workflow: Explains implementation approach for a specified feature
+      "label": "Copilot: Explain how you would implement a specified feature (Interactive)",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "I want you to explain how I could implement a specified feature. Ask me which feature and provide a detailed explanation of how to implement it."
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      // Interactive workflow: Copilot proposes features based on instructions (mostly game inspirations) and handles the logic
+      "label": "Copilot: Propose features based on instructions (Interactive)",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "I want you to propose features based on the instructions in `.github/instructions/` and `copilot-instructions.md`. Ask me which feature I want to implement and provide a detailed explanation of how to implement it. You can suggest multiple features and let me choose. You can also ask me if I want to implement a feature based on a specific game inspiration or mechanic."
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      // Interactive workflow: Copilot helps implement features from a given game inspiration and handles the logic
+      "label": "Copilot: Help me implement features suggested from a game inspiration (Interactive)",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "I want you to help me implement features based on a specific game inspiration from the instructions in `.github/instructions/`. Ask me which game I want to take features from and provide a list of features from that game that could be implemented. Let me choose which features to implement and provide a detailed explanation of how to implement them."
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      // Interactive workflow: Implements a specific feature from a chosen game inspiration
+      "label": "Copilot: Help me implement a specific feature from a game inspiration (Interactive)",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "I want you to help me implement a specific feature based on a specific game inspiration from the instructions in `.github/instructions/`. Ask me which feature I want to implement from which game, and help me implement it by providing a detailed explanation of how to implement it."
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
     // ============================================================================
     // CODE ASSISTANCE TASKS
     // ============================================================================
@@ -283,14 +404,32 @@
       "description": "Component name (PascalCase, e.g., 'Inventory')"
     },
     {
+      "id": "componentNameOptional",
+      "type": "promptString",
+      "description": "Optional: Component name (PascalCase, e.g., 'Inventory')",
+      "default": ""
+    },
+    {
       "id": "systemName",
       "type": "promptString",
       "description": "System name (camelCase, e.g., 'inventory')"
     },
     {
+      "id": "systemNameOptional",
+      "type": "promptString",
+      "description": "Optional: System name (camelCase, e.g., 'inventory')",
+      "default": ""
+    },
+    {
       "id": "entityType",
       "type": "promptString",
       "description": "Entity type (PascalCase, e.g., 'Merchant')"
+    },
+    {
+      "id": "entityTypeOptional",
+      "type": "promptString",
+      "description": "Optional: Entity type to verify (leave empty to skip, or enter PascalCase like 'Merchant')",
+      "default": ""
     },
     {
       "id": "refactorGoal",
@@ -301,6 +440,30 @@
       "id": "bugDescription",
       "type": "promptString",
       "description": "Describe the bug or issue"
+    },
+    {
+      "id": "ecsArgsSelection",
+      "type": "pickString",
+      "options": ["component", "system", "entity factory"],
+      "description": "Selection of ECS elements to create or verify"
+    },
+    {
+      "id": "wantComponent",
+      "type": "pickString",
+      "options": ["yes", "no"],
+      "description": "Do you want to create a component?"
+    },
+    {
+      "id": "wantSystem",
+      "type": "pickString",
+      "options": ["yes", "no"],
+      "description": "Do you want to create a system?"
+    },
+    {
+      "id": "wantEntityFactory",
+      "type": "pickString",
+      "options": ["yes", "no"],
+      "description": "Do you want to create an entity factory?"
     }
   ]
 }
