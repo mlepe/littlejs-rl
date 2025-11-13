@@ -16,6 +16,48 @@
       "problemMatcher": []
     },
     {
+      "label": "Copilot: Add JSDoc to all project files",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Add JSDoc for all functions, classes, and methods in the project"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copilot: Update copilot-instructions.md based on recent changes",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Update copilot-instructions.md based on recent changes"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copilot: Update or create documentation or instructions as needed based on recent changes",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Update or create documentation or instructions as needed based on recent changes. You can create new files if necessary."
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Copilot: Create Component",
       "type": "shell",
       "command": "code",
@@ -56,6 +98,67 @@
         "focus": false
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Copilot: Create Component, System and Entity Factory",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Create: new ECS component named ${input:componentName} in src/ts/components/, new ECS system named ${input:systemName} in src/ts/systems/, and new entity factory function create${input:entityType} in src/ts/entities.ts"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copilot: Verify that Component and System are coherent",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Verify that new ECS component named ${input:componentName} in src/ts/components/ and new ECS system named ${input:systemName} in src/ts/systems/ are coherent"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copilot: Verify that Component, System and Entity Factory are coherent",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Verify that new ECS component named ${input:componentName} in src/ts/components/, new ECS system named ${input:systemName} in src/ts/systems/, and new entity factory function create${input:entityType} in src/ts/entities.ts are coherent"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Copilot: (Composed) Create Component and System",
+      "dependsOn": [
+        "Copilot: Create Component",
+        "Copilot: Create System",
+        "Copilot: Verify that Component and System are coherent"
+      ],
+      "dependsOrder": "sequence"
+    },
+    {
+      "label": "Copilot: (Composed) Create Component, System and Entity Factory",
+      "dependsOn": [
+        "Copilot: Create Component",
+        "Copilot: Create System",
+        "Copilot: Create Entity Factory",
+        "Copilot: Verify that Component, System and Entity Factory are coherent"
+      ],
+      "dependsOrder": "sequence"
     },
     {
       "label": "Copilot: Explain Selection",
