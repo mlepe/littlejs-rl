@@ -36,6 +36,18 @@
       "problemMatcher": []
     },
     {
+      // Adds JSDoc documentation to selected code in the editor
+      "label": "Copilot: Add JSDoc for selected element",
+      "type": "shell",
+      "command": "code",
+      "args": ["chat", "Add JSDoc for this element: ${selectedText}"],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
       // Adds JSDoc documentation to all project files at once
       "label": "Copilot: Add JSDoc to all project files",
       "type": "shell",
@@ -190,6 +202,36 @@
       },
       "problemMatcher": []
     },
+    {
+      // Provides a detailed implementation plan for a specified feature
+      "label": "Copilot: Help me implement this feature",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Help me implement this feature: ${input:featureDescription}. Provide a detailed implementation plan. You may ask me for more details if needed."
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      // Provides a detailed implementation plan for a specified feature
+      "label": "Copilot: Verify the coherence of this feature implementation",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Verify the coherence of the feature you just helped me implement."
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
 
     // ============================================================================
     // VERIFICATION TASKS
@@ -244,6 +286,14 @@
         "Copilot: Create System",
         "Copilot: Create Entity Factory",
         "Copilot: Verify Component and System Coherence"
+      ],
+      "dependsOrder": "sequence"
+    },
+    {
+      "label": "Copilot: (Composed) Help me implement this feature and verify coherence",
+      "dependsOn": [
+        "Copilot: Help me implement this feature",
+        "Copilot: Verify the coherence of this feature implementation"
       ],
       "dependsOrder": "sequence"
     },
@@ -464,6 +514,21 @@
       "type": "pickString",
       "options": ["yes", "no"],
       "description": "Do you want to create an entity factory?"
+    },
+    {
+      "id": "elementsToCreate",
+      "type": "promptString",
+      "description": "Describe the elements to create. Specify component, system, and/or entity factory."
+    },
+    {
+      "id": "elementsProperties",
+      "type": "promptString",
+      "description": "Describe the properties of the elements to create."
+    },
+    {
+      "id": "featureDescription",
+      "type": "promptString",
+      "description": "Describe the feature you want to add implement."
     }
   ]
 }
