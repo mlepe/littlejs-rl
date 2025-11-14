@@ -12,6 +12,8 @@
 
 import * as LJS from 'littlejsengine';
 
+import { BiomeType, LocationType } from './locationType';
+
 import ECS from './ecs';
 import Location from './location';
 import { RelationComponent } from './components';
@@ -85,10 +87,17 @@ export default class World {
    * Get or create a location at the specified world position
    * @param worldX - World X coordinate
    * @param worldY - World Y coordinate
+   * @param locationType - Optional location type (default: DUNGEON)
+   * @param biome - Optional biome type (default: FOREST)
    * @returns The location at the specified position
    * @throws Error if coordinates are out of bounds
    */
-  getOrCreateLocation(worldX: number, worldY: number): Location {
+  getOrCreateLocation(
+    worldX: number,
+    worldY: number,
+    locationType?: LocationType,
+    biome?: BiomeType
+  ): Location {
     if (!this.isInBounds(worldX, worldY)) {
       throw new Error(`World position out of bounds: ${worldX}, ${worldY}`);
     }
@@ -101,7 +110,9 @@ export default class World {
         LJS.vec2(worldX, worldY),
         this.locationWidth,
         this.locationHeight,
-        `Location_${worldX}_${worldY}`
+        `Location_${worldX}_${worldY}`,
+        locationType,
+        biome
       );
       location.generate();
       this.locations.set(key, location);
@@ -124,9 +135,21 @@ export default class World {
    * Set the current active location
    * @param worldX - World X coordinate
    * @param worldY - World Y coordinate
+   * @param locationType - Optional location type
+   * @param biome - Optional biome type
    */
-  setCurrentLocation(worldX: number, worldY: number): void {
-    this.currentLocation = this.getOrCreateLocation(worldX, worldY);
+  setCurrentLocation(
+    worldX: number,
+    worldY: number,
+    locationType?: LocationType,
+    biome?: BiomeType
+  ): void {
+    this.currentLocation = this.getOrCreateLocation(
+      worldX,
+      worldY,
+      locationType,
+      biome
+    );
   }
 
   /**

@@ -12,35 +12,42 @@
 
 import * as LJS from 'littlejsengine';
 
+import {
+  BiomeType,
+  LocationMetadata,
+  LocationType,
+  createLocationMetadata,
+} from './locationType';
 import { Tile, TileType, createTile } from './tile';
 
 import Global from './global';
+import { LocationGenerator } from './locationGenerator';
 
 /**
  * Location - Represents a single map/level in the game world
- * 
+ *
  * Handles tile data and rendering, but NOT entity storage (ECS handles that).
  * Each location represents a distinct area in the game world with its own:
  * - Tile map (floors, walls, doors, etc.)
  * - Collision data for pathfinding and movement
  * - Visual rendering via LittleJS tile layers
- * 
+ *
  * Entity positions are stored in the ECS using PositionComponent and
  * LocationComponent, not in the Location object itself.
- * 
+ *
  * @example
  * ```typescript
  * const location = new Location(vec2(5, 5), 50, 50);
  * location.generate(); // Create procedural layout
- * 
+ *
  * // Set custom tiles
  * location.setTile(10, 10, createTile(TileType.WATER));
- * 
+ *
  * // Check walkability
  * if (location.isWalkable(x, y)) {
  *   // Position is walkable
  * }
- * 
+ *
  * // Render
  * location.render();
  * ```
@@ -50,6 +57,7 @@ export default class Location {
   readonly width: number;
   readonly height: number;
   readonly worldPosition: LJS.Vector2;
+  readonly metadata: LocationMetadata;
 
   private readonly tiles: Map<string, Tile>; // "x,y" -> Tile (without entity tracking)
   private readonly tileLayer: LJS.TileLayer;
@@ -59,12 +67,15 @@ export default class Location {
     worldPosition: LJS.Vector2,
     width: number,
     height: number,
-    name?: string
+    name?: string,
+    locationType: LocationType = LocationType.DUNGEON,
+    biome: BiomeType = BiomeType.FOREST
   ) {
     this.name = name || `Location_${worldPosition.x}_${worldPosition.y}`;
     this.worldPosition = worldPosition;
     this.width = width;
     this.height = height;
+    this.metadata = createLocationMetadata(locationType, biome, this.name);
     this.tiles = new Map();
 
     // Initialize LittleJS tile layers
@@ -163,28 +174,10 @@ export default class Location {
 
   /**
    * Generate procedural location content
-   * Creates a simple room layout with walls and floor
-   * Override or extend this method for more complex generation
+   * Uses LocationGenerator to create layout based on location type and biome
    */
   generate(): void {
-    // Fill with walls
-    for (let x = 0; x < this.width; x++) {
-      for (let y = 0; y < this.height; y++) {
-        this.setTile(x, y, createTile(TileType.WALL));
-      }
-    }
-
-    // Create floor space (simple room for now)
-    for (let x = 2; x < this.width - 2; x++) {
-      for (let y = 2; y < this.height - 2; y++) {
-        this.setTile(x, y, createTile(TileType.FLOOR));
-      }
-    }
-
-    // Add stairs in center
-    const centerX = Math.floor(this.width / 2);
-    const centerY = Math.floor(this.height / 2);
-    this.setTile(centerX, centerY, createTile(TileType.STAIRS_DOWN));
+    LocationGenerator.generate(this);
   }
 
   /**
@@ -271,6 +264,45 @@ export default class Location {
    */
   getCenter(): LJS.Vector2 {
     return LJS.vec2(Math.floor(this.width / 2), Math.floor(this.height / 2));
+  }
+
+  /**
+   * Create a biome-themed floor tile
+   * @returns Floor tile with biome-appropriate color
+   */
+  private createBiomeFloor(): Tile {
+    const tile = createTile(TileType.FLOOR, this.metadata.palette.floor);
+    return tile;
+  }
+
+  /**
+   * Create a biome-themed wall tile
+   * @returns Wall tile with biome-appropriate color
+   */
+  private createBiomeWall(): Tile {
+    const tile = createTile(TileType.WALL, this.metadata.palette.wall);
+    return tile;
+  }
+
+  /**
+   * Create a biome-themed grass tile (if applicable)
+   * @returns Grass tile with biome-appropriate color
+   */
+  private createBiomeGrass(): Tile {
+    const color =
+      this.metadata.palette.vegetation || this.metadata.palette.accent;
+    const tile = createTile(TileType.GRASS, color);
+    return tile;
+  }
+
+  /**
+   * Create a biome-themed water tile (if applicable)
+   * @returns Water tile with biome-appropriate color
+   */
+  private createBiomeWater(): Tile {
+    const color = this.metadata.palette.water || LJS.rgb(0.2, 0.4, 0.8);
+    const tile = createTile(TileType.WATER, color);
+    return tile;
   }
 
   /**
