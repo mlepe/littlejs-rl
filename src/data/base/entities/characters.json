@@ -12,8 +12,8 @@
 
       "stats": {
         "strength": 8,
-        "defense": 5,
-        "speed": 0.8
+        "toughness": 10,
+        "dexterity": 6
       },
 
       "ai": {
@@ -45,8 +45,8 @@
 
       "stats": {
         "strength": 4,
-        "defense": 2,
-        "speed": 1.5
+        "toughness": 4,
+        "dexterity": 15
       },
 
       "ai": {
@@ -78,8 +78,8 @@
 
       "stats": {
         "strength": 15,
-        "defense": 8,
-        "speed": 0.5
+        "toughness": 16,
+        "dexterity": 4
       },
 
       "ai": {
@@ -111,8 +111,8 @@
 
       "stats": {
         "strength": 6,
-        "defense": 3,
-        "speed": 1.0
+        "toughness": 6,
+        "dexterity": 10
       },
 
       "ai": {
@@ -144,8 +144,8 @@
 
       "stats": {
         "strength": 3,
-        "defense": 2,
-        "speed": 1.0
+        "toughness": 4,
+        "dexterity": 10
       },
 
       "ai": {
@@ -177,8 +177,8 @@
 
       "stats": {
         "strength": 5,
-        "defense": 4,
-        "speed": 0.9
+        "toughness": 8,
+        "dexterity": 8
       },
 
       "ai": {
@@ -210,8 +210,8 @@
 
       "stats": {
         "strength": 2,
-        "defense": 1,
-        "speed": 1.2
+        "toughness": 2,
+        "dexterity": 14
       },
 
       "ai": {
@@ -243,8 +243,8 @@
 
       "stats": {
         "strength": 9,
-        "defense": 7,
-        "speed": 1.0
+        "toughness": 14,
+        "dexterity": 10
       },
 
       "ai": {
@@ -276,8 +276,8 @@
 
       "stats": {
         "strength": 7,
-        "defense": 3,
-        "speed": 1.4
+        "toughness": 6,
+        "dexterity": 13
       },
 
       "ai": {

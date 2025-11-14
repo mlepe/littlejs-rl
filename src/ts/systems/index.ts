@@ -18,3 +18,4 @@ export * from './playerMovementSystem';
 export * from './spatialSystem';
 export * from './relationSystem';
 export * from './statModifierSystem';
+export * from './derivedStatsSystem';

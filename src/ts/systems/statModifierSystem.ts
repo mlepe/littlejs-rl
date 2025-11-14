@@ -11,13 +11,18 @@
  */
 
 import type {
+  BaseStats,
+  DerivedStats,
+  StatsComponent,
+} from '../components/stats';
+import type {
   ModifierType,
   StatModifier,
   StatModifierComponent,
 } from '../components/statModifier';
 
 import type ECS from '../ecs';
-import type { StatsComponent } from '../components/stats';
+import { calculateDerivedStats } from './derivedStatsSystem';
 
 /**
  * Add a stat modifier to an entity
@@ -25,6 +30,7 @@ import type { StatsComponent } from '../components/stats';
  * @param ecs - The ECS instance
  * @param entityId - Entity to add modifier to
  * @param stat - Name of stat to modify (e.g., 'strength', 'defense', 'speed')
+ *               Can be base stats (strength, dexterity, etc.) or derived stats (defense, dodge, etc.)
  * @param type - Type of modification (flat or percentage)
  * @param value - Value of modification
  * @param duration - Optional duration in turns (-1 for permanent, undefined for permanent)
@@ -126,6 +132,9 @@ function calculateModifiedStat(
 /**
  * Get the effective stat value for an entity, including all modifiers
  *
+ * For base stats: applies modifiers to base value, then recalculates derived stats
+ * For derived stats: recalculates from modified base stats, then applies direct modifiers
+ *
  * @param ecs - The ECS instance
  * @param entityId - Entity to get stat for
  * @param stat - Name of stat to retrieve (e.g., 'strength', 'defense', 'speed')
@@ -139,26 +148,74 @@ export function getEffectiveStat(
   const statsComp = ecs.getComponent<StatsComponent>(entityId, 'stats');
   if (!statsComp) return undefined;
 
-  // Get base stat value
-  const baseValue = (statsComp as any)[stat];
-  if (baseValue === undefined) return undefined;
-
   const modifierComp = ecs.getComponent<StatModifierComponent>(
     entityId,
     'statModifier'
   );
 
-  // If no modifiers, return base value
-  if (!modifierComp || modifierComp.modifiers.length === 0) {
-    return baseValue;
+  // Check if this is a base stat or derived stat
+  const isBaseStat = stat in statsComp.base;
+  const isDerivedStat = stat in statsComp.derived;
+
+  if (!isBaseStat && !isDerivedStat) return undefined;
+
+  // Handle base stats
+  if (isBaseStat) {
+    const baseValue = (statsComp.base as any)[stat];
+
+    if (!modifierComp || modifierComp.modifiers.length === 0) {
+      return baseValue;
+    }
+
+    const relevantModifiers = modifierComp.modifiers.filter(
+      (mod) => mod.stat === stat
+    );
+
+    return calculateModifiedStat(baseValue, relevantModifiers);
   }
 
-  // Filter modifiers that affect this specific stat
-  const relevantModifiers = modifierComp.modifiers.filter(
+  // Handle derived stats
+  // Step 1: Get modified base stats
+  const modifiedBase: BaseStats = { ...statsComp.base };
+
+  if (modifierComp && modifierComp.modifiers.length > 0) {
+    // Apply modifiers to base stats
+    for (const baseStat in modifiedBase) {
+      const baseModifiers = modifierComp.modifiers.filter(
+        (mod) => mod.stat === baseStat
+      );
+      if (baseModifiers.length > 0) {
+        (modifiedBase as any)[baseStat] = calculateModifiedStat(
+          (statsComp.base as any)[baseStat],
+          baseModifiers
+        );
+      }
+    }
+  }
+
+  // Step 2: Recalculate derived stats from modified base stats
+  // TODO: Get equipment weight when inventory system is implemented
+  const equipmentWeight = 0;
+  const recalculatedDerived = calculateDerivedStats(
+    modifiedBase,
+    equipmentWeight
+  );
+  const derivedValue = (recalculatedDerived as any)[stat];
+
+  // Step 3: Apply direct modifiers to the derived stat itself
+  if (!modifierComp || modifierComp.modifiers.length === 0) {
+    return derivedValue;
+  }
+
+  const directDerivedModifiers = modifierComp.modifiers.filter(
     (mod) => mod.stat === stat
   );
 
-  return calculateModifiedStat(baseValue, relevantModifiers);
+  if (directDerivedModifiers.length === 0) {
+    return derivedValue;
+  }
+
+  return calculateModifiedStat(derivedValue, directDerivedModifiers);
 }
 
 /**

@@ -97,8 +97,8 @@ export function aiSystem(ecs: ECS, playerEntityId: number): void {
       // Fleeing behavior or need to retreat
       if (distance <= ai.detectionRange) {
         ai.state = 'fleeing';
-        const dx = -Math.sign(playerPos.x - pos.x) * stats.speed;
-        const dy = -Math.sign(playerPos.y - pos.y) * stats.speed;
+        const dx = -Math.sign(playerPos.x - pos.x) * stats.derived.speed;
+        const dy = -Math.sign(playerPos.y - pos.y) * stats.derived.speed;
         pos.x += dx;
         pos.y += dy;
       }
@@ -109,8 +109,8 @@ export function aiSystem(ecs: ECS, playerEntityId: number): void {
 
       if (distance > 1) {
         // Move towards player
-        const dx = Math.sign(playerPos.x - pos.x) * stats.speed;
-        const dy = Math.sign(playerPos.y - pos.y) * stats.speed;
+        const dx = Math.sign(playerPos.x - pos.x) * stats.derived.speed;
+        const dy = Math.sign(playerPos.y - pos.y) * stats.derived.speed;
         pos.x += dx;
         pos.y += dy;
       } else {
@@ -122,15 +122,15 @@ export function aiSystem(ecs: ECS, playerEntityId: number): void {
       // Patrol behavior (simple wandering for now)
       ai.state = 'patrolling';
       if (Math.random() < 0.05) {
-        pos.x += Math.floor(Math.random() * 3 - 1) * stats.speed;
-        pos.y += Math.floor(Math.random() * 3 - 1) * stats.speed;
+        pos.x += Math.floor(Math.random() * 3 - 1) * stats.derived.speed;
+        pos.y += Math.floor(Math.random() * 3 - 1) * stats.derived.speed;
       }
     } else if (ai.disposition === 'peaceful' || ai.disposition === 'neutral') {
       // Peaceful wandering
       ai.state = 'idle';
       if (Math.random() < 0.05) {
-        pos.x += Math.floor(Math.random() * 3 - 1) * stats.speed * 0.5;
-        pos.y += Math.floor(Math.random() * 3 - 1) * stats.speed * 0.5;
+        pos.x += Math.floor(Math.random() * 3 - 1) * stats.derived.speed * 0.5;
+        pos.y += Math.floor(Math.random() * 3 - 1) * stats.derived.speed * 0.5;
       }
     } else {
       // Default idle state

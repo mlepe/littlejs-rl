@@ -33,6 +33,7 @@ import ECS from './ecs';
 import { InputComponent } from './components/input';
 import { PlayerComponent } from './components/player';
 import { StatsComponent } from './components/stats';
+import { calculateDerivedStats } from './systems/derivedStatsSystem';
 
 /**
  * Create a player entity with all required components
@@ -76,7 +77,7 @@ export function createPlayer(
     max: 100,
   });
 
-  ecs.addComponent<StatsComponent>(playerId, 'stats', {
+  const playerBase = {
     strength: 10,
     dexterity: 10,
     intelligence: 10,
@@ -84,11 +85,10 @@ export function createPlayer(
     willpower: 10,
     toughness: 10,
     attractiveness: 10,
-    defense: 5,
-    dodge: 5,
-    mindDefense: 5,
-    magicalDefense: 5,
-    speed: 1,
+  };
+  ecs.addComponent<StatsComponent>(playerId, 'stats', {
+    base: playerBase,
+    derived: calculateDerivedStats(playerBase),
   });
 
   ecs.addComponent<InputComponent>(playerId, 'input', {
@@ -145,7 +145,7 @@ export function createEnemy(
     max: 50,
   });
 
-  ecs.addComponent<StatsComponent>(enemyId, 'stats', {
+  const enemyBase = {
     strength: 5,
     dexterity: 5,
     intelligence: 3,
@@ -153,11 +153,10 @@ export function createEnemy(
     willpower: 5,
     toughness: 8,
     attractiveness: 3,
-    defense: 3,
-    dodge: 3,
-    mindDefense: 3,
-    magicalDefense: 2,
-    speed: 0.5,
+  };
+  ecs.addComponent<StatsComponent>(enemyId, 'stats', {
+    base: enemyBase,
+    derived: calculateDerivedStats(enemyBase),
   });
 
   ecs.addComponent<AIComponent>(enemyId, 'ai', {
@@ -214,7 +213,7 @@ export function createNPC(
     max: 30,
   });
 
-  ecs.addComponent<StatsComponent>(npcId, 'stats', {
+  const npcBase = {
     strength: 2,
     dexterity: 8,
     intelligence: 12,
@@ -222,11 +221,10 @@ export function createNPC(
     willpower: 10,
     toughness: 5,
     attractiveness: 12,
-    defense: 1,
-    dodge: 7,
-    mindDefense: 10,
-    magicalDefense: 8,
-    speed: 0.8,
+  };
+  ecs.addComponent<StatsComponent>(npcId, 'stats', {
+    base: npcBase,
+    derived: calculateDerivedStats(npcBase),
   });
 
   ecs.addComponent<AIComponent>(npcId, 'ai', {
@@ -286,7 +284,7 @@ export function createFleeingCreature(
     max: 20,
   });
 
-  ecs.addComponent<StatsComponent>(creatureId, 'stats', {
+  const creatureBase = {
     strength: 1,
     dexterity: 15,
     intelligence: 3,
@@ -294,11 +292,10 @@ export function createFleeingCreature(
     willpower: 5,
     toughness: 3,
     attractiveness: 5,
-    defense: 1,
-    dodge: 12,
-    mindDefense: 3,
-    magicalDefense: 2,
-    speed: 1.5,
+  };
+  ecs.addComponent<StatsComponent>(creatureId, 'stats', {
+    base: creatureBase,
+    derived: calculateDerivedStats(creatureBase),
   });
 
   ecs.addComponent<AIComponent>(creatureId, 'ai', {
@@ -355,7 +352,7 @@ export function createBoss(
     max: 200,
   });
 
-  ecs.addComponent<StatsComponent>(bossId, 'stats', {
+  const bossBase = {
     strength: 20,
     dexterity: 10,
     intelligence: 8,
@@ -363,11 +360,10 @@ export function createBoss(
     willpower: 15,
     toughness: 25,
     attractiveness: 3,
-    defense: 10,
-    dodge: 6,
-    mindDefense: 12,
-    magicalDefense: 10,
-    speed: 0.3,
+  };
+  ecs.addComponent<StatsComponent>(bossId, 'stats', {
+    base: bossBase,
+    derived: calculateDerivedStats(bossBase),
   });
 
   ecs.addComponent<AIComponent>(bossId, 'ai', {

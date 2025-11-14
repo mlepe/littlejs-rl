@@ -26,6 +26,7 @@ import { EntityDataFile, EntityTemplate } from '../types/dataSchemas';
 import { TileSprite, getTileCoords } from '../tileConfig';
 
 import ECS from '../ecs';
+import { calculateDerivedStats } from '../systems/derivedStatsSystem';
 
 /**
  * Registry for entity templates loaded from data files
@@ -173,7 +174,7 @@ export class EntityRegistry {
 
     // Add stats
     if (template.stats) {
-      ecs.addComponent<StatsComponent>(entityId, 'stats', {
+      const baseStats = {
         strength: template.stats.strength,
         dexterity: template.stats.dexterity ?? 10,
         intelligence: template.stats.intelligence ?? 10,
@@ -181,11 +182,10 @@ export class EntityRegistry {
         willpower: template.stats.willpower ?? 10,
         toughness: template.stats.toughness ?? 10,
         attractiveness: template.stats.attractiveness ?? 10,
-        defense: template.stats.defense,
-        dodge: template.stats.dodge ?? 5,
-        mindDefense: template.stats.mindDefense ?? 5,
-        magicalDefense: template.stats.magicalDefense ?? 5,
-        speed: template.stats.speed,
+      };
+      ecs.addComponent<StatsComponent>(entityId, 'stats', {
+        base: baseStats,
+        derived: calculateDerivedStats(baseStats),
       });
     }
 
@@ -217,12 +217,10 @@ export class EntityRegistry {
       );
     }
 
-    // Add movable
-    if (template.stats?.speed) {
-      ecs.addComponent<MovableComponent>(entityId, 'movable', {
-        speed: template.stats.speed,
-      });
-    }
+    // Add movable component (always add it, speed comes from derived stats)
+    ecs.addComponent<MovableComponent>(entityId, 'movable', {
+      speed: 1.0, // Speed is determined by derived stats
+    });
 
     // Add relation component if specified
     if (template.relation) {

@@ -49,8 +49,8 @@ export function playerMovementSystem(ecs: ECS): void {
 
     // Apply movement with speed
     if (input.moveX !== 0 || input.moveY !== 0) {
-      pos.x += input.moveX * stats.speed;
-      pos.y += input.moveY * stats.speed;
+      pos.x += input.moveX * stats.derived.speed;
+      pos.y += input.moveY * stats.derived.speed;
     }
 
     // Handle action

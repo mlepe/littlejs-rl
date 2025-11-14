@@ -26,6 +26,7 @@ export interface EntityTemplate {
   };
 
   stats?: {
+    // Base stats - set directly in data files
     strength: number;
     dexterity?: number;
     intelligence?: number;
@@ -33,11 +34,8 @@ export interface EntityTemplate {
     willpower?: number;
     toughness?: number;
     attractiveness?: number;
-    defense: number;
-    dodge?: number;
-    mindDefense?: number;
-    magicalDefense?: number;
-    speed: number;
+    // Note: Derived stats (defense, dodge, mindDefense, magicalDefense, speed)
+    // are calculated automatically from base stats and should NOT be specified in data files
   };
 
   ai?: {
