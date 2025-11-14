@@ -26,12 +26,20 @@ Outside of roguelikes, this project is also inspired by other games and genres.
 - Many different ways to complete a mission
 - Unrestricted level exploration, with many secrets to discover, and also ways to complete the missions and level
 
-## Inspiring games
+## Inspiring games/game series
 
 - TES: Daggerfall
 - TES: Morrowind
 - Vampire: The Masquerade - Bloodlines
 - Deus Ex
+- Dungeons & Dragons
+- Pathfinder
+- Baldur's Gate
+- Warhammer 40K: Rogue Traders
+- Shadowrun: Dragonfall
+- Shadowrun: Hong Kong
+- Fallout
+- Avernum
 
 ### Inspirations from TES: Daggerfall
 

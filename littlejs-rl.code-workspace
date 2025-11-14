@@ -12,10 +12,25 @@
 
     // Editor settings
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": null,
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "explicit",
     },
+
+    "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "javascript.suggest.enabled": true,
+    "javascript.suggest.completeJSDocs": true,
+    "javascript.suggest.jsdoc.generateReturns": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "typescript.suggest.enabled": true,
+    "typescript.suggest.completeJSDocs": true,
+    "typescript.suggest.jsdoc.generateReturns": true
+  },
 
     // File associations
     "files.associations": {
@@ -66,6 +81,7 @@
         "scope": "workspace",
       },
     },
+    "typescript.format.semicolons": "insert",
   },
   "extensions": {
     "recommendations": [
