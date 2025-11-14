@@ -377,6 +377,22 @@
       },
       "problemMatcher": []
     },
+    {
+      // Updates the LittleJS integration code if necessary based on recent changes
+      "label": "Copilot: Update LittleJS integration if necessary",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "chat",
+        "Following the #file:littlejs-integration.md instruction, update the LittleJS integration code if necessary based on recent changes."
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+
     // ============================================================================
     // CODE ASSISTANCE TASKS
     // ============================================================================
