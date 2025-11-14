@@ -23,3 +23,7 @@ export * from './elementalDamageSystem';
 export * from './statusEffectSystem';
 export * from './raceSystem';
 export * from './classSystem';
+export * from './itemStackingSystem';
+export * from './carryWeightSystem';
+export * from './equipmentSystem';
+export * from './inventorySystem';
