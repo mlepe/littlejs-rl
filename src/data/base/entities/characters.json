@@ -30,6 +30,28 @@
         "baseScore": -50,
         "minScore": -100,
         "maxScore": 0
+      },
+
+      "elementalDamage": [
+        {
+          "element": "slashing",
+          "amount": 10
+        }
+      ],
+
+      "elementalResistance": {
+        "slashing": {
+          "flat": 2,
+          "percent": 0.1
+        },
+        "piercing": {
+          "flat": -2,
+          "percent": -0.1
+        },
+        "fire": {
+          "flat": -5,
+          "percent": -0.2
+        }
       }
     },
 
@@ -63,6 +85,24 @@
         "baseScore": -30,
         "minScore": -100,
         "maxScore": 20
+      },
+
+      "elementalDamage": [
+        {
+          "element": "piercing",
+          "amount": 6
+        }
+      ],
+
+      "elementalResistance": {
+        "fire": {
+          "flat": -3,
+          "percent": -0.2
+        },
+        "poison": {
+          "flat": 2,
+          "percent": 0.2
+        }
       }
     },
 
@@ -96,6 +136,36 @@
         "baseScore": -70,
         "minScore": -100,
         "maxScore": -20
+      },
+
+      "elementalDamage": [
+        {
+          "element": "bludgeoning",
+          "amount": 20
+        }
+      ],
+
+      "elementalResistance": {
+        "bludgeoning": {
+          "flat": 5,
+          "percent": 0.3
+        },
+        "slashing": {
+          "flat": 3,
+          "percent": 0.2
+        },
+        "piercing": {
+          "flat": 3,
+          "percent": 0.2
+        },
+        "fire": {
+          "flat": -15,
+          "percent": -0.5
+        },
+        "acid": {
+          "flat": -10,
+          "percent": -0.3
+        }
       }
     },
 
@@ -129,6 +199,36 @@
         "baseScore": -100,
         "minScore": -100,
         "maxScore": -100
+      },
+
+      "elementalDamage": [
+        {
+          "element": "slashing",
+          "amount": 8
+        }
+      ],
+
+      "elementalResistance": {
+        "slashing": {
+          "flat": 0,
+          "percent": 0.3
+        },
+        "piercing": {
+          "flat": 0,
+          "percent": 0.5
+        },
+        "holy": {
+          "flat": -10,
+          "percent": -0.5
+        },
+        "dark": {
+          "flat": 5,
+          "percent": 0.5
+        },
+        "poison": {
+          "flat": 0,
+          "percent": 1.0
+        }
       }
     },
 

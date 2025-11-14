@@ -19,3 +19,5 @@ export * from './spatialSystem';
 export * from './relationSystem';
 export * from './statModifierSystem';
 export * from './derivedStatsSystem';
+export * from './elementalDamageSystem';
+export * from './statusEffectSystem';

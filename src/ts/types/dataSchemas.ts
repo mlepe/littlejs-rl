@@ -4,11 +4,13 @@
  * File Created: 2025-11-14 16:00:00
  * Author: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
- * Last Modified: 2025-11-14 16:00:00
+ * Last Modified: 2025-01-14 12:30:00
  * Modified By: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
+
+import { ElementType } from './elements';
 
 /**
  * Base entity template that can be loaded from JSON data files
@@ -63,6 +65,21 @@ export interface EntityTemplate {
     maxScore?: number;
   };
 
+  // Elemental resistances (flat and percentage)
+  elementalResistance?: {
+    [element: string]: {
+      // Element type from ElementType enum (e.g., "fire", "cold", "slashing")
+      flat?: number; // Flat damage reduction (negative = weakness)
+      percent?: number; // Percentage resistance 0-1 (negative = vulnerability)
+    };
+  };
+
+  // Elemental damage dealt by attacks
+  elementalDamage?: Array<{
+    element: string; // Element type from ElementType enum
+    amount: number; // Damage amount
+  }>;
+
   // Entity type for categorization (visual/gameplay, not hostility)
   type: 'player' | 'character' | 'creature' | 'boss';
 }
@@ -83,6 +100,21 @@ export interface ItemTemplate {
     strength?: number;
     defense?: number;
     speed?: number;
+  };
+
+  // Elemental damage added by this item (for weapons)
+  elementalDamage?: Array<{
+    element: string; // Element type from ElementType enum
+    amount: number; // Damage amount
+  }>;
+
+  // Elemental resistances provided by this item (for armor)
+  elementalResistance?: {
+    [element: string]: {
+      // Element type from ElementType enum
+      flat?: number; // Flat damage reduction
+      percent?: number; // Percentage resistance 0-1
+    };
   };
 
   // Stack settings

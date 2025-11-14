@@ -14,6 +14,8 @@ import * as LJS from 'littlejsengine';
 
 import {
   AIComponent,
+  ElementalDamageComponent,
+  ElementalResistanceComponent,
   HealthComponent,
   LocationComponent,
   MovableComponent,
@@ -21,11 +23,13 @@ import {
   RelationComponent,
   RenderComponent,
   StatsComponent,
+  StatusEffectComponent,
 } from '../components';
 import { EntityDataFile, EntityTemplate } from '../types/dataSchemas';
 import { TileSprite, getTileCoords } from '../tileConfig';
 
 import ECS from '../ecs';
+import { ElementType } from '../types/elements';
 import { calculateDerivedStats } from '../systems/derivedStatsSystem';
 
 /**
@@ -228,6 +232,50 @@ export class EntityRegistry {
         relations: new Map(),
       });
     }
+
+    // Add elemental resistance component if specified
+    if (template.elementalResistance) {
+      const flatReduction: Partial<Record<ElementType, number>> = {};
+      const percentResistance: Partial<Record<ElementType, number>> = {};
+
+      for (const [elementStr, resistance] of Object.entries(
+        template.elementalResistance
+      )) {
+        const element = elementStr as ElementType;
+        if (resistance.flat !== undefined) {
+          flatReduction[element] = resistance.flat;
+        }
+        if (resistance.percent !== undefined) {
+          percentResistance[element] = resistance.percent;
+        }
+      }
+
+      ecs.addComponent<ElementalResistanceComponent>(
+        entityId,
+        'elementalResistance',
+        {
+          flatReduction,
+          percentResistance,
+        }
+      );
+    }
+
+    // Add elemental damage component if specified
+    if (template.elementalDamage && template.elementalDamage.length > 0) {
+      const damages = template.elementalDamage.map((d) => ({
+        element: d.element as ElementType,
+        amount: d.amount,
+      }));
+
+      ecs.addComponent<ElementalDamageComponent>(entityId, 'elementalDamage', {
+        damages,
+      });
+    }
+
+    // Add empty status effect component (can be populated during gameplay)
+    ecs.addComponent<StatusEffectComponent>(entityId, 'statusEffect', {
+      effects: [],
+    });
 
     console.log(
       `[EntityRegistry] Spawned ${template.name} (${templateId}) at (${x}, ${y}) in location (${worldX}, ${worldY})`

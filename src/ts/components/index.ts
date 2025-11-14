@@ -21,3 +21,6 @@ export * from './input';
 export * from './locationComponent';
 export * from './relation';
 export * from './statModifier';
+export * from './elementalResistance';
+export * from './elementalDamage';
+export * from './statusEffect';
