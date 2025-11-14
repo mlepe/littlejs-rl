@@ -4,11 +4,14 @@
  * File Created: Thursday, 14th November 2025 11:50:00 pm
  * Author: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
- * Last Modified: Thursday, 14th November 2025 11:50:00 pm
+ * Last Modified: November 14, 2025
  * Modified By: Matthieu LEPERLIER (m.leperlier42@gmail.com>)
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
+
+import { DEFAULT_VALUES, validateRaceTemplate } from './validation';
+import { MissingDataError, ValidationError, logWarnings } from './errors';
 
 import { RaceTemplate } from '../types/dataSchemas';
 
@@ -37,29 +40,94 @@ export class RaceRegistry {
   }
 
   /**
-   * Register a race template
+   * Register a race template with validation
    */
-  public register(race: RaceTemplate): void {
-    if (this.races.has(race.id)) {
-      console.warn(`Race "${race.id}" is already registered. Overwriting...`);
+  public register(race: RaceTemplate | any): void {
+    // Validate the race template
+    const validation = validateRaceTemplate(race);
+
+    // Log warnings if any
+    if (validation.warnings.length > 0) {
+      logWarnings(
+        validation.warnings,
+        `Race Registration: ${validation.data.id}`
+      );
     }
-    this.races.set(race.id, race);
+
+    // Throw error if validation failed critically
+    if (!validation.isValid) {
+      throw new ValidationError(
+        `Failed to register race '${validation.data.id}'`,
+        validation.errors,
+        validation.warnings
+      );
+    }
+
+    // Check for overwrites
+    if (this.races.has(validation.data.id)) {
+      console.warn(
+        `Race "${validation.data.id}" is already registered. Overwriting...`
+      );
+    }
+
+    this.races.set(validation.data.id, validation.data);
   }
 
   /**
-   * Register multiple race templates
+   * Register multiple race templates with validation
    */
-  public registerMultiple(races: RaceTemplate[]): void {
+  public registerMultiple(races: (RaceTemplate | any)[]): void {
+    const errors: string[] = [];
+
     for (const race of races) {
-      this.register(race);
+      try {
+        this.register(race);
+      } catch (error) {
+        if (error instanceof ValidationError) {
+          errors.push(error.message);
+          console.error(error.toString());
+        } else {
+          errors.push(`Unexpected error registering race: ${error}`);
+          console.error(error);
+        }
+      }
+    }
+
+    if (errors.length > 0) {
+      console.warn(
+        `\nRace registration completed with ${errors.length} error(s). ${this.count()} races registered successfully.`
+      );
     }
   }
 
   /**
-   * Get a race template by ID
+   * Get a race template by ID, with optional fallback to default
    */
-  public get(id: string): RaceTemplate | undefined {
-    return this.races.get(id);
+  public get(
+    id: string,
+    useFallback: boolean = false
+  ): RaceTemplate | undefined {
+    const race = this.races.get(id);
+
+    if (!race && useFallback) {
+      console.warn(
+        `Race '${id}' not found, returning default race template. This should be fixed in your data files.`
+      );
+      return DEFAULT_VALUES.RACE;
+    }
+
+    return race;
+  }
+
+  /**
+   * Get a race template by ID, throwing error if not found
+   */
+  public getOrThrow(id: string): RaceTemplate {
+    const race = this.races.get(id);
+    if (!race) {
+      throw new MissingDataError('race', id);
+    }
+    return race;
   }
 
   /**

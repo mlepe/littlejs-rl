@@ -4,11 +4,14 @@
  * File Created: Thursday, 14th November 2025 11:50:00 pm
  * Author: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
- * Last Modified: Thursday, 14th November 2025 11:50:00 pm
+ * Last Modified: November 14, 2025
  * Modified By: Matthieu LEPERLIER (m.leperlier42@gmail.com>)
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
+
+import { DEFAULT_VALUES, validateClassTemplate } from './validation';
+import { MissingDataError, ValidationError, logWarnings } from './errors';
 
 import { ClassTemplate } from '../types/dataSchemas';
 
@@ -37,31 +40,94 @@ export class ClassRegistry {
   }
 
   /**
-   * Register a class template
+   * Register a class template with validation
    */
-  public register(classTemplate: ClassTemplate): void {
-    if (this.classes.has(classTemplate.id)) {
-      console.warn(
-        `Class "${classTemplate.id}" is already registered. Overwriting...`
+  public register(classTemplate: ClassTemplate | any): void {
+    // Validate the class template
+    const validation = validateClassTemplate(classTemplate);
+
+    // Log warnings if any
+    if (validation.warnings.length > 0) {
+      logWarnings(
+        validation.warnings,
+        `Class Registration: ${validation.data.id}`
       );
     }
-    this.classes.set(classTemplate.id, classTemplate);
+
+    // Throw error if validation failed critically
+    if (!validation.isValid) {
+      throw new ValidationError(
+        `Failed to register class '${validation.data.id}'`,
+        validation.errors,
+        validation.warnings
+      );
+    }
+
+    // Check for overwrites
+    if (this.classes.has(validation.data.id)) {
+      console.warn(
+        `Class "${validation.data.id}" is already registered. Overwriting...`
+      );
+    }
+
+    this.classes.set(validation.data.id, validation.data);
   }
 
   /**
-   * Register multiple class templates
+   * Register multiple class templates with validation
    */
-  public registerMultiple(classes: ClassTemplate[]): void {
+  public registerMultiple(classes: (ClassTemplate | any)[]): void {
+    const errors: string[] = [];
+
     for (const classTemplate of classes) {
-      this.register(classTemplate);
+      try {
+        this.register(classTemplate);
+      } catch (error) {
+        if (error instanceof ValidationError) {
+          errors.push(error.message);
+          console.error(error.toString());
+        } else {
+          errors.push(`Unexpected error registering class: ${error}`);
+          console.error(error);
+        }
+      }
+    }
+
+    if (errors.length > 0) {
+      console.warn(
+        `\nClass registration completed with ${errors.length} error(s). ${this.count()} classes registered successfully.`
+      );
     }
   }
 
   /**
-   * Get a class template by ID
+   * Get a class template by ID, with optional fallback to default
    */
-  public get(id: string): ClassTemplate | undefined {
-    return this.classes.get(id);
+  public get(
+    id: string,
+    useFallback: boolean = false
+  ): ClassTemplate | undefined {
+    const classTemplate = this.classes.get(id);
+
+    if (!classTemplate && useFallback) {
+      console.warn(
+        `Class '${id}' not found, returning default class template. This should be fixed in your data files.`
+      );
+      return DEFAULT_VALUES.CLASS;
+    }
+
+    return classTemplate;
+  }
+
+  /**
+   * Get a class template by ID, throwing error if not found
+   */
+  public getOrThrow(id: string): ClassTemplate {
+    const classTemplate = this.classes.get(id);
+    if (!classTemplate) {
+      throw new MissingDataError('class', id);
+    }
+    return classTemplate;
   }
 
   /**

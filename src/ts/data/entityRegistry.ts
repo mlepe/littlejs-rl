@@ -4,7 +4,7 @@
  * File Created: 2025-11-14 16:00:00
  * Author: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
- * Last Modified: 2025-11-14 16:00:00
+ * Last Modified: November 14, 2025
  * Modified By: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
@@ -27,7 +27,18 @@ import {
   StatsComponent,
   StatusEffectComponent,
 } from '../components';
+import {
+  DEFAULT_VALUES,
+  validateEntityTemplate,
+  validateReference,
+} from './validation';
 import { EntityDataFile, EntityTemplate } from '../types/dataSchemas';
+import {
+  FileLoadError,
+  ParseError,
+  ValidationError,
+  logWarnings,
+} from './errors';
 import { TileSprite, getTileCoords } from '../tileConfig';
 
 import { ClassRegistry } from './classRegistry';
@@ -62,45 +73,98 @@ export class EntityRegistry {
     try {
       const response = await fetch(path);
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        throw new FileLoadError(path, response.status);
       }
 
-      const data: EntityDataFile = await response.json();
+      const text = await response.text();
+      let data: EntityDataFile;
+
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        throw new ParseError(path, parseError as Error);
+      }
 
       if (data.entities && Array.isArray(data.entities)) {
+        let successCount = 0;
+        let errorCount = 0;
+
         for (const template of data.entities) {
-          this.register(template);
+          try {
+            this.register(template);
+            successCount++;
+          } catch (error) {
+            errorCount++;
+            if (error instanceof ValidationError) {
+              console.error(error.toString());
+            } else {
+              console.error(
+                `[EntityRegistry] Error registering entity:`,
+                error
+              );
+            }
+          }
         }
+
         console.log(
-          `[EntityRegistry] Loaded ${data.entities.length} entities from ${path}`
+          `[EntityRegistry] Loaded ${successCount} entities from ${path}${errorCount > 0 ? ` (${errorCount} failed)` : ''}`
         );
       } else {
         console.warn(`[EntityRegistry] No entities array found in ${path}`);
       }
     } catch (error) {
-      console.error(`[EntityRegistry] Failed to load ${path}:`, error);
+      if (error instanceof FileLoadError || error instanceof ParseError) {
+        console.error(error.toString());
+      } else {
+        console.error(`[EntityRegistry] Failed to load ${path}:`, error);
+      }
+      throw error;
     }
   }
 
   /**
-   * Register a single entity template
+   * Register a single entity template with validation
    */
-  register(template: EntityTemplate): void {
-    if (this.templates.has(template.id)) {
+  register(template: EntityTemplate | any): void {
+    // Validate the entity template
+    const validation = validateEntityTemplate(template);
+
+    // Log warnings if any
+    if (validation.warnings.length > 0) {
+      logWarnings(
+        validation.warnings,
+        `Entity Registration: ${validation.data.id}`
+      );
+    }
+
+    // Throw error if validation failed critically
+    if (!validation.isValid) {
+      throw new ValidationError(
+        `Failed to register entity '${validation.data.id}'`,
+        validation.errors,
+        validation.warnings
+      );
+    }
+
+    // Check for overwrites
+    if (this.templates.has(validation.data.id)) {
       console.warn(
-        `[EntityRegistry] Overwriting entity template: ${template.id}`
+        `[EntityRegistry] Overwriting entity template: ${validation.data.id}`
       );
     }
 
-    // Validate required fields
-    if (!template.render || !template.render.sprite) {
+    // Validate sprite exists in TileSprite enum
+    if (
+      validation.data.render?.sprite &&
+      !(validation.data.render.sprite in TileSprite)
+    ) {
       console.error(
-        `[EntityRegistry] Invalid template ${template.id}: missing render.sprite`
+        `[EntityRegistry] Invalid sprite '${validation.data.render.sprite}' for entity '${validation.data.id}'. Using default.`
       );
-      return;
+      validation.data.render.sprite = DEFAULT_VALUES.ENTITY.render!.sprite;
     }
 
-    this.templates.set(template.id, template);
+    this.templates.set(validation.data.id, validation.data);
   }
 
   /**
@@ -286,7 +350,21 @@ export class EntityRegistry {
     // Add race component if specified
     if (template.race) {
       const raceRegistry = RaceRegistry.getInstance();
-      const raceTemplate = raceRegistry.get(template.race.id);
+
+      // Validate race reference
+      const raceValidation = validateReference(
+        template.race.id,
+        'race',
+        templateId,
+        (id) => raceRegistry.has(id)
+      );
+
+      if (raceValidation.warnings.length > 0) {
+        logWarnings(raceValidation.warnings, `Entity Spawn: ${templateId}`);
+      }
+
+      // Try to get race template with fallback
+      const raceTemplate = raceRegistry.get(template.race.id, true);
 
       if (raceTemplate) {
         ecs.addComponent<RaceComponent>(entityId, 'race', {
@@ -297,11 +375,14 @@ export class EntityRegistry {
         });
 
         // Apply racial stat bonuses
-        applyRacialBonuses(ecs, entityId);
-      } else {
-        console.warn(
-          `[EntityRegistry] Race "${template.race.id}" not found for entity ${templateId}`
-        );
+        try {
+          applyRacialBonuses(ecs, entityId);
+        } catch (error) {
+          console.error(
+            `[EntityRegistry] Failed to apply racial bonuses for ${templateId}:`,
+            error
+          );
+        }
       }
     }
 
@@ -313,7 +394,21 @@ export class EntityRegistry {
         template.type === 'boss')
     ) {
       const classRegistry = ClassRegistry.getInstance();
-      const classTemplate = classRegistry.get(template.class.id);
+
+      // Validate class reference
+      const classValidation = validateReference(
+        template.class.id,
+        'class',
+        templateId,
+        (id) => classRegistry.has(id)
+      );
+
+      if (classValidation.warnings.length > 0) {
+        logWarnings(classValidation.warnings, `Entity Spawn: ${templateId}`);
+      }
+
+      // Try to get class template with fallback
+      const classTemplate = classRegistry.get(template.class.id, true);
 
       if (classTemplate) {
         const startLevel = template.class.level ?? 1;
@@ -354,11 +449,14 @@ export class EntityRegistry {
         }
 
         // Apply class stat bonuses
-        applyClassBonuses(ecs, entityId);
-      } else {
-        console.warn(
-          `[EntityRegistry] Class "${template.class.id}" not found for entity ${templateId}`
-        );
+        try {
+          applyClassBonuses(ecs, entityId);
+        } catch (error) {
+          console.error(
+            `[EntityRegistry] Failed to apply class bonuses for ${templateId}:`,
+            error
+          );
+        }
       }
     }
 

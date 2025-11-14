@@ -4,11 +4,13 @@
  * File Created: 2025-11-14 16:00:00
  * Author: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
- * Last Modified: 2025-11-14 16:00:00
+ * Last Modified: November 14, 2025
  * Modified By: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
+
+import { FileLoadError, ParseError, logError } from './errors';
 
 import { ClassRegistry } from './classRegistry';
 import { EntityRegistry } from './entityRegistry';
@@ -60,7 +62,8 @@ export class DataLoader {
       this.loaded = true;
       console.log('[DataLoader] All data loaded successfully');
     } catch (error) {
-      console.error('[DataLoader] Failed to load data:', error);
+      logError(error as Error, 'DataLoader.loadAllData');
+      this.loaded = false;
       throw error;
     } finally {
       this.loading = false;
@@ -77,13 +80,28 @@ export class DataLoader {
     const raceRegistry = RaceRegistry.getInstance();
     const classRegistry = ClassRegistry.getInstance();
 
+    const errors: Error[] = [];
+
     // Load races and classes first (entities depend on them)
     try {
       await this.loadRaces(raceRegistry);
+    } catch (error) {
+      errors.push(error as Error);
+      logError(error as Error, 'Loading Races');
+    }
+
+    try {
       await this.loadClasses(classRegistry);
     } catch (error) {
-      console.error('[DataLoader] Failed to load races/classes:', error);
-      throw error;
+      errors.push(error as Error);
+      logError(error as Error, 'Loading Classes');
+    }
+
+    // If critical dependencies failed, stop here
+    if (errors.length > 0) {
+      throw new Error(
+        `Failed to load critical data dependencies (${errors.length} errors). Check logs above.`
+      );
     }
 
     // Load entity definitions
@@ -93,8 +111,8 @@ export class DataLoader {
       try {
         await entityRegistry.loadFromFile(file);
       } catch (error) {
-        console.error(`[DataLoader] Failed to load ${file}:`, error);
-        // Continue loading other files
+        logError(error as Error, `Loading ${file}`);
+        // Continue loading other files - entity files are not critical
       }
     }
 
@@ -108,10 +126,39 @@ export class DataLoader {
    */
   private async loadRaces(registry: RaceRegistry): Promise<void> {
     console.log('[DataLoader] Loading races...');
-    const response = await fetch('src/data/base/races.json');
-    const data = await response.json();
-    registry.registerMultiple(data.races);
-    console.log(`[DataLoader] Loaded ${data.races.length} races`);
+
+    const path = 'src/data/base/races.json';
+
+    try {
+      const response = await fetch(path);
+
+      if (!response.ok) {
+        throw new FileLoadError(path, response.status);
+      }
+
+      const text = await response.text();
+      let data;
+
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        throw new ParseError(path, parseError as Error);
+      }
+
+      if (!data.races || !Array.isArray(data.races)) {
+        throw new Error(
+          `Invalid data format in ${path}: expected 'races' array`
+        );
+      }
+
+      registry.registerMultiple(data.races);
+      console.log(`[DataLoader] Loaded ${registry.count()} races successfully`);
+    } catch (error) {
+      if (error instanceof FileLoadError || error instanceof ParseError) {
+        throw error;
+      }
+      throw new Error(`Failed to load races from ${path}: ${error}`);
+    }
   }
 
   /**
@@ -119,10 +166,41 @@ export class DataLoader {
    */
   private async loadClasses(registry: ClassRegistry): Promise<void> {
     console.log('[DataLoader] Loading classes...');
-    const response = await fetch('src/data/base/classes.json');
-    const data = await response.json();
-    registry.registerMultiple(data.classes);
-    console.log(`[DataLoader] Loaded ${data.classes.length} classes`);
+
+    const path = 'src/data/base/classes.json';
+
+    try {
+      const response = await fetch(path);
+
+      if (!response.ok) {
+        throw new FileLoadError(path, response.status);
+      }
+
+      const text = await response.text();
+      let data;
+
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        throw new ParseError(path, parseError as Error);
+      }
+
+      if (!data.classes || !Array.isArray(data.classes)) {
+        throw new Error(
+          `Invalid data format in ${path}: expected 'classes' array`
+        );
+      }
+
+      registry.registerMultiple(data.classes);
+      console.log(
+        `[DataLoader] Loaded ${registry.count()} classes successfully`
+      );
+    } catch (error) {
+      if (error instanceof FileLoadError || error instanceof ParseError) {
+        throw error;
+      }
+      throw new Error(`Failed to load classes from ${path}: ${error}`);
+    }
   }
 
   /**
