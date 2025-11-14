@@ -18,19 +18,19 @@
     },
 
     "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.tabSize": 2,
-    "javascript.suggest.enabled": true,
-    "javascript.suggest.completeJSDocs": true,
-    "javascript.suggest.jsdoc.generateReturns": true
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.tabSize": 2,
-    "typescript.suggest.enabled": true,
-    "typescript.suggest.completeJSDocs": true,
-    "typescript.suggest.jsdoc.generateReturns": true
-  },
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabSize": 2,
+      "javascript.suggest.enabled": true,
+      "javascript.suggest.completeJSDocs": true,
+      "javascript.suggest.jsdoc.generateReturns": true,
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabSize": 2,
+      "typescript.suggest.enabled": true,
+      "typescript.suggest.completeJSDocs": true,
+      "typescript.suggest.jsdoc.generateReturns": true,
+    },
 
     // File associations
     "files.associations": {
@@ -109,10 +109,6 @@
       "christian-kohler.path-intellisense",
       "streetsidesoftware.code-spell-checker",
     ],
-  },
-  "tasks": {
-    "version": "2.0.0",
-    "tasks": [],
   },
   "launch": {
     "version": "0.2.0",

@@ -26,6 +26,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Add JSDoc for this element: ${input:elementDescription}"
       ],
@@ -40,7 +41,11 @@
       "label": "Copilot: Add JSDoc for selected element",
       "type": "shell",
       "command": "code",
-      "args": ["chat", "Add JSDoc for this element: ${selectedText}"],
+      "args": [
+        "--reuse-window",
+        "chat",
+        "Add JSDoc for this element: ${selectedText}"
+      ],
       "presentation": {
         "reveal": "never",
         "focus": false
@@ -53,6 +58,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Add JSDoc for all functions, classes, and methods in the project"
       ],
@@ -68,6 +74,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Update copilot-instructions.md based on recent changes"
       ],
@@ -83,6 +90,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Update or create documentation or instructions as needed based on recent changes. You can create new files if necessary."
       ],
@@ -103,6 +111,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Create a new ECS component named ${input:componentName} in src/ts/components/"
       ],
@@ -118,6 +127,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Create a new ECS component named ${input:componentName}_test in src/ts/test/components/"
       ],
@@ -133,6 +143,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Create a new ECS system named ${input:systemName} in src/ts/systems/"
       ],
@@ -148,6 +159,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Create a new ECS system named ${input:systemName}_test in src/ts/test/systems/"
       ],
@@ -163,6 +175,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Create entity factory function create${input:entityType} in src/ts/entities.ts"
       ],
@@ -178,6 +191,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Create entity factory function create${input:entityType}_test in src/ts/test/entities.ts"
       ],
@@ -193,6 +207,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "${input:entityTypeOptional:+ and ECS Entity Factory create${input:entityTypeOptional} in src/ts/entities.ts}Create entity factory function create${input:entityTypeOptional} in src/ts/entities.ts${input:entityTypeOptional:- (skip if empty)}"
       ],
@@ -208,6 +223,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Help me implement this feature: ${input:featureDescription}. Provide a detailed implementation plan. You may ask me for more details if needed."
       ],
@@ -223,6 +239,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Verify the coherence of the feature you just helped me implement."
       ],
@@ -243,6 +260,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Verify that new ECS component named ${input:componentName} in src/ts/components/ and new ECS system named ${input:systemName} in src/ts/systems/${input:entityTypeOptional:+ and ECS Entity Factory create${input:entityTypeOptional} in src/ts/entities.ts} are coherent"
       ],
@@ -308,6 +326,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "I want to create ECS elements. Ask me which ones (component, system, entity factory) and their names, then create them in the appropriate directories (src/ts/components/, src/ts/systems/, src/ts/entities.ts).Ask me if I want to verify coherence between them and do so if I agree."
       ],
@@ -323,6 +342,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "I want you to explain how I could implement a specified feature. Ask me which feature and provide a detailed explanation of how to implement it."
       ],
@@ -338,6 +358,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "I want you to propose features based on the instructions in `.github/instructions/` and `copilot-instructions.md`. Ask me which feature I want to implement and provide a detailed explanation of how to implement it. You can suggest multiple features and let me choose. You can also ask me if I want to implement a feature based on a specific game inspiration or mechanic."
       ],
@@ -353,6 +374,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "I want you to help me implement features based on a specific game inspiration from the instructions in `.github/instructions/`. Ask me which game I want to take features from and provide a list of features from that game that could be implemented. Let me choose which features to implement and provide a detailed explanation of how to implement them."
       ],
@@ -368,6 +390,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "I want you to help me implement a specific feature based on a specific game inspiration from the instructions in `.github/instructions/`. Ask me which feature I want to implement from which game, and help me implement it by providing a detailed explanation of how to implement it."
       ],
@@ -383,6 +406,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Following the #file:littlejs-integration.md instruction, update the LittleJS integration code if necessary based on recent changes."
       ],
@@ -402,7 +426,7 @@
       "label": "Copilot: Explain Selection",
       "type": "shell",
       "command": "code",
-      "args": ["chat", "Explain this code: ${selectedText}"],
+      "args": ["--reuse-window", "chat", "Explain this code: ${selectedText}"],
       "presentation": {
         "reveal": "never",
         "focus": false
@@ -415,6 +439,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Refactor this code to ${input:refactorGoal}: ${selectedText}"
       ],
@@ -429,7 +454,7 @@
       "label": "Copilot: Add Tests",
       "type": "shell",
       "command": "code",
-      "args": ["chat", "Add unit tests for: ${selectedText}"],
+      "args": ["--reuse-window", "chat", "Add unit tests for: ${selectedText}"],
       "presentation": {
         "reveal": "never",
         "focus": false
@@ -442,6 +467,7 @@
       "type": "shell",
       "command": "code",
       "args": [
+        "--reuse-window",
         "chat",
         "Debug and fix this code: ${selectedText}. Issue: ${input:bugDescription}"
       ],
