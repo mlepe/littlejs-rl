@@ -1,9 +1,11 @@
 # Custom Dictionary Words
 ADOM
+Cogmind
 consommables
 cooldowns
 DCSS
 debuffs
+Dragonfall
 Elin
 Elona
 Equipable
@@ -15,15 +17,16 @@ littlejsengine
 Maj'Eyal
 mithril
 playthrough
+Quasimorph
 replayability
 Roguebasin
 Roguelike
 roguelikedev
 roguelikes
+Shadowrun
 sidequests
 Tileset
 uncursing
 usables
+Warhammer
 Worldmap
-Cogmind
-Quasimorph
