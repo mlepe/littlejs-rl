@@ -17,6 +17,54 @@
   "version": "2.0.0",
   "tasks": [
     // ============================================================================
+    // NPM TASKS
+    // ============================================================================
+    {
+      "name": "npm dev",
+      "label": "Build and serve TypeScript",
+      "type": "npm",
+      "script": "dev",
+      "problemMatcher": ["$tsc"], // Parse TypeScript errors
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "name": "npm build",
+      "label": "Build TypeScript",
+      "type": "npm",
+      "script": "build",
+      "problemMatcher": ["$tsc"], // Parse TypeScript errors
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "name": "npm serve",
+      "label": "Serve TypeScript",
+      "type": "npm",
+      "script": "serve",
+      "problemMatcher": ["$tsc"], // Parse TypeScript errors
+      "group": {
+        "kind": "none",
+        "isDefault": false
+      }
+    },
+    {
+      "name": "npm lint",
+      "label": "Lint TypeScript",
+      "type": "npm",
+      "script": "lint",
+      "problemMatcher": ["$eslint-stylish"], // Parse lint errors
+      "group": {
+        "kind": "none",
+        "isDefault": false
+      }
+    },
+
+    // ============================================================================
     // DOCUMENTATION TASKS
     // ============================================================================
 
