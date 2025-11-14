@@ -1,0 +1,265 @@
+{
+  "classes": [
+    {
+      "id": "warrior",
+      "name": "Warrior",
+      "description": "Masters of melee combat. Strong, tough, and skilled with all weapons.",
+      "baseStatModifiers": {
+        "strength": { "flat": 3 },
+        "toughness": { "flat": 2 },
+        "dexterity": { "flat": -1 }
+      },
+      "statModifiersPerLevel": {
+        "strength": { "flat": 0.5, "percent": 0.02 },
+        "toughness": { "flat": 0.4, "percent": 0.02 }
+      },
+      "experienceFormula": {
+        "base": 100,
+        "multiplier": 1.5
+      },
+      "abilities": {
+        "1": ["power_strike"],
+        "3": ["shield_bash"],
+        "5": ["battle_cry"],
+        "10": ["whirlwind_attack"]
+      }
+    },
+
+    {
+      "id": "mage",
+      "name": "Mage",
+      "description": "Masters of arcane magic. High intelligence and magical power.",
+      "baseStatModifiers": {
+        "intelligence": { "flat": 4 },
+        "willpower": { "flat": 2 },
+        "toughness": { "flat": -2 }
+      },
+      "statModifiersPerLevel": {
+        "intelligence": { "flat": 0.6, "percent": 0.03 },
+        "willpower": { "flat": 0.4, "percent": 0.02 }
+      },
+      "experienceFormula": {
+        "base": 120,
+        "multiplier": 1.6
+      },
+      "abilities": {
+        "1": ["fireball"],
+        "2": ["ice_shard"],
+        "4": ["lightning_bolt"],
+        "7": ["teleport"],
+        "10": ["meteor_storm"]
+      }
+    },
+
+    {
+      "id": "thief",
+      "name": "Thief",
+      "description": "Masters of stealth and precision. Quick, agile, and deadly from shadows.",
+      "baseStatModifiers": {
+        "dexterity": { "flat": 4 },
+        "strength": { "flat": -1 },
+        "charisma": { "flat": 1 }
+      },
+      "statModifiersPerLevel": {
+        "dexterity": { "flat": 0.7, "percent": 0.03 },
+        "charisma": { "flat": 0.2 }
+      },
+      "experienceFormula": {
+        "base": 90,
+        "multiplier": 1.4
+      },
+      "abilities": {
+        "1": ["backstab"],
+        "2": ["stealth"],
+        "4": ["lockpicking"],
+        "6": ["pickpocket"],
+        "8": ["shadow_step"],
+        "10": ["assassinate"]
+      }
+    },
+
+    {
+      "id": "cleric",
+      "name": "Cleric",
+      "description": "Divine healers and protectors. Channel holy power to aid allies.",
+      "baseStatModifiers": {
+        "willpower": { "flat": 3 },
+        "charisma": { "flat": 2 },
+        "toughness": { "flat": 1 }
+      },
+      "statModifiersPerLevel": {
+        "willpower": { "flat": 0.5, "percent": 0.02 },
+        "charisma": { "flat": 0.3 }
+      },
+      "experienceFormula": {
+        "base": 110,
+        "multiplier": 1.5
+      },
+      "abilities": {
+        "1": ["heal"],
+        "2": ["bless"],
+        "4": ["smite"],
+        "6": ["divine_shield"],
+        "8": ["resurrection"],
+        "10": ["holy_aura"]
+      }
+    },
+
+    {
+      "id": "ranger",
+      "name": "Ranger",
+      "description": "Expert archers and trackers. Masters of wilderness survival.",
+      "baseStatModifiers": {
+        "dexterity": { "flat": 3 },
+        "intelligence": { "flat": 1 },
+        "toughness": { "flat": 1 }
+      },
+      "statModifiersPerLevel": {
+        "dexterity": { "flat": 0.5, "percent": 0.02 },
+        "intelligence": { "flat": 0.2 }
+      },
+      "experienceFormula": {
+        "base": 95,
+        "multiplier": 1.45
+      },
+      "abilities": {
+        "1": ["aimed_shot"],
+        "3": ["animal_companion"],
+        "5": ["track"],
+        "7": ["multishot"],
+        "10": ["volley"]
+      }
+    },
+
+    {
+      "id": "berserker",
+      "name": "Berserker",
+      "description": "Frenzied warriors who sacrifice defense for raw power.",
+      "baseStatModifiers": {
+        "strength": { "flat": 5 },
+        "toughness": { "flat": -1 },
+        "willpower": { "flat": -1 }
+      },
+      "statModifiersPerLevel": {
+        "strength": { "flat": 0.7, "percent": 0.04 },
+        "toughness": { "flat": 0.2 }
+      },
+      "experienceFormula": {
+        "base": 105,
+        "multiplier": 1.55
+      },
+      "abilities": {
+        "1": ["rage"],
+        "3": ["reckless_attack"],
+        "6": ["intimidate"],
+        "10": ["bloodlust"]
+      }
+    },
+
+    {
+      "id": "paladin",
+      "name": "Paladin",
+      "description": "Holy warriors combining martial prowess with divine magic.",
+      "baseStatModifiers": {
+        "strength": { "flat": 2 },
+        "toughness": { "flat": 2 },
+        "willpower": { "flat": 2 },
+        "charisma": { "flat": 1 }
+      },
+      "statModifiersPerLevel": {
+        "strength": { "flat": 0.3, "percent": 0.01 },
+        "toughness": { "flat": 0.3, "percent": 0.01 },
+        "willpower": { "flat": 0.3, "percent": 0.01 }
+      },
+      "experienceFormula": {
+        "base": 130,
+        "multiplier": 1.65
+      },
+      "abilities": {
+        "1": ["lay_on_hands"],
+        "3": ["divine_sense"],
+        "5": ["smite_evil"],
+        "8": ["aura_of_protection"],
+        "10": ["divine_intervention"]
+      }
+    },
+
+    {
+      "id": "necromancer",
+      "name": "Necromancer",
+      "description": "Dark mages who command the power of death and undeath.",
+      "baseStatModifiers": {
+        "intelligence": { "flat": 3 },
+        "willpower": { "flat": 3 },
+        "charisma": { "flat": -2 }
+      },
+      "statModifiersPerLevel": {
+        "intelligence": { "flat": 0.5, "percent": 0.025 },
+        "willpower": { "flat": 0.4, "percent": 0.02 }
+      },
+      "experienceFormula": {
+        "base": 125,
+        "multiplier": 1.6
+      },
+      "abilities": {
+        "1": ["raise_skeleton"],
+        "3": ["drain_life"],
+        "5": ["death_bolt"],
+        "7": ["summon_wraith"],
+        "10": ["army_of_the_dead"]
+      }
+    },
+
+    {
+      "id": "bard",
+      "name": "Bard",
+      "description": "Charismatic performers who inspire allies with magic and music.",
+      "baseStatModifiers": {
+        "charisma": { "flat": 4 },
+        "dexterity": { "flat": 2 },
+        "intelligence": { "flat": 1 }
+      },
+      "statModifiersPerLevel": {
+        "charisma": { "flat": 0.6, "percent": 0.03 },
+        "dexterity": { "flat": 0.3 }
+      },
+      "experienceFormula": {
+        "base": 100,
+        "multiplier": 1.5
+      },
+      "abilities": {
+        "1": ["inspire_courage"],
+        "2": ["song_of_rest"],
+        "4": ["charm"],
+        "6": ["counter_spell_song"],
+        "8": ["mass_inspiration"],
+        "10": ["symphony_of_power"]
+      }
+    },
+
+    {
+      "id": "monk",
+      "name": "Monk",
+      "description": "Martial artists who harness inner ki for supernatural feats.",
+      "baseStatModifiers": {
+        "dexterity": { "flat": 3 },
+        "willpower": { "flat": 3 }
+      },
+      "statModifiersPerLevel": {
+        "dexterity": { "flat": 0.4, "percent": 0.02 },
+        "willpower": { "flat": 0.4, "percent": 0.02 }
+      },
+      "experienceFormula": {
+        "base": 110,
+        "multiplier": 1.55
+      },
+      "abilities": {
+        "1": ["flurry_of_blows"],
+        "3": ["stunning_strike"],
+        "5": ["ki_strike"],
+        "7": ["deflect_missiles"],
+        "10": ["quivering_palm"]
+      }
+    }
+  ]
+}

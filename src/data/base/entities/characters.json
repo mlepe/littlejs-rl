@@ -4,7 +4,16 @@
       "id": "orc_warrior",
       "name": "Orc Warrior",
       "description": "A brutish orc wielding a crude axe. Territorial and quick to anger.",
-      "type": "creature",
+      "type": "character",
+
+      "race": {
+        "id": "orc"
+      },
+
+      "class": {
+        "id": "warrior",
+        "level": 3
+      },
 
       "health": {
         "max": 50
@@ -59,7 +68,16 @@
       "id": "goblin_scout",
       "name": "Goblin Scout",
       "description": "A fast and sneaky goblin. Prefers to avoid conflict.",
-      "type": "creature",
+      "type": "character",
+
+      "race": {
+        "id": "goblin"
+      },
+
+      "class": {
+        "id": "thief",
+        "level": 2
+      },
 
       "health": {
         "max": 30
@@ -110,7 +128,16 @@
       "id": "troll_brute",
       "name": "Troll Brute",
       "description": "A massive troll with incredible strength. Attacks anything in its territory.",
-      "type": "creature",
+      "type": "boss",
+
+      "race": {
+        "id": "troll"
+      },
+
+      "class": {
+        "id": "berserker",
+        "level": 5
+      },
 
       "health": {
         "max": 100
@@ -175,6 +202,10 @@
       "description": "An animated skeleton wielding rusty weapons. Mindlessly aggressive.",
       "type": "creature",
 
+      "race": {
+        "id": "skeleton"
+      },
+
       "health": {
         "max": 40
       },
@@ -238,6 +269,15 @@
       "description": "A peaceful villager going about their day.",
       "type": "character",
 
+      "race": {
+        "id": "human"
+      },
+
+      "class": {
+        "id": "warrior",
+        "level": 1
+      },
+
       "health": {
         "max": 50
       },
@@ -270,6 +310,15 @@
       "name": "Traveling Merchant",
       "description": "A merchant selling wares. Will defend themselves if attacked.",
       "type": "character",
+
+      "race": {
+        "id": "halfling"
+      },
+
+      "class": {
+        "id": "bard",
+        "level": 2
+      },
 
       "health": {
         "max": 60
@@ -304,6 +353,15 @@
       "description": "A cheerful bard wandering the lands, singing songs.",
       "type": "character",
 
+      "race": {
+        "id": "elf"
+      },
+
+      "class": {
+        "id": "bard",
+        "level": 3
+      },
+
       "health": {
         "max": 45
       },
@@ -337,6 +395,15 @@
       "description": "A vigilant guard protecting the settlement. Defensive but not aggressive.",
       "type": "character",
 
+      "race": {
+        "id": "dwarf"
+      },
+
+      "class": {
+        "id": "warrior",
+        "level": 4
+      },
+
       "health": {
         "max": 70
       },
@@ -369,6 +436,10 @@
       "name": "Wild Wolf",
       "description": "A wolf hunting for food. Will flee if injured but attack if cornered.",
       "type": "creature",
+
+      "race": {
+        "id": "wolf"
+      },
 
       "health": {
         "max": 35

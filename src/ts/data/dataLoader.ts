@@ -10,7 +10,9 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
+import { ClassRegistry } from './classRegistry';
 import { EntityRegistry } from './entityRegistry';
+import { RaceRegistry } from './raceRegistry';
 
 /**
  * Central data loading system
@@ -72,6 +74,17 @@ export class DataLoader {
     console.log('[DataLoader] Loading base game data...');
 
     const entityRegistry = EntityRegistry.getInstance();
+    const raceRegistry = RaceRegistry.getInstance();
+    const classRegistry = ClassRegistry.getInstance();
+
+    // Load races and classes first (entities depend on them)
+    try {
+      await this.loadRaces(raceRegistry);
+      await this.loadClasses(classRegistry);
+    } catch (error) {
+      console.error('[DataLoader] Failed to load races/classes:', error);
+      throw error;
+    }
 
     // Load entity definitions
     const entityFiles = ['src/data/base/entities/characters.json'];
@@ -91,6 +104,28 @@ export class DataLoader {
   }
 
   /**
+   * Load race definitions
+   */
+  private async loadRaces(registry: RaceRegistry): Promise<void> {
+    console.log('[DataLoader] Loading races...');
+    const response = await fetch('src/data/base/races.json');
+    const data = await response.json();
+    registry.registerMultiple(data.races);
+    console.log(`[DataLoader] Loaded ${data.races.length} races`);
+  }
+
+  /**
+   * Load class definitions
+   */
+  private async loadClasses(registry: ClassRegistry): Promise<void> {
+    console.log('[DataLoader] Loading classes...');
+    const response = await fetch('src/data/base/classes.json');
+    const data = await response.json();
+    registry.registerMultiple(data.classes);
+    console.log(`[DataLoader] Loaded ${data.classes.length} classes`);
+  }
+
+  /**
    * Reload all data (useful for development)
    */
   async reload(): Promise<void> {
@@ -98,6 +133,8 @@ export class DataLoader {
 
     // Clear existing data
     EntityRegistry.getInstance().clear();
+    RaceRegistry.getInstance().clear();
+    ClassRegistry.getInstance().clear();
     // Future: Clear other registries
 
     this.loaded = false;

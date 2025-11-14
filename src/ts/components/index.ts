@@ -24,3 +24,5 @@ export * from './statModifier';
 export * from './elementalResistance';
 export * from './elementalDamage';
 export * from './statusEffect';
+export * from './race';
+export * from './class';

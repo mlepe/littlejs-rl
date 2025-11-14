@@ -14,12 +14,14 @@ import * as LJS from 'littlejsengine';
 
 import {
   AIComponent,
+  ClassComponent,
   ElementalDamageComponent,
   ElementalResistanceComponent,
   HealthComponent,
   LocationComponent,
   MovableComponent,
   PositionComponent,
+  RaceComponent,
   RelationComponent,
   RenderComponent,
   StatsComponent,
@@ -28,8 +30,12 @@ import {
 import { EntityDataFile, EntityTemplate } from '../types/dataSchemas';
 import { TileSprite, getTileCoords } from '../tileConfig';
 
+import { ClassRegistry } from './classRegistry';
 import ECS from '../ecs';
 import { ElementType } from '../types/elements';
+import { RaceRegistry } from './raceRegistry';
+import { applyClassBonuses } from '../systems/classSystem';
+import { applyRacialBonuses } from '../systems/raceSystem';
 import { calculateDerivedStats } from '../systems/derivedStatsSystem';
 
 /**
@@ -276,6 +282,85 @@ export class EntityRegistry {
     ecs.addComponent<StatusEffectComponent>(entityId, 'statusEffect', {
       effects: [],
     });
+
+    // Add race component if specified
+    if (template.race) {
+      const raceRegistry = RaceRegistry.getInstance();
+      const raceTemplate = raceRegistry.get(template.race.id);
+
+      if (raceTemplate) {
+        ecs.addComponent<RaceComponent>(entityId, 'race', {
+          raceId: raceTemplate.id,
+          raceName: raceTemplate.name,
+          raceType: raceTemplate.type,
+          abilities: raceTemplate.abilities ? [...raceTemplate.abilities] : [],
+        });
+
+        // Apply racial stat bonuses
+        applyRacialBonuses(ecs, entityId);
+      } else {
+        console.warn(
+          `[EntityRegistry] Race "${template.race.id}" not found for entity ${templateId}`
+        );
+      }
+    }
+
+    // Add class component if specified (only for characters/players/bosses)
+    if (
+      template.class &&
+      (template.type === 'character' ||
+        template.type === 'player' ||
+        template.type === 'boss')
+    ) {
+      const classRegistry = ClassRegistry.getInstance();
+      const classTemplate = classRegistry.get(template.class.id);
+
+      if (classTemplate) {
+        const startLevel = template.class.level ?? 1;
+        const startXP = template.class.experience ?? 0;
+        const nextLevelXP =
+          classRegistry.getExperienceForLevel(
+            template.class.id,
+            startLevel + 1
+          ) || (startLevel + 1) * 100;
+
+        ecs.addComponent<ClassComponent>(entityId, 'class', {
+          classId: classTemplate.id,
+          className: classTemplate.name,
+          level: startLevel,
+          experience: startXP,
+          experienceToNextLevel: nextLevelXP,
+          abilities: [],
+        });
+
+        // Unlock abilities for all levels up to start level
+        for (let level = 1; level <= startLevel; level++) {
+          const abilities = classRegistry.getAbilitiesForLevel(
+            template.class.id,
+            level
+          );
+          if (abilities && abilities.length > 0) {
+            const classComp = ecs.getComponent<ClassComponent>(
+              entityId,
+              'class'
+            );
+            if (classComp) {
+              if (!classComp.abilities) {
+                classComp.abilities = [];
+              }
+              classComp.abilities.push(...abilities);
+            }
+          }
+        }
+
+        // Apply class stat bonuses
+        applyClassBonuses(ecs, entityId);
+      } else {
+        console.warn(
+          `[EntityRegistry] Class "${template.class.id}" not found for entity ${templateId}`
+        );
+      }
+    }
 
     console.log(
       `[EntityRegistry] Spawned ${template.name} (${templateId}) at (${x}, ${y}) in location (${worldX}, ${worldY})`

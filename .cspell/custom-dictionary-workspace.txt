@@ -10,12 +10,16 @@ Elin
 Elona
 Equipable
 equipables
+Halfling
+Halflings
 littlejs
 LittleJS
 littlejs-rl
 littlejsengine
+lockpicking
 Maj'Eyal
 mithril
+multishot
 playthrough
 Quasimorph
 replayability
@@ -27,6 +31,7 @@ Shadowrun
 sidequests
 Tileset
 uncursing
+undeath
 usables
 Warhammer
 Worldmap

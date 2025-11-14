@@ -1,0 +1,232 @@
+{
+  "races": [
+    {
+      "id": "human",
+      "name": "Human",
+      "type": "humanoid",
+      "description": "Versatile and adaptable. Humans excel at diplomacy and learning.",
+      "statModifiers": {
+        "intelligence": { "flat": 1 },
+        "charisma": { "flat": 1 }
+      },
+      "classAffinities": {
+        "warrior": 0,
+        "mage": 0,
+        "thief": 0,
+        "cleric": 0,
+        "ranger": 0
+      }
+    },
+
+    {
+      "id": "dwarf",
+      "name": "Dwarf",
+      "type": "humanoid",
+      "description": "Sturdy and resilient. Dwarves are natural warriors and craftsmen.",
+      "statModifiers": {
+        "toughness": { "flat": 3, "percent": 0.1 },
+        "strength": { "flat": 2 },
+        "dexterity": { "flat": -1 },
+        "attractiveness": { "flat": -1 }
+      },
+      "classAffinities": {
+        "warrior": 2,
+        "cleric": 1,
+        "mage": -2
+      }
+    },
+
+    {
+      "id": "elf",
+      "name": "Elf",
+      "type": "humanoid",
+      "description": "Graceful and intelligent. Elves are natural mages and archers.",
+      "statModifiers": {
+        "dexterity": { "flat": 3 },
+        "intelligence": { "flat": 2 },
+        "attractiveness": { "flat": 2 },
+        "toughness": { "flat": -2 }
+      },
+      "classAffinities": {
+        "mage": 2,
+        "ranger": 2,
+        "warrior": -1
+      }
+    },
+
+    {
+      "id": "orc",
+      "name": "Orc",
+      "type": "humanoid",
+      "description": "Brutish and powerful. Orcs dominate through raw strength.",
+      "statModifiers": {
+        "strength": { "flat": 4, "percent": 0.15 },
+        "toughness": { "flat": 3 },
+        "intelligence": { "flat": -2 },
+        "charisma": { "flat": -2 },
+        "attractiveness": { "flat": -3 }
+      },
+      "classAffinities": {
+        "warrior": 3,
+        "mage": -3,
+        "thief": -1
+      }
+    },
+
+    {
+      "id": "goblin",
+      "name": "Goblin",
+      "type": "humanoid",
+      "description": "Small and sneaky. Goblins excel at stealth and trickery.",
+      "statModifiers": {
+        "dexterity": { "flat": 4 },
+        "strength": { "flat": -3 },
+        "toughness": { "flat": -2 },
+        "attractiveness": { "flat": -2 }
+      },
+      "classAffinities": {
+        "thief": 3,
+        "ranger": 1,
+        "warrior": -2,
+        "cleric": -1
+      }
+    },
+
+    {
+      "id": "halfling",
+      "name": "Halfling",
+      "type": "humanoid",
+      "description": "Small but lucky. Halflings are naturally stealthy and charming.",
+      "statModifiers": {
+        "dexterity": { "flat": 2 },
+        "charisma": { "flat": 2 },
+        "strength": { "flat": -2 }
+      },
+      "classAffinities": {
+        "thief": 2,
+        "ranger": 1
+      }
+    },
+
+    {
+      "id": "wolf",
+      "name": "Wolf",
+      "type": "beast",
+      "description": "Swift and fierce predator. Excellent senses.",
+      "statModifiers": {
+        "dexterity": { "flat": 3 },
+        "strength": { "flat": 2 },
+        "intelligence": { "flat": -5 },
+        "charisma": { "flat": -3 }
+      }
+    },
+
+    {
+      "id": "bear",
+      "name": "Bear",
+      "type": "beast",
+      "description": "Massive and powerful. Incredible strength and endurance.",
+      "statModifiers": {
+        "strength": { "flat": 5, "percent": 0.2 },
+        "toughness": { "flat": 5, "percent": 0.2 },
+        "dexterity": { "flat": -3 },
+        "intelligence": { "flat": -6 }
+      }
+    },
+
+    {
+      "id": "rat",
+      "name": "Rat",
+      "type": "beast",
+      "description": "Small, quick, and disease-ridden vermin.",
+      "statModifiers": {
+        "dexterity": { "flat": 2 },
+        "strength": { "flat": -5 },
+        "toughness": { "flat": -3 },
+        "intelligence": { "flat": -7 }
+      }
+    },
+
+    {
+      "id": "cat",
+      "name": "Cat",
+      "type": "beast",
+      "description": "Agile and independent. Natural hunters.",
+      "statModifiers": {
+        "dexterity": { "flat": 4 },
+        "strength": { "flat": -4 },
+        "intelligence": { "flat": -5 }
+      }
+    },
+
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "type": "undead",
+      "description": "Animated bones. Immune to many mortal weaknesses.",
+      "statModifiers": {
+        "toughness": { "flat": -2 },
+        "charisma": { "flat": -5 },
+        "attractiveness": { "flat": -10 }
+      }
+    },
+
+    {
+      "id": "zombie",
+      "name": "Zombie",
+      "type": "undead",
+      "description": "Shambling corpse. Slow but relentless.",
+      "statModifiers": {
+        "toughness": { "flat": 3 },
+        "dexterity": { "flat": -4 },
+        "intelligence": { "flat": -6 },
+        "charisma": { "flat": -7 }
+      }
+    },
+
+    {
+      "id": "troll",
+      "name": "Troll",
+      "type": "humanoid",
+      "description": "Massive regenerating giant. Incredible resilience.",
+      "statModifiers": {
+        "strength": { "flat": 6, "percent": 0.2 },
+        "toughness": { "flat": 7, "percent": 0.25 },
+        "intelligence": { "flat": -4 },
+        "dexterity": { "flat": -3 },
+        "attractiveness": { "flat": -5 }
+      },
+      "classAffinities": {
+        "warrior": 2,
+        "mage": -4
+      }
+    },
+
+    {
+      "id": "demon",
+      "name": "Demon",
+      "type": "demon",
+      "description": "Infernal being of chaos and destruction.",
+      "statModifiers": {
+        "strength": { "flat": 4 },
+        "intelligence": { "flat": 3 },
+        "willpower": { "flat": 4 },
+        "charisma": { "flat": -4 }
+      }
+    },
+
+    {
+      "id": "golem",
+      "name": "Golem",
+      "type": "construct",
+      "description": "Magically animated construct. Incredibly durable.",
+      "statModifiers": {
+        "toughness": { "flat": 10, "percent": 0.3 },
+        "strength": { "flat": 5 },
+        "dexterity": { "flat": -5 },
+        "intelligence": { "flat": -8 },
+        "charisma": { "flat": -10 }
+      }
+    }
+  ]
+}

@@ -21,3 +21,5 @@ export * from './statModifierSystem';
 export * from './derivedStatsSystem';
 export * from './elementalDamageSystem';
 export * from './statusEffectSystem';
+export * from './raceSystem';
+export * from './classSystem';

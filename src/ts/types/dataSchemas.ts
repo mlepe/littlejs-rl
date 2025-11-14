@@ -11,6 +11,91 @@
  */
 
 import { ElementType } from './elements';
+import { RaceType } from '../components/race';
+
+/**
+ * Stat modifier - can be flat bonus or percentage multiplier
+ */
+export interface StatModifier {
+  /** Flat bonus added to stat (e.g., +5 strength) */
+  flat?: number;
+  /** Percentage multiplier (e.g., 0.2 = +20% strength) */
+  percent?: number;
+}
+
+/**
+ * Race template that can be loaded from JSON data files
+ */
+export interface RaceTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  type: RaceType;
+
+  /** Stat modifiers provided by this race */
+  statModifiers?: {
+    strength?: StatModifier;
+    dexterity?: StatModifier;
+    intelligence?: StatModifier;
+    charisma?: StatModifier;
+    willpower?: StatModifier;
+    toughness?: StatModifier;
+    attractiveness?: StatModifier;
+  };
+
+  /** Racial abilities/traits IDs granted by this race */
+  abilities?: string[];
+
+  /** Class affinity modifiers (for future implementation) */
+  classAffinities?: {
+    [classId: string]: number; // Positive = affinity, negative = penalty
+  };
+}
+
+/**
+ * Class template that can be loaded from JSON data files
+ */
+export interface ClassTemplate {
+  id: string;
+  name: string;
+  description?: string;
+
+  /** Stat modifiers provided by this class per level */
+  statModifiersPerLevel?: {
+    strength?: StatModifier;
+    dexterity?: StatModifier;
+    intelligence?: StatModifier;
+    charisma?: StatModifier;
+    willpower?: StatModifier;
+    toughness?: StatModifier;
+    attractiveness?: StatModifier;
+  };
+
+  /** Base stat modifiers at level 1 */
+  baseStatModifiers?: {
+    strength?: StatModifier;
+    dexterity?: StatModifier;
+    intelligence?: StatModifier;
+    charisma?: StatModifier;
+    willpower?: StatModifier;
+    toughness?: StatModifier;
+    attractiveness?: StatModifier;
+  };
+
+  /** Class abilities/skills IDs granted by this class */
+  abilities?: {
+    [level: number]: string[]; // Abilities unlocked at each level
+  };
+
+  /** Experience required for each level (level 1 to 2, 2 to 3, etc.) */
+  experiencePerLevel?: number[];
+
+  /** Default XP formula: level * baseXP * multiplier^(level-1) */
+  experienceFormula?: {
+    base: number;
+    multiplier: number;
+  };
+}
 
 /**
  * Base entity template that can be loaded from JSON data files
@@ -82,6 +167,18 @@ export interface EntityTemplate {
 
   // Entity type for categorization (visual/gameplay, not hostility)
   type: 'player' | 'character' | 'creature' | 'boss';
+
+  // Race configuration (all entities have a race)
+  race?: {
+    id: string; // Race ID from races.json
+  };
+
+  // Class configuration (only 'character', 'player', 'boss' types have classes)
+  class?: {
+    id: string; // Class ID from classes.json
+    level?: number; // Starting level (default: 1)
+    experience?: number; // Starting XP (default: 0)
+  };
 }
 
 /**
@@ -233,4 +330,18 @@ export interface TileDataFile {
  */
 export interface BiomeDataFile {
   biomes: BiomeTemplate[];
+}
+
+/**
+ * Container for race data files
+ */
+export interface RaceDataFile {
+  races: RaceTemplate[];
+}
+
+/**
+ * Container for class data files
+ */
+export interface ClassDataFile {
+  classes: ClassTemplate[];
 }

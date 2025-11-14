@@ -15,8 +15,10 @@
  * Central exports for all data-related functionality
  */
 
+export { ClassRegistry } from './classRegistry';
 export { DataLoader } from './dataLoader';
 export { EntityRegistry } from './entityRegistry';
+export { RaceRegistry } from './raceRegistry';
 
 // Future: Export other registries when implemented
 // export { ItemRegistry } from './itemRegistry';
