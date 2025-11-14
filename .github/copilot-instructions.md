@@ -640,6 +640,65 @@ function combatSystem(ecs: ECS) {
 - Run `npm run serve` to start dev server
 - Run `npm run dev` to build and serve
 
+## Data-Driven Content System
+
+The game uses a data-driven architecture where content is defined in JSON files rather than code.
+
+### Quick Reference
+
+**Load data** (automatic in Game.init()):
+
+```typescript
+import { DataLoader } from './ts/data/dataLoader';
+await DataLoader.getInstance().loadAllData();
+```
+
+**Spawn entities from data**:
+
+```typescript
+import { EntityRegistry } from './ts/data/entityRegistry';
+const registry = EntityRegistry.getInstance();
+const orcId = registry.spawn(ecs, 'orc_warrior', x, y, worldX, worldY);
+```
+
+**Query available entities**:
+
+```typescript
+const allIds = registry.getAllIds();
+const enemies = registry.getByType('enemy');
+const orcTemplate = registry.get('orc_warrior');
+```
+
+### File Locations
+
+- **Entity data**: `src/data/base/entities/*.json`
+- **Balance config**: `src/data/base/stats/balance.json`
+- **Type definitions**: `src/ts/types/dataSchemas.ts`
+- **Loading system**: `src/ts/data/`
+
+### Entity Data Format
+
+```json
+{
+  "entities": [
+    {
+      "id": "unique_id",
+      "name": "Display Name",
+      "type": "enemy" | "npc" | "player" | "creature" | "boss",
+      "health": { "max": 50 },
+      "stats": { "strength": 8, "defense": 5, "speed": 1.0 },
+      "ai": { "type": "aggressive" | "passive" | "fleeing" | "patrol", "detectionRange": 10 },
+      "render": { "sprite": "ENEMY_ORC", "color": "#00ff00" },
+      "relation": { "baseScore": -50, "minScore": -100, "maxScore": 0 }
+    }
+  ]
+}
+```
+
+**Valid sprite names** are defined in `TileSprite` enum in `src/ts/tileConfig.ts`.
+
+**See `DATA-SYSTEM.md` for comprehensive documentation.**
+
 ## Debugging
 
 - Set `GAME_DEBUG=true` in `.env` for debug mode

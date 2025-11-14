@@ -1,0 +1,38 @@
+{
+  "player": {
+    "health": 100,
+    "strength": 10,
+    "defense": 5,
+    "speed": 1.0
+  },
+
+  "combat": {
+    "baseDamageMultiplier": 1.0,
+    "defenseReduction": 0.1,
+    "criticalChance": 0.05,
+    "criticalMultiplier": 2.0
+  },
+
+  "progression": {
+    "xpPerLevel": 100,
+    "levelScaling": 1.5,
+    "statsPerLevel": {
+      "strength": 2,
+      "defense": 1,
+      "health": 10
+    }
+  },
+
+  "ai": {
+    "updateRadius": 20,
+    "passiveWanderChance": 0.1,
+    "aggressivePursuitSpeed": 1.2,
+    "fleeingSpeedBonus": 1.5
+  },
+
+  "world": {
+    "defaultLocationSize": 50,
+    "entityDespawnDistance": 30,
+    "maxEntitiesPerLocation": 50
+  }
+}

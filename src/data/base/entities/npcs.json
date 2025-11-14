@@ -1,0 +1,102 @@
+{
+  "entities": [
+    {
+      "id": "friendly_villager",
+      "name": "Villager",
+      "description": "A peaceful villager going about their day.",
+      "type": "npc",
+
+      "health": {
+        "max": 50
+      },
+
+      "stats": {
+        "strength": 3,
+        "defense": 2,
+        "speed": 1.0
+      },
+
+      "ai": {
+        "type": "passive",
+        "detectionRange": 5
+      },
+
+      "render": {
+        "sprite": "NPC_PEASANT",
+        "color": "#4444ff"
+      },
+
+      "relation": {
+        "baseScore": 20,
+        "minScore": -50,
+        "maxScore": 100
+      }
+    },
+
+    {
+      "id": "merchant",
+      "name": "Traveling Merchant",
+      "description": "A merchant selling wares. Always looking for a good deal.",
+      "type": "npc",
+
+      "health": {
+        "max": 60
+      },
+
+      "stats": {
+        "strength": 5,
+        "defense": 4,
+        "speed": 0.9
+      },
+
+      "ai": {
+        "type": "passive",
+        "detectionRange": 7
+      },
+
+      "render": {
+        "sprite": "NPC_MERCHANT",
+        "color": "#ffd700"
+      },
+
+      "relation": {
+        "baseScore": 30,
+        "minScore": -20,
+        "maxScore": 100
+      }
+    },
+
+    {
+      "id": "wandering_minstrel",
+      "name": "Minstrel",
+      "description": "A cheerful bard wandering the lands, singing songs.",
+      "type": "npc",
+
+      "health": {
+        "max": 45
+      },
+
+      "stats": {
+        "strength": 2,
+        "defense": 1,
+        "speed": 1.2
+      },
+
+      "ai": {
+        "type": "patrol",
+        "detectionRange": 8
+      },
+
+      "render": {
+        "sprite": "PLAYER_BARD",
+        "color": "#ff69b4"
+      },
+
+      "relation": {
+        "baseScore": 40,
+        "minScore": 0,
+        "maxScore": 100
+      }
+    }
+  ]
+}

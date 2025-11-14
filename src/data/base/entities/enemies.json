@@ -1,0 +1,135 @@
+{
+  "entities": [
+    {
+      "id": "orc_warrior",
+      "name": "Orc Warrior",
+      "description": "A brutish orc wielding a crude axe. Aggressive and territorial.",
+      "type": "enemy",
+
+      "health": {
+        "max": 50
+      },
+
+      "stats": {
+        "strength": 8,
+        "defense": 5,
+        "speed": 0.8
+      },
+
+      "ai": {
+        "type": "aggressive",
+        "detectionRange": 10
+      },
+
+      "render": {
+        "sprite": "ENEMY_ORC",
+        "color": "#00ff00"
+      },
+
+      "relation": {
+        "baseScore": -50,
+        "minScore": -100,
+        "maxScore": 0
+      }
+    },
+
+    {
+      "id": "goblin_scout",
+      "name": "Goblin Scout",
+      "description": "A fast and sneaky goblin. Flees when threatened.",
+      "type": "enemy",
+
+      "health": {
+        "max": 30
+      },
+
+      "stats": {
+        "strength": 4,
+        "defense": 2,
+        "speed": 1.5
+      },
+
+      "ai": {
+        "type": "fleeing",
+        "detectionRange": 8
+      },
+
+      "render": {
+        "sprite": "ENEMY_GOBLIN",
+        "color": "#ffaa00"
+      },
+
+      "relation": {
+        "baseScore": -30,
+        "minScore": -100,
+        "maxScore": 20
+      }
+    },
+
+    {
+      "id": "troll_brute",
+      "name": "Troll Brute",
+      "description": "A massive troll with incredible strength. Slow but devastating.",
+      "type": "enemy",
+
+      "health": {
+        "max": 100
+      },
+
+      "stats": {
+        "strength": 15,
+        "defense": 8,
+        "speed": 0.5
+      },
+
+      "ai": {
+        "type": "aggressive",
+        "detectionRange": 6
+      },
+
+      "render": {
+        "sprite": "ENEMY_TROLL",
+        "color": "#808080"
+      },
+
+      "relation": {
+        "baseScore": -70,
+        "minScore": -100,
+        "maxScore": -20
+      }
+    },
+
+    {
+      "id": "skeleton_warrior",
+      "name": "Skeleton Warrior",
+      "description": "An animated skeleton wielding rusty weapons. Relentless undead.",
+      "type": "enemy",
+
+      "health": {
+        "max": 40
+      },
+
+      "stats": {
+        "strength": 6,
+        "defense": 3,
+        "speed": 1.0
+      },
+
+      "ai": {
+        "type": "aggressive",
+        "detectionRange": 12
+      },
+
+      "render": {
+        "sprite": "ENEMY_SKELETON",
+        "color": "#ffffff"
+      },
+
+      "relation": {
+        "baseScore": -100,
+        "minScore": -100,
+        "maxScore": -100
+      }
+    }
+  ]
+}

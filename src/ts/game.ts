@@ -22,24 +22,25 @@ import {
 import ECS from './ecs';
 import World from './world';
 import { createPlayer } from './entities';
+import { DataLoader } from './data/dataLoader';
 
 /**
  * Main Game class - Singleton pattern
- * 
+ *
  * Manages the ECS, World, and game loop integration with LittleJS.
  * This is the central controller for the game, coordinating between:
  * - Entity Component System (ECS) for game logic
  * - World and Location management for tile-based maps
  * - LittleJS engine for rendering and input
- * 
+ *
  * @example
  * ```typescript
  * // Get the game instance
  * const game = Game.getInstance();
- * 
+ *
  * // Initialize the game
  * game.init();
- * 
+ *
  * // Access game systems
  * const ecs = game.getECS();
  * const world = game.getWorld();
@@ -105,11 +106,17 @@ export default class Game {
   /**
    * Initialize the game world and player
    */
-  init(): void {
+  async init(): Promise<void> {
     if (this.initialized) {
       console.warn('Game already initialized');
       return;
     }
+
+    // Load all game data first
+    console.log('[Game] Loading game data...');
+    const dataLoader = DataLoader.getInstance();
+    await dataLoader.loadAllData();
+    console.log('[Game] Game data loaded');
 
     // Set up initial location
     this.world.setCurrentLocation(
