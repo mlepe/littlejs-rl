@@ -58,6 +58,14 @@
       ".env": ".env.example, .env.local",
     },
     "deepscan.enable": true,
+    "cSpell.customDictionaries": {
+      "custom-dictionary-workspace": {
+        "name": "custom-dictionary-workspace",
+        "path": "${workspaceFolder:LittleJS Roguelike}/.cspell/custom-dictionary-workspace.txt",
+        "addWords": true,
+        "scope": "workspace",
+      },
+    },
   },
   "extensions": {
     "recommendations": [
