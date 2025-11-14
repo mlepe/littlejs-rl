@@ -28,5 +28,6 @@
     "**/.hg": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true
-  }
+  },
+  "typescript.format.semicolons": "insert"
 }
