@@ -19,8 +19,7 @@ src/
 ├── data/
 │   ├── base/                    # Core game content
 │   │   ├── entities/
-│   │   │   ├── enemies.json    # Enemy definitions
-│   │   │   ├── npcs.json       # NPC definitions
+│   │   │   ├── characters.json # All entity definitions (characters & creatures)
 │   │   │   └── player.json     # Player templates (future)
 │   │   ├── items/              # Item definitions (future)
 │   │   ├── tiles/              # Tile definitions (future)
@@ -85,8 +84,8 @@ const orcTemplate = registry.get('orc_warrior');
 console.log(orcTemplate?.name); // "Orc Warrior"
 
 // Get entities by type
-const enemies = registry.getByType('enemy');
-const npcs = registry.getByType('npc');
+const characters = registry.getByType('character');
+const creatures = registry.getByType('creature');
 
 // Check if template exists
 if (registry.has('troll_brute')) {
@@ -107,7 +106,7 @@ Entities are defined in JSON files under `src/data/base/entities/`:
       "id": "unique_identifier",
       "name": "Display Name",
       "description": "Optional description",
-      "type": "enemy",
+      "type": "creature",
 
       "health": {
         "max": 50,
@@ -121,7 +120,7 @@ Entities are defined in JSON files under `src/data/base/entities/`:
       },
 
       "ai": {
-        "type": "aggressive",
+        "disposition": "aggressive",
         "detectionRange": 10
       },
 
@@ -163,7 +162,7 @@ Entities are defined in JSON files under `src/data/base/entities/`:
   - **`defense`** (number): Damage reduction
   - **`speed`** (number): Movement speed multiplier
 - **`ai`** (object): AI behavior (only for NPCs/enemies)
-  - **`type`** (string): `"passive"`, `"aggressive"`, `"patrol"`, or `"fleeing"`
+  - **`disposition`** (string): `"peaceful"`, `"neutral"`, `"defensive"`, `"aggressive"`, `"hostile"`, `"patrol"`, or `"fleeing"`
   - **`detectionRange`** (number): How far the entity can detect the player
 - **`relation`** (object): Relationship system
   - **`baseScore`** (number, optional): Starting relationship value (default: 0)
@@ -174,14 +173,14 @@ Entities are defined in JSON files under `src/data/base/entities/`:
 
 ### Example 1: Creating a New Enemy
 
-Add to `src/data/base/entities/enemies.json`:
+Add to `src/data/base/entities/characters.json`:
 
 ```json
 {
   "id": "dragon_whelp",
   "name": "Dragon Whelp",
   "description": "A young dragon, still dangerous despite its size.",
-  "type": "enemy",
+  "type": "creature",
 
   "health": {
     "max": 80,
@@ -195,7 +194,7 @@ Add to `src/data/base/entities/enemies.json`:
   },
 
   "ai": {
-    "type": "aggressive",
+    "disposition": "hostile",
     "detectionRange": 15
   },
 
@@ -212,16 +211,16 @@ Add to `src/data/base/entities/enemies.json`:
 }
 ```
 
-### Example 2: Creating a Friendly NPC
+### Example 2: Creating a Friendly Character
 
-Add to `src/data/base/entities/npcs.json`:
+Add to `src/data/base/entities/characters.json`:
 
 ```json
 {
   "id": "quest_giver",
   "name": "Village Elder",
   "description": "The wise elder of the village, always has tasks for adventurers.",
-  "type": "npc",
+  "type": "character",
 
   "health": {
     "max": 40
@@ -234,7 +233,7 @@ Add to `src/data/base/entities/npcs.json`:
   },
 
   "ai": {
-    "type": "passive",
+    "disposition": "peaceful",
     "detectionRange": 5
   },
 
@@ -333,12 +332,19 @@ This file can be loaded and used for game mechanics (implementation pending).
 - **Late game**: 100+ HP, 15+ strength, 10+ defense
 - **Speed**: 0.5-2.0 (player is 1.0)
 
-### AI Types
+### Entity Dispositions
 
-- **`passive`**: Wanders around, doesn't attack unless provoked
-- **`aggressive`**: Chases and attacks player on sight
-- **`fleeing`**: Runs away from player
-- **`patrol`**: Follows a patrol route (implementation pending)
+See `DISPOSITION-SYSTEM.md` for comprehensive guide.
+
+**Quick Reference:**
+
+- **`peaceful`**: Never attacks (friendly NPCs)
+- **`neutral`**: Attacks if relation < -20 (merchants, wildlife)
+- **`defensive`**: Attacks if relation < -40 (guards)
+- **`aggressive`**: Attacks if relation < 0 (bandits, orcs)
+- **`hostile`**: Attacks unless relation > 10 (undead, demons)
+- **`patrol`**: Patrols and attacks if relation < -10
+- **`fleeing`**: Never attacks, always runs (goblins, prey)
 
 ### Relationship Scores
 
@@ -376,7 +382,7 @@ src/data/mods/my-custom-enemies/
 ├── mod.json              # Mod metadata
 └── data/
     ├── entities/
-    │   └── custom-enemies.json
+    │   └── custom-characters.json
     └── items/
         └── custom-weapons.json
 ```
@@ -391,7 +397,7 @@ The `mod.json` format:
   "author": "Your Name",
   "description": "Adds 10 new enemy types to the game",
   "data": [
-    "data/entities/custom-enemies.json",
+    "data/entities/custom-characters.json",
     "data/items/custom-weapons.json"
   ],
   "dependencies": []

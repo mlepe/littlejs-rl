@@ -13,6 +13,11 @@
 /**
  * Example: Using the Data Loading System
  *
+ * ⚠️ WARNING: This example file is currently outdated!
+ * The Location class API has changed and addEntity() method no longer exists.
+ * These examples are kept for reference but will cause compilation errors.
+ * TODO: Update examples to use new Location API
+ *
  * This file demonstrates how to use the EntityRegistry and DataLoader
  * to spawn entities from data files in your game.
  */
@@ -81,11 +86,11 @@ export function exampleRandomSpawning(
 ): void {
   const registry = EntityRegistry.getInstance();
 
-  // Get all enemy templates
-  const enemies = registry.getByType('enemy');
+  // Get all creature templates
+  const creatures = registry.getByType('creature');
 
-  if (enemies.length === 0) {
-    console.warn('No enemy templates loaded');
+  if (creatures.length === 0) {
+    console.warn('No creature templates loaded');
     return;
   }
 
@@ -105,8 +110,8 @@ export function exampleRandomSpawning(
       continue;
     }
 
-    // Random enemy type
-    const template = enemies[Math.floor(Math.random() * enemies.length)];
+    // Random creature type
+    const template = creatures[Math.floor(Math.random() * creatures.length)];
 
     // Spawn
     const entityId = registry.spawn(ecs, template.id, x, y, worldX, worldY);
@@ -136,10 +141,12 @@ export function exampleCheckTemplates(): void {
   }
 
   // Get specific types
-  const enemies = registry.getByType('enemy');
-  const npcs = registry.getByType('npc');
+  const creatures = registry.getByType('creature');
+  const characters = registry.getByType('character');
 
-  console.log(`\nLoaded ${enemies.length} enemies and ${npcs.length} NPCs`);
+  console.log(
+    `\nLoaded ${creatures.length} creatures and ${characters.length} characters`
+  );
 }
 
 /**
@@ -156,30 +163,37 @@ export function exampleConditionalSpawning(
 ): void {
   const registry = EntityRegistry.getInstance();
 
-  // Get enemies sorted by health (difficulty)
-  const enemies = registry
-    .getByType('enemy')
+  // Get creatures sorted by health (difficulty)
+  const creatures = registry
+    .getByType('creature')
     .filter((e) => e.health !== undefined)
     .sort((a, b) => (a.health?.max || 0) - (b.health?.max || 0));
 
-  if (enemies.length === 0) return;
+  if (creatures.length === 0) return;
 
-  // Select enemy based on difficulty
-  let selectedEnemy;
+  // Select creature based on difficulty
+  let selectedCreature;
   if (difficulty === 'easy') {
-    selectedEnemy = enemies[0]; // Weakest
+    selectedCreature = creatures[0]; // Weakest
   } else if (difficulty === 'hard') {
-    selectedEnemy = enemies[enemies.length - 1]; // Strongest
+    selectedCreature = creatures[creatures.length - 1]; // Strongest
   } else {
-    selectedEnemy = enemies[Math.floor(enemies.length / 2)]; // Middle
+    selectedCreature = creatures[Math.floor(creatures.length / 2)]; // Middle
   }
 
   // Spawn the selected enemy
-  const entityId = registry.spawn(ecs, selectedEnemy.id, x, y, worldX, worldY);
+  const entityId = registry.spawn(
+    ecs,
+    selectedCreature.id,
+    x,
+    y,
+    worldX,
+    worldY
+  );
 
   if (entityId !== null) {
     location.addEntity(x, y, entityId);
-    console.log(`Spawned ${selectedEnemy.name} (difficulty: ${difficulty})`);
+    console.log(`Spawned ${selectedCreature.name} (difficulty: ${difficulty})`);
   }
 }
 
@@ -218,12 +232,12 @@ export function exampleSpawnVillage(
 ): void {
   const registry = EntityRegistry.getInstance();
 
-  // Get all NPC templates
-  const npcs = registry.getByType('npc');
+  // Get all character templates
+  const characters = registry.getByType('character');
 
-  // Spawn one of each NPC type around the village center
-  npcs.forEach((template, index) => {
-    const angle = (index / npcs.length) * Math.PI * 2;
+  // Spawn one of each character type around the village center
+  characters.forEach((template, index) => {
+    const angle = (index / characters.length) * Math.PI * 2;
     const radius = 5;
     const x = Math.floor(centerX + Math.cos(angle) * radius);
     const y = Math.floor(centerY + Math.sin(angle) * radius);

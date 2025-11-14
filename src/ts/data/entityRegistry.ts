@@ -175,7 +175,16 @@ export class EntityRegistry {
     if (template.stats) {
       ecs.addComponent<StatsComponent>(entityId, 'stats', {
         strength: template.stats.strength,
+        dexterity: template.stats.dexterity ?? 10,
+        intelligence: template.stats.intelligence ?? 10,
+        charisma: template.stats.charisma ?? 10,
+        willpower: template.stats.willpower ?? 10,
+        toughness: template.stats.toughness ?? 10,
+        attractiveness: template.stats.attractiveness ?? 10,
         defense: template.stats.defense,
+        dodge: template.stats.dodge ?? 5,
+        mindDefense: template.stats.mindDefense ?? 5,
+        magicalDefense: template.stats.magicalDefense ?? 5,
         speed: template.stats.speed,
       });
     }
@@ -183,7 +192,7 @@ export class EntityRegistry {
     // Add AI
     if (template.ai) {
       ecs.addComponent<AIComponent>(entityId, 'ai', {
-        type: template.ai.type,
+        disposition: template.ai.disposition,
         detectionRange: template.ai.detectionRange,
         state: 'idle',
       });

@@ -27,12 +27,29 @@ export interface EntityTemplate {
 
   stats?: {
     strength: number;
+    dexterity?: number;
+    intelligence?: number;
+    charisma?: number;
+    willpower?: number;
+    toughness?: number;
+    attractiveness?: number;
     defense: number;
+    dodge?: number;
+    mindDefense?: number;
+    magicalDefense?: number;
     speed: number;
   };
 
   ai?: {
-    type: 'passive' | 'aggressive' | 'patrol' | 'fleeing';
+    // Disposition determines base behavior pattern
+    disposition:
+      | 'peaceful'
+      | 'neutral'
+      | 'defensive'
+      | 'aggressive'
+      | 'hostile'
+      | 'patrol'
+      | 'fleeing';
     detectionRange: number;
   };
 
@@ -48,8 +65,8 @@ export interface EntityTemplate {
     maxScore?: number;
   };
 
-  // Entity type for categorization
-  type: 'player' | 'enemy' | 'npc' | 'creature' | 'boss';
+  // Entity type for categorization (visual/gameplay, not hostility)
+  type: 'player' | 'character' | 'creature' | 'boss';
 }
 
 /**

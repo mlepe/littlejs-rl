@@ -78,7 +78,16 @@ export function createPlayer(
 
   ecs.addComponent<StatsComponent>(playerId, 'stats', {
     strength: 10,
+    dexterity: 10,
+    intelligence: 10,
+    charisma: 10,
+    willpower: 10,
+    toughness: 10,
+    attractiveness: 10,
     defense: 5,
+    dodge: 5,
+    mindDefense: 5,
+    magicalDefense: 5,
     speed: 1,
   });
 
@@ -138,12 +147,21 @@ export function createEnemy(
 
   ecs.addComponent<StatsComponent>(enemyId, 'stats', {
     strength: 5,
+    dexterity: 5,
+    intelligence: 3,
+    charisma: 3,
+    willpower: 5,
+    toughness: 8,
+    attractiveness: 3,
     defense: 3,
+    dodge: 3,
+    mindDefense: 3,
+    magicalDefense: 2,
     speed: 0.5,
   });
 
   ecs.addComponent<AIComponent>(enemyId, 'ai', {
-    type: 'aggressive',
+    disposition: 'aggressive',
     detectionRange: 10,
     state: 'idle',
   });
@@ -198,12 +216,21 @@ export function createNPC(
 
   ecs.addComponent<StatsComponent>(npcId, 'stats', {
     strength: 2,
-    defense: 2,
-    speed: 0.3,
+    dexterity: 8,
+    intelligence: 12,
+    charisma: 15,
+    willpower: 10,
+    toughness: 5,
+    attractiveness: 12,
+    defense: 1,
+    dodge: 7,
+    mindDefense: 10,
+    magicalDefense: 8,
+    speed: 0.8,
   });
 
   ecs.addComponent<AIComponent>(npcId, 'ai', {
-    type: 'passive',
+    disposition: 'peaceful',
     detectionRange: 5,
     state: 'idle',
   });
@@ -261,13 +288,22 @@ export function createFleeingCreature(
 
   ecs.addComponent<StatsComponent>(creatureId, 'stats', {
     strength: 1,
+    dexterity: 15,
+    intelligence: 3,
+    charisma: 3,
+    willpower: 5,
+    toughness: 3,
+    attractiveness: 5,
     defense: 1,
+    dodge: 12,
+    mindDefense: 3,
+    magicalDefense: 2,
     speed: 1.5,
   });
 
   ecs.addComponent<AIComponent>(creatureId, 'ai', {
-    type: 'fleeing',
-    detectionRange: 8,
+    disposition: 'fleeing',
+    detectionRange: 12,
     state: 'idle',
   });
 
@@ -321,12 +357,21 @@ export function createBoss(
 
   ecs.addComponent<StatsComponent>(bossId, 'stats', {
     strength: 20,
+    dexterity: 10,
+    intelligence: 8,
+    charisma: 5,
+    willpower: 15,
+    toughness: 25,
+    attractiveness: 3,
     defense: 10,
+    dodge: 6,
+    mindDefense: 12,
+    magicalDefense: 10,
     speed: 0.3,
   });
 
   ecs.addComponent<AIComponent>(bossId, 'ai', {
-    type: 'aggressive',
+    disposition: 'aggressive',
     detectionRange: 15,
     state: 'idle',
   });

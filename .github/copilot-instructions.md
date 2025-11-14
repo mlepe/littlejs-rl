@@ -258,9 +258,21 @@ export function movementSystem(ecs: ECS, dx: number, dy: number): void {
 
 **AI Components:**
 
-- `AIComponent` - type (passive/aggressive/patrol/fleeing), detectionRange, state, target
+- `AIComponent` - disposition (peaceful/neutral/defensive/aggressive/hostile/patrol/fleeing), detectionRange, state, target
 - `RelationComponent` - relations Map tracking scores with multiple entities (Map<entityId, RelationData>)
 - `RelationData` - relationScore, minRelationScore, maxRelationScore for individual relationships
+
+**Disposition System:**
+
+- `peaceful`: Never attacks (friendly NPCs)
+- `neutral`: Attacks if relation < -20 (merchants, wildlife)
+- `defensive`: Attacks if relation < -40 (guards)
+- `aggressive`: Attacks if relation < 0 (bandits, orcs)
+- `hostile`: Attacks unless relation > 10 (undead, demons)
+- `patrol`: Patrols and attacks if relation < -10
+- `fleeing`: Never attacks, always runs (goblins, prey)
+
+**See `DISPOSITION-SYSTEM.md` for comprehensive guide.**
 
 ### Available Systems
 
@@ -698,6 +710,7 @@ const orcTemplate = registry.get('orc_warrior');
 **Valid sprite names** are defined in `TileSprite` enum in `src/ts/tileConfig.ts`.
 
 **See `DATA-SYSTEM.md` for comprehensive documentation.**
+**See `DISPOSITION-SYSTEM.md` for entity behavior system.**
 
 ## Debugging
 

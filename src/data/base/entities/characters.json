@@ -1,0 +1,300 @@
+{
+  "entities": [
+    {
+      "id": "orc_warrior",
+      "name": "Orc Warrior",
+      "description": "A brutish orc wielding a crude axe. Territorial and quick to anger.",
+      "type": "creature",
+
+      "health": {
+        "max": 50
+      },
+
+      "stats": {
+        "strength": 8,
+        "defense": 5,
+        "speed": 0.8
+      },
+
+      "ai": {
+        "disposition": "aggressive",
+        "detectionRange": 10
+      },
+
+      "render": {
+        "sprite": "ENEMY_ORC",
+        "color": "#00ff00"
+      },
+
+      "relation": {
+        "baseScore": -50,
+        "minScore": -100,
+        "maxScore": 0
+      }
+    },
+
+    {
+      "id": "goblin_scout",
+      "name": "Goblin Scout",
+      "description": "A fast and sneaky goblin. Prefers to avoid conflict.",
+      "type": "creature",
+
+      "health": {
+        "max": 30
+      },
+
+      "stats": {
+        "strength": 4,
+        "defense": 2,
+        "speed": 1.5
+      },
+
+      "ai": {
+        "disposition": "fleeing",
+        "detectionRange": 8
+      },
+
+      "render": {
+        "sprite": "ENEMY_GOBLIN",
+        "color": "#ffaa00"
+      },
+
+      "relation": {
+        "baseScore": -30,
+        "minScore": -100,
+        "maxScore": 20
+      }
+    },
+
+    {
+      "id": "troll_brute",
+      "name": "Troll Brute",
+      "description": "A massive troll with incredible strength. Attacks anything in its territory.",
+      "type": "creature",
+
+      "health": {
+        "max": 100
+      },
+
+      "stats": {
+        "strength": 15,
+        "defense": 8,
+        "speed": 0.5
+      },
+
+      "ai": {
+        "disposition": "hostile",
+        "detectionRange": 6
+      },
+
+      "render": {
+        "sprite": "ENEMY_TROLL",
+        "color": "#808080"
+      },
+
+      "relation": {
+        "baseScore": -70,
+        "minScore": -100,
+        "maxScore": -20
+      }
+    },
+
+    {
+      "id": "skeleton_warrior",
+      "name": "Skeleton Warrior",
+      "description": "An animated skeleton wielding rusty weapons. Mindlessly aggressive.",
+      "type": "creature",
+
+      "health": {
+        "max": 40
+      },
+
+      "stats": {
+        "strength": 6,
+        "defense": 3,
+        "speed": 1.0
+      },
+
+      "ai": {
+        "disposition": "hostile",
+        "detectionRange": 12
+      },
+
+      "render": {
+        "sprite": "ENEMY_SKELETON",
+        "color": "#ffffff"
+      },
+
+      "relation": {
+        "baseScore": -100,
+        "minScore": -100,
+        "maxScore": -100
+      }
+    },
+
+    {
+      "id": "friendly_villager",
+      "name": "Villager",
+      "description": "A peaceful villager going about their day.",
+      "type": "character",
+
+      "health": {
+        "max": 50
+      },
+
+      "stats": {
+        "strength": 3,
+        "defense": 2,
+        "speed": 1.0
+      },
+
+      "ai": {
+        "disposition": "peaceful",
+        "detectionRange": 5
+      },
+
+      "render": {
+        "sprite": "NPC_PEASANT",
+        "color": "#4444ff"
+      },
+
+      "relation": {
+        "baseScore": 20,
+        "minScore": -50,
+        "maxScore": 100
+      }
+    },
+
+    {
+      "id": "merchant",
+      "name": "Traveling Merchant",
+      "description": "A merchant selling wares. Will defend themselves if attacked.",
+      "type": "character",
+
+      "health": {
+        "max": 60
+      },
+
+      "stats": {
+        "strength": 5,
+        "defense": 4,
+        "speed": 0.9
+      },
+
+      "ai": {
+        "disposition": "neutral",
+        "detectionRange": 7
+      },
+
+      "render": {
+        "sprite": "NPC_MERCHANT",
+        "color": "#ffd700"
+      },
+
+      "relation": {
+        "baseScore": 30,
+        "minScore": -20,
+        "maxScore": 100
+      }
+    },
+
+    {
+      "id": "wandering_minstrel",
+      "name": "Minstrel",
+      "description": "A cheerful bard wandering the lands, singing songs.",
+      "type": "character",
+
+      "health": {
+        "max": 45
+      },
+
+      "stats": {
+        "strength": 2,
+        "defense": 1,
+        "speed": 1.2
+      },
+
+      "ai": {
+        "disposition": "patrol",
+        "detectionRange": 8
+      },
+
+      "render": {
+        "sprite": "PLAYER_BARD",
+        "color": "#ff69b4"
+      },
+
+      "relation": {
+        "baseScore": 40,
+        "minScore": 0,
+        "maxScore": 100
+      }
+    },
+
+    {
+      "id": "guard",
+      "name": "Town Guard",
+      "description": "A vigilant guard protecting the settlement. Defensive but not aggressive.",
+      "type": "character",
+
+      "health": {
+        "max": 70
+      },
+
+      "stats": {
+        "strength": 9,
+        "defense": 7,
+        "speed": 1.0
+      },
+
+      "ai": {
+        "disposition": "defensive",
+        "detectionRange": 12
+      },
+
+      "render": {
+        "sprite": "NPC_GUARD",
+        "color": "#4444aa"
+      },
+
+      "relation": {
+        "baseScore": 10,
+        "minScore": -80,
+        "maxScore": 80
+      }
+    },
+
+    {
+      "id": "wild_wolf",
+      "name": "Wild Wolf",
+      "description": "A wolf hunting for food. Will flee if injured but attack if cornered.",
+      "type": "creature",
+
+      "health": {
+        "max": 35
+      },
+
+      "stats": {
+        "strength": 7,
+        "defense": 3,
+        "speed": 1.4
+      },
+
+      "ai": {
+        "disposition": "neutral",
+        "detectionRange": 10
+      },
+
+      "render": {
+        "sprite": "ENEMY_WOLF",
+        "color": "#666666"
+      },
+
+      "relation": {
+        "baseScore": -10,
+        "minScore": -60,
+        "maxScore": 30
+      }
+    }
+  ]
+}

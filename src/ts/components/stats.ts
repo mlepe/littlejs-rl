@@ -10,16 +10,31 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
+export enum StatType {
+  BASE = 'base',
+  DERIVED = 'derived',
+}
+
 /**
  * Stats Component - Contains entity combat and movement statistics
  *
- * Used by players, enemies, and NPCs for combat calculations and movement.
+ * Used by entities for combat calculations and movement.
  */
 export interface StatsComponent {
   /** Attack power */
   strength: number;
+  /** Agility and accuracy */
+  dexterity: number;
+  intelligence: number;
+  charisma: number;
+  willpower: number;
+  toughness: number;
+  attractiveness: number;
   /** Damage reduction */
   defense: number;
+  dodge: number;
+  mindDefense: number;
+  magicalDefense: number;
   /** Movement speed multiplier */
   speed: number;
 }

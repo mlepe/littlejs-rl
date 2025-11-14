@@ -74,10 +74,7 @@ export class DataLoader {
     const entityRegistry = EntityRegistry.getInstance();
 
     // Load entity definitions
-    const entityFiles = [
-      'src/data/base/entities/enemies.json',
-      'src/data/base/entities/npcs.json',
-    ];
+    const entityFiles = ['src/data/base/entities/characters.json'];
 
     for (const file of entityFiles) {
       try {

@@ -2,18 +2,18 @@
 
 This guide shows you how to quickly add new entities to your game using the data system.
 
-## Adding a New Enemy in 3 Minutes
+## Adding a New Entity in 3 Minutes
 
 ### Step 1: Edit the JSON File
 
-Open `src/data/base/entities/enemies.json` and add your entity:
+Open `src/data/base/entities/characters.json` and add your entity:
 
 ```json
 {
   "id": "shadow_beast",
   "name": "Shadow Beast",
   "description": "A creature of living darkness that stalks its prey.",
-  "type": "enemy",
+  "type": "creature",
 
   "health": {
     "max": 65
@@ -26,7 +26,7 @@ Open `src/data/base/entities/enemies.json` and add your entity:
   },
 
   "ai": {
-    "type": "aggressive",
+    "disposition": "aggressive",
     "detectionRange": 12
   },
 
@@ -83,12 +83,19 @@ Valid sprite names are in `src/ts/tileConfig.ts`, look for the `TileSprite` enum
 - `NPC_WIZARD`, `NPC_PRIEST`
 - `PLAYER_BARD` (for minstrel characters)
 
-## AI Types Explained
+## Entity Dispositions Explained
 
-- **`aggressive`**: Chases and attacks the player on sight
-- **`passive`**: Wanders peacefully, doesn't attack (unless provoked)
-- **`fleeing`**: Runs away from the player
-- **`patrol`**: Follows a patrol route (future feature)
+See `DISPOSITION-SYSTEM.md` for comprehensive guide.
+
+**Quick Reference:**
+
+- **`peaceful`**: Never attacks (friendly NPCs, children)
+- **`neutral`**: Attacks if relation < -20 (merchants, wildlife)
+- **`defensive`**: Attacks if relation < -40 (guards, protectors)
+- **`aggressive`**: Attacks if relation < 0 (bandits, orcs)
+- **`hostile`**: Attacks unless relation > 10 (undead, demons)
+- **`patrol`**: Patrols and attacks if relation < -10 (sentries)
+- **`fleeing`**: Never attacks, always runs (goblins, prey animals)
 
 ## Color Guide
 
