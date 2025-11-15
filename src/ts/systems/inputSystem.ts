@@ -51,6 +51,8 @@ export function inputSystem(ecs: ECS): void {
     ACTION: ['Space', 'Enter', 'KeyE'],
     ZOOM_IN: ['Equal', 'NumpadAdd'],
     ZOOM_OUT: ['Minus', 'NumpadSubtract'],
+    DEBUG_TOGGLE_COLLISION_DISPLAY: ['KeyC'],
+    DEBUG_TOGGLE_DEBUG_TEXT: ['KeyX'],
   } as const;
 
   for (const entityId of playerEntities) {
@@ -63,6 +65,8 @@ export function inputSystem(ecs: ECS): void {
     input.action = false;
     input.zoomIn = false;
     input.zoomOut = false;
+    input.debugToggleCollision = false;
+    input.debugToggleText = false;
 
     // Read keyboard input (LittleJS) - use keyWasPressed for turn-based movement
 
@@ -123,6 +127,22 @@ export function inputSystem(ecs: ECS): void {
     // Check ZOOM_OUT
     if (keybinds.ZOOM_OUT.some((key) => LJS.keyWasPressed(key))) {
       input.zoomOut = true;
+    }
+
+    // Check DEBUG_TOGGLE_COLLISION_DISPLAY
+    if (
+      keybinds.DEBUG_TOGGLE_COLLISION_DISPLAY.some((key) =>
+        LJS.keyWasPressed(key)
+      )
+    ) {
+      input.debugToggleCollision = true;
+    }
+
+    // Check DEBUG_TOGGLE_DEBUG_TEXT
+    if (
+      keybinds.DEBUG_TOGGLE_DEBUG_TEXT.some((key) => LJS.keyWasPressed(key))
+    ) {
+      input.debugToggleText = true;
     }
   }
 }

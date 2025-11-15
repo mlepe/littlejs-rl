@@ -26,4 +26,8 @@ export interface InputComponent {
   zoomIn: boolean;
   /** Zoom out command */
   zoomOut: boolean;
+  /** Toggle collision layer visibility (debug) */
+  debugToggleCollision: boolean;
+  /** Toggle debug text visibility */
+  debugToggleText: boolean;
 }

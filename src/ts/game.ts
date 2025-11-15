@@ -55,6 +55,10 @@ export default class Game {
   static readonly isDebug = process.env.GAME_DEBUG === 'true';
   static readonly version = process.env.GAME_VERSION;
 
+  // Debug display toggles (runtime toggleable)
+  private showCollisionOverlay = false;
+  private showDebugText = true; // Default to true
+
   // Core systems
   private readonly ecs: ECS;
   private readonly world: World;
@@ -194,6 +198,10 @@ export default class Game {
 
     // Process systems in order
     inputSystem(this.ecs); // Capture player input
+
+    // Handle debug toggles from player input
+    this.handleDebugToggles();
+
     playerMovementSystem(this.ecs); // Move player based on input
     cameraSystem(this.ecs); // Update camera (follow player + zoom)
     aiSystem(this.ecs, this.playerId); // AI behaviors for NPCs/enemies
@@ -216,11 +224,11 @@ export default class Game {
     if (!this.initialized) return;
 
     // TileLayer and TileCollisionLayer are automatically rendered by LittleJS
-    // Only render collision overlay if in debug mode
-    if (Game.isDebug) {
+    // Render collision overlay if enabled (runtime toggle)
+    if (this.showCollisionOverlay) {
       const location = this.world.getCurrentLocation();
       if (location) {
-        location.renderDebug(); // Shows collision overlay only
+        location.renderDebug(); // Shows collision overlay
       }
     }
 
@@ -234,9 +242,40 @@ export default class Game {
   renderPost(): void {
     if (!this.initialized) return;
 
-    // Render UI, HUD, etc.
-    if (Game.isDebug) {
+    // Render debug info if enabled (runtime toggle)
+    if (this.showDebugText) {
       this.renderDebugInfo();
+    }
+  }
+
+  /**
+   * Handle debug toggle inputs
+   * @private
+   */
+  private handleDebugToggles(): void {
+    const playerEntities = this.ecs.query('player', 'input');
+
+    for (const entityId of playerEntities) {
+      const input = this.ecs.getComponent<{
+        debugToggleCollision: boolean;
+        debugToggleText: boolean;
+      }>(entityId, 'input');
+
+      if (!input) continue;
+
+      // Toggle collision overlay
+      if (input.debugToggleCollision) {
+        this.showCollisionOverlay = !this.showCollisionOverlay;
+        console.log(
+          `Collision overlay: ${this.showCollisionOverlay ? 'ON' : 'OFF'}`
+        );
+      }
+
+      // Toggle debug text
+      if (input.debugToggleText) {
+        this.showDebugText = !this.showDebugText;
+        console.log(`Debug text: ${this.showDebugText ? 'ON' : 'OFF'}`);
+      }
     }
   }
 
