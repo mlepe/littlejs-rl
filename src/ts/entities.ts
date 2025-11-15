@@ -108,6 +108,28 @@ export function createPlayer(
     currentWeight: 0,
   });
 
+  // Add equipment component with all slots empty
+  ecs.addComponent(playerId, 'equipment', {
+    head: undefined,
+    face: undefined,
+    neck: undefined,
+    body: undefined,
+    shoulderLeft: undefined,
+    shoulderRight: undefined,
+    wristLeft: undefined,
+    wristRight: undefined,
+    handLeft: undefined,
+    handRight: undefined,
+    mainHand: undefined,
+    offHand: undefined,
+    ringLeft: undefined,
+    ringRight: undefined,
+    back: undefined,
+    belt: undefined,
+    legs: undefined,
+    feet: undefined,
+  });
+
   const playerCoords = getTileCoords(TileSprite.PLAYER_WARRIOR);
   ecs.addComponent<RenderComponent>(playerId, 'render', {
     tileInfo: LJS.tile(TileSprite.PLAYER_WARRIOR),

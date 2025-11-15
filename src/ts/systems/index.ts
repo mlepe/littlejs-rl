@@ -25,3 +25,4 @@ export * from './statusEffectSystem';
 export * from './raceSystem';
 export * from './classSystem';
 export * from './inventorySystem';
+export * from './equipmentSystem';

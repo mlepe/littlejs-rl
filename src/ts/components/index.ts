@@ -28,3 +28,4 @@ export * from './race';
 export * from './class';
 export * from './item';
 export * from './inventory';
+export * from './equipment';
