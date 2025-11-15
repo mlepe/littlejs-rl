@@ -51,6 +51,8 @@ export interface DerivedStats {
   magicalDefense: number;
   /** Movement speed multiplier (from dexterity, equipment weight) */
   speed: number;
+  /** Maximum carry weight capacity in pounds (from strength) */
+  carryCapacity: number;
 }
 
 /**

@@ -11,61 +11,183 @@
  */
 
 /**
- * Item types in the game
+ * Item types for categorization
  */
-export enum ItemType {
-  WEAPON = 'weapon',
-  ARMOR = 'armor',
-  CONSUMABLE = 'consumable',
-  SCROLL = 'scroll',
-  POTION = 'potion',
-  ROD = 'rod',
-  FOOD = 'food',
-  MATERIAL = 'material',
-  MISC = 'misc',
-}
+export type ItemType =
+  | 'weapon'
+  | 'armor'
+  | 'consumable'
+  | 'potion'
+  | 'scroll'
+  | 'rod'
+  | 'food'
+  | 'material'
+  | 'quest'
+  | 'misc';
 
 /**
- * Item rarity/state
+ * Item blessed/cursed state
+ * - blessed: Improved stats, positive effects
+ * - normal: Standard item
+ * - cursed: Worse stats, can't unequip without curse removal
  */
-export enum ItemState {
-  NORMAL = 'normal',
-  BLESSED = 'blessed',
-  CURSED = 'cursed',
-}
+export type ItemBlessState = 'blessed' | 'normal' | 'cursed';
 
 /**
- * Item material types
+ * Item identification level
+ * - unidentified: Completely unknown (e.g., "blue potion")
+ * - partial: Basic type known (e.g., "iron sword" but not +1 or blessed)
+ * - identified: Fully identified with all properties
  */
-export enum ItemMaterial {
-  IRON = 'iron',
-  STEEL = 'steel',
-  SILVER = 'silver',
-  MITHRIL = 'mithril',
-  WOOD = 'wood',
-  LEATHER = 'leather',
-  CLOTH = 'cloth',
-  CRYSTAL = 'crystal',
-  BONE = 'bone',
-  UNKNOWN = 'unknown',
-}
+export type ItemIdentificationLevel = 'unidentified' | 'partial' | 'identified';
 
 /**
- * Core item component - Base data for all items
+ * Equipment slot types for equippable items
+ * Designed to support future dismemberment system with individual slots
+ */
+export type EquipmentSlot =
+  | 'head'
+  | 'face'
+  | 'neck'
+  | 'body'
+  | 'shoulder-left'
+  | 'shoulder-right'
+  | 'wrist-left'
+  | 'wrist-right'
+  | 'hand-left'
+  | 'hand-right'
+  | 'main-hand'
+  | 'off-hand'
+  | 'ring-left'
+  | 'ring-right'
+  | 'back'
+  | 'belt'
+  | 'legs'
+  | 'feet';
+
+/**
+ * Item material types (affects stats and properties)
+ */
+export type ItemMaterial =
+  | 'iron'
+  | 'steel'
+  | 'silver'
+  | 'mithril'
+  | 'wood'
+  | 'leather'
+  | 'cloth'
+  | 'crystal'
+  | 'bone'
+  | 'unknown';
+
+/**
+ * Item component - represents a single item instance
+ *
+ * Items can be:
+ * - Unidentified, partially identified, or fully identified
+ * - Blessed (improved stats), normal, or cursed (worse stats, can't unequip)
+ * - Stackable (similar items combine) or unique
+ * - Different quality levels (0 = basic, +1, +2, etc.)
+ * - Equipped in various body slots
+ *
+ * @example
+ * ```typescript
+ * const sword: ItemComponent = {
+ *   id: 'iron_sword_001',
+ *   name: 'Iron Sword',
+ *   description: 'A basic iron sword',
+ *   weight: 5.0,
+ *   value: 50,
+ *   itemType: 'weapon',
+ *   identified: 'partial',
+ *   blessState: 'normal',
+ *   stackable: false,
+ *   quantity: 1,
+ *   quality: 1,
+ *   material: 'iron',
+ *   equipSlot: 'main-hand',
+ *   equipped: false
+ * };
+ * ```
  */
 export interface ItemComponent {
-  /** Display name of the item */
+  /**
+   * Unique identifier for this item instance
+   */
+  readonly id: string;
+
+  /**
+   * Display name (may show generic name if unidentified)
+   */
   name: string;
-  /** Type of item */
-  type: ItemType;
-  /** Description of the item */
+
+  /**
+   * Item description (may be hidden if unidentified)
+   */
   description: string;
-  /** Item state (normal, blessed, cursed) */
-  state: ItemState;
-  /** Material the item is made of */
-  material: ItemMaterial;
-  /** Whether the item is broken */
-  isBroken: boolean;
-  /** Item value in currency */
+
+  /**
+   * Weight in pounds (affects carry capacity)
+   */
+  weight: number;
+
+  /**
+   * Base value in gold pieces
+   */
   value: number;
+
+  /**
+   * Item category
+   */
+  itemType: ItemType;
+
+  /**
+   * Identification level
+   */
+  identified: ItemIdentificationLevel;
+
+  /**
+   * Blessed/cursed state (affects stats and equipability)
+   */
+  blessState: ItemBlessState;
+
+  /**
+   * Whether similar items can stack together
+   */
+  stackable: boolean;
+
+  /**
+   * Quantity in stack (only used if stackable)
+   */
+  quantity: number;
+
+  /**
+   * Quality level: 0 = basic, +1, +2, etc. (affects stats)
+   */
+  quality: number;
+
+  /**
+   * Material the item is made of (affects stats)
+   */
+  material: ItemMaterial;
+
+  /**
+   * Optional equipment slot if item is equippable
+   */
+  equipSlot?: EquipmentSlot;
+
+  /**
+   * Whether item is currently equipped
+   */
+  equipped?: boolean;
+
+  /**
+   * Whether the item can be broken (durability system placeholder)
+   */
+  canBreak?: boolean;
+
+  /**
+   * Whether the item is currently broken
+   */
+  broken?: boolean;
 }

@@ -102,6 +102,12 @@ export function createPlayer(
     debugToggleText: false,
   });
 
+  // Add empty inventory (capacity calculated from strength in derived stats)
+  ecs.addComponent(playerId, 'inventory', {
+    items: [],
+    currentWeight: 0,
+  });
+
   const playerCoords = getTileCoords(TileSprite.PLAYER_WARRIOR);
   ecs.addComponent<RenderComponent>(playerId, 'render', {
     tileInfo: LJS.tile(TileSprite.PLAYER_WARRIOR),

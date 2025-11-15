@@ -11,16 +11,32 @@
  */
 
 /**
- * Inventory component - Stores items for a character
- * 
- * No maximum item count - only limited by carry weight.
- * Items are stored as entity IDs.
+ * Inventory component - manages entity's carried items
+ *
+ * Key features:
+ * - No item count limit (only weight-based)
+ * - Automatic stacking of similar items
+ * - Weight capacity based on strength stat (stored in DerivedStats)
+ * - Tracks total current weight
+ *
+ * @example
+ * ```typescript
+ * const inventory: InventoryComponent = {
+ *   items: [itemId1, itemId2, itemId3],
+ *   currentWeight: 25.5,
+ * };
+ * ```
  */
 export interface InventoryComponent {
-  /** Entity IDs of items in inventory */
+  /**
+   * Array of item entity IDs
+   * No limit on count, only limited by weight capacity
+   */
   items: number[];
-  /** Maximum carry weight capacity */
-  maxCarryWeight: number;
-  /** Current total weight of all items */
+
+  /**
+   * Current total weight of all items
+   * Calculated by summing item weights * quantities
+   */
   currentWeight: number;
 }

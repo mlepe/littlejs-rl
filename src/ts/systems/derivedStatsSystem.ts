@@ -98,6 +98,20 @@ export function calculateSpeed(base: BaseStats, equipmentWeight = 0): number {
 }
 
 /**
+ * Calculate carry capacity from strength
+ * Formula: carryCapacity = strength * 10
+ *
+ * Base formula: 10 pounds per point of strength
+ * This determines max inventory weight before penalties
+ *
+ * @param base - Base stats
+ * @returns Calculated carry capacity in pounds
+ */
+export function calculateCarryCapacity(base: BaseStats): number {
+  return base.strength * 10;
+}
+
+/**
  * Calculate all derived stats from base stats
  *
  * This is the main function to use when you need to recalculate derived stats.
@@ -117,6 +131,7 @@ export function calculateDerivedStats(
     mindDefense: calculateMindDefense(base),
     magicalDefense: calculateMagicalDefense(base),
     speed: calculateSpeed(base, equipmentWeight),
+    carryCapacity: calculateCarryCapacity(base),
   };
 }
 
