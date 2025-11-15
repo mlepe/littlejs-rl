@@ -19,10 +19,10 @@ import {
   renderSystem,
 } from './systems';
 
+import { DataLoader } from './data/dataLoader';
 import ECS from './ecs';
 import World from './world';
 import { createPlayer } from './entities';
-import { DataLoader } from './data/dataLoader';
 
 /**
  * Main Game class - Singleton pattern
@@ -129,19 +129,45 @@ export default class Game {
       // Generate the starting location
       startLocation.generate();
 
-      // Create player entity at center of location
-      const startX = Math.floor(startLocation.width / 2);
-      const startY = Math.floor(startLocation.height / 2);
+      // Find walkable spawn position (search from center outward)
+      let spawnX = Math.floor(startLocation.width / 2);
+      let spawnY = Math.floor(startLocation.height / 2);
+
+      // Search for first walkable tile from center outward
+      let found = startLocation.isWalkable(spawnX, spawnY);
+      if (!found) {
+        for (let radius = 1; radius < 20 && !found; radius++) {
+          for (let dx = -radius; dx <= radius && !found; dx++) {
+            for (let dy = -radius; dy <= radius && !found; dy++) {
+              if (Math.abs(dx) === radius || Math.abs(dy) === radius) {
+                const testX = spawnX + dx;
+                const testY = spawnY + dy;
+                if (startLocation.isWalkable(testX, testY)) {
+                  spawnX = testX;
+                  spawnY = testY;
+                  found = true;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Create player entity at walkable position
       this.playerId = createPlayer(
         this.ecs,
-        startX,
-        startY,
+        spawnX,
+        spawnY,
         this.currentWorldPos.x,
         this.currentWorldPos.y
       );
 
       // Set camera to player position
-      LJS.setCameraPos(LJS.vec2(startX, startY));
+      LJS.setCameraPos(LJS.vec2(spawnX, spawnY));
+
+      if (Game.isDebug) {
+        console.log(`Player spawned at (${spawnX}, ${spawnY})`);
+      }
     }
 
     // Initialize relations between all entities
@@ -190,13 +216,12 @@ export default class Game {
   render(): void {
     if (!this.initialized) return;
 
-    const location = this.world.getCurrentLocation();
-    if (location) {
-      // Render the current location tiles
-      if (Game.isDebug) {
-        location.renderDebug(); // Shows collision overlay
-      } else {
-        location.render();
+    // TileLayer and TileCollisionLayer are automatically rendered by LittleJS
+    // Only render collision overlay if in debug mode
+    if (Game.isDebug) {
+      const location = this.world.getCurrentLocation();
+      if (location) {
+        location.renderDebug(); // Shows collision overlay only
       }
     }
 

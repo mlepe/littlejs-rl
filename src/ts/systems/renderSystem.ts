@@ -20,17 +20,19 @@ import ECS from '../ecs';
  * Render System - Renders all entities with visual components
  *
  * Processes all entities with 'position' and 'render' components.
- * Creates temporary LittleJS EngineObjects to render each entity.
+ * Uses LittleJS drawTile to render each entity.
  *
- * Should be called in the gameRender() callback, after location tiles are rendered.
+ * Note: TileLayer and TileCollisionLayer are automatically rendered by LittleJS.
+ * Manual tile rendering is not needed - tiles redraw when modified.
+ *
+ * Should be called in the gameRender() callback.
  *
  * @param ecs - The ECS instance
  *
  * @example
  * ```typescript
  * function gameRender() {
- *   location.render(); // Render tiles first
- *   renderSystem(ecs); // Then render entities
+ *   renderSystem(ecs); // Render all entities (tiles auto-render)
  * }
  * ```
  */

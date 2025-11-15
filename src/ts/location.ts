@@ -178,6 +178,9 @@ export default class Location {
    */
   generate(): void {
     LocationGenerator.generate(this);
+    // Redraw tile layers after generation to make tiles visible
+    this.tileLayer.redraw();
+    this.collisionLayer.redraw();
   }
 
   /**
