@@ -25,6 +25,7 @@ import {
   SPRITE_FLEEING_CREATURE,
   SPRITE_NPC,
   SPRITE_PLAYER,
+  TileSprite,
   getTileCoords,
 } from './tileConfig';
 
@@ -97,9 +98,9 @@ export function createPlayer(
     action: false,
   });
 
-  const playerCoords = getTileCoords(SPRITE_PLAYER);
+  const playerCoords = getTileCoords(TileSprite.PLAYER_WARRIOR);
   ecs.addComponent<RenderComponent>(playerId, 'render', {
-    tileInfo: new LJS.TileInfo(LJS.vec2(playerCoords.x, playerCoords.y)),
+    tileInfo: LJS.tile(TileSprite.PLAYER_WARRIOR),
     color: new LJS.Color(1, 1, 1), // White
     size: new LJS.Vector2(1, 1),
   });
