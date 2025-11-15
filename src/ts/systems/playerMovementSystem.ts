@@ -12,11 +12,13 @@
 
 import {
   InputComponent,
+  LocationComponent,
   PositionComponent,
   StatsComponent,
 } from '../components';
 
 import ECS from '../ecs';
+import Game from '../game';
 
 /**
  * Player Movement System - Moves player entities based on input
@@ -38,19 +40,32 @@ import ECS from '../ecs';
  * ```
  */
 export function playerMovementSystem(ecs: ECS): void {
-  const playerEntities = ecs.query('player', 'position', 'input', 'stats');
+  const playerEntities = ecs.query('player', 'position', 'input', 'location');
 
   for (const entityId of playerEntities) {
     const pos = ecs.getComponent<PositionComponent>(entityId, 'position');
     const input = ecs.getComponent<InputComponent>(entityId, 'input');
-    const stats = ecs.getComponent<StatsComponent>(entityId, 'stats');
+    const locationComp = ecs.getComponent<LocationComponent>(
+      entityId,
+      'location'
+    );
 
-    if (!pos || !input || !stats) continue;
+    if (!pos || !input || !locationComp) continue;
 
-    // Apply movement with speed
+    // Apply movement (grid-based, one tile at a time)
     if (input.moveX !== 0 || input.moveY !== 0) {
-      pos.x += input.moveX * stats.derived.speed;
-      pos.y += input.moveY * stats.derived.speed;
+      const newX = Math.floor(pos.x + input.moveX);
+      const newY = Math.floor(pos.y + input.moveY);
+
+      // Get current location to check collision
+      const game = Game.getInstance();
+      const location = game.getCurrentLocation();
+
+      if (location && location.isWalkable(newX, newY)) {
+        // Move to new position (tile-based, integer coordinates)
+        pos.x = newX;
+        pos.y = newY;
+      }
     }
 
     // Handle action

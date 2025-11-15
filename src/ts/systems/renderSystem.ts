@@ -42,16 +42,16 @@ export function renderSystem(ecs: ECS): void {
     const render = ecs.getComponent<RenderComponent>(id, 'render');
 
     if (pos && render) {
-      // Create a temporary EngineObject to render with LittleJS
-      const position = new LJS.Vector2(pos.x, pos.y);
-      const obj = new LJS.EngineObject(
+      // Use LittleJS drawTile instead of EngineObject to avoid trails
+      const position = LJS.vec2(pos.x, pos.y);
+      LJS.drawTile(
         position,
         render.size,
         render.tileInfo,
-        0,
-        render.color
+        render.color,
+        render.angle || 0,
+        render.mirror || false
       );
-      obj.render();
     }
   }
 }

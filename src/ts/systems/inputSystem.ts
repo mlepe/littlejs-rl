@@ -47,17 +47,17 @@ export function inputSystem(ecs: ECS): void {
     input.moveY = 0;
     input.action = false;
 
-    // Read keyboard input (LittleJS)
-    if (LJS.keyIsDown('ArrowLeft') || LJS.keyIsDown('KeyA')) {
+    // Read keyboard input (LittleJS) - use keyWasPressed for turn-based movement
+    if (LJS.keyWasPressed('ArrowLeft') || LJS.keyWasPressed('KeyA')) {
       input.moveX = -1;
     }
-    if (LJS.keyIsDown('ArrowRight') || LJS.keyIsDown('KeyD')) {
+    if (LJS.keyWasPressed('ArrowRight') || LJS.keyWasPressed('KeyD')) {
       input.moveX = 1;
     }
-    if (LJS.keyIsDown('ArrowUp') || LJS.keyIsDown('KeyW')) {
+    if (LJS.keyWasPressed('ArrowUp') || LJS.keyWasPressed('KeyW')) {
       input.moveY = -1;
     }
-    if (LJS.keyIsDown('ArrowDown') || LJS.keyIsDown('KeyS')) {
+    if (LJS.keyWasPressed('ArrowDown') || LJS.keyWasPressed('KeyS')) {
       input.moveY = 1;
     }
     if (LJS.keyWasPressed('Space')) {

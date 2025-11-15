@@ -15,7 +15,7 @@
 import * as LJS from 'littlejsengine';
 
 import Game from './ts/game';
-import Tileset from './assets/img/tileset.png';
+import TilesetImg from './assets/img/tileset.png';
 
 // Get the Game singleton instance
 const game = Game.getInstance();
@@ -97,5 +97,5 @@ LJS.engineInit(
   gameUpdatePost,
   gameRender,
   gameRenderPost,
-  [Tileset]
+  [TilesetImg]
 );
