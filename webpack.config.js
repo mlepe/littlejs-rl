@@ -30,7 +30,15 @@ module.exports = (env, argv) => {
       extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
     },
     devServer: {
-      static: './dist',
+      static: [
+        {
+          directory: path.join(__dirname, 'dist'),
+        },
+        {
+          directory: path.join(__dirname, 'src'),
+          publicPath: '/src',
+        },
+      ],
       hot: true,
       port: process.env.PORT || 8080,
       host: process.env.HOST || 'localhost',
@@ -53,6 +61,13 @@ module.exports = (env, argv) => {
         {
           test: /\.(png|svg|jpg|jpeg|gif)$/i,
           loader: 'file-loader',
+        },
+        {
+          test: /\.json$/i,
+          type: 'asset/resource',
+          generator: {
+            filename: 'data/[path][name][ext]',
+          },
         },
         // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
         { test: /\.tsx?$/, loader: 'ts-loader' },

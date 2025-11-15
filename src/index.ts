@@ -26,10 +26,10 @@ const game = Game.getInstance();
  * Called once after the LittleJS engine starts up.
  * Initializes the game world, player, and ECS.
  */
-function gameInit() {
+async function gameInit() {
   // Called once after the engine starts up
   // Initialize the game world, player, and ECS
-  game.init();
+  await game.init();
 
   if (Game.isDebug) {
     console.log('LittleJS Roguelike initialized');
