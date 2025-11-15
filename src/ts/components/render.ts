@@ -24,4 +24,10 @@ export interface RenderComponent {
   color: LJS.Color;
   /** Entity size in tiles */
   size: LJS.Vector2;
+  /** Rotation angle in radians (optional) */
+  angle?: number;
+  /** Whether to mirror the sprite horizontally (optional) */
+  mirror?: boolean;
+  /** Additive color for effects (optional) */
+  additiveColor?: LJS.Color;
 }
