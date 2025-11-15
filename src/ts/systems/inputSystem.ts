@@ -38,6 +38,21 @@ import { InputComponent } from '../components';
 export function inputSystem(ecs: ECS): void {
   const playerEntities = ecs.query('player', 'input');
 
+  // Define keybindings as a constant object (supports multiple keys per action)
+  const keybinds = {
+    UP: ['ArrowUp', 'KeyW', 'Numpad8'],
+    DOWN: ['ArrowDown', 'KeyS', 'Numpad2'],
+    LEFT: ['ArrowLeft', 'KeyA', 'Numpad4'],
+    RIGHT: ['ArrowRight', 'KeyD', 'Numpad6'],
+    UP_LEFT: ['Numpad7'],
+    UP_RIGHT: ['Numpad9'],
+    DOWN_LEFT: ['Numpad1'],
+    DOWN_RIGHT: ['Numpad3'],
+    ACTION: ['Space', 'Enter', 'KeyE'],
+    ZOOM_IN: ['Equal', 'NumpadAdd'],
+    ZOOM_OUT: ['Minus', 'NumpadSubtract'],
+  } as const;
+
   for (const entityId of playerEntities) {
     const input = ecs.getComponent<InputComponent>(entityId, 'input');
     if (!input) continue;
@@ -46,22 +61,68 @@ export function inputSystem(ecs: ECS): void {
     input.moveX = 0;
     input.moveY = 0;
     input.action = false;
+    input.zoomIn = false;
+    input.zoomOut = false;
 
     // Read keyboard input (LittleJS) - use keyWasPressed for turn-based movement
-    if (LJS.keyWasPressed('ArrowLeft') || LJS.keyWasPressed('KeyA')) {
+
+    // Check LEFT movement
+    if (keybinds.LEFT.some((key) => LJS.keyWasPressed(key))) {
       input.moveX = -1;
     }
-    if (LJS.keyWasPressed('ArrowRight') || LJS.keyWasPressed('KeyD')) {
+
+    // Check RIGHT movement
+    if (keybinds.RIGHT.some((key) => LJS.keyWasPressed(key))) {
       input.moveX = 1;
     }
-    if (LJS.keyWasPressed('ArrowUp') || LJS.keyWasPressed('KeyW')) {
-      input.moveY = -1;
-    }
-    if (LJS.keyWasPressed('ArrowDown') || LJS.keyWasPressed('KeyS')) {
+
+    // Check UP movement (Y axis is inverted in screen coordinates)
+    if (keybinds.UP.some((key) => LJS.keyWasPressed(key))) {
       input.moveY = 1;
     }
-    if (LJS.keyWasPressed('Space')) {
+
+    // Check DOWN movement
+    if (keybinds.DOWN.some((key) => LJS.keyWasPressed(key))) {
+      input.moveY = -1;
+    }
+
+    // Check UP_LEFT movement (Y axis is inverted in screen coordinates)
+    if (keybinds.UP_LEFT.some((key) => LJS.keyWasPressed(key))) {
+      input.moveX = -1;
+      input.moveY = 1;
+    }
+
+    // Check UP_RIGHT movement
+    if (keybinds.UP_RIGHT.some((key) => LJS.keyWasPressed(key))) {
+      input.moveX = 1;
+      input.moveY = 1;
+    }
+
+    // Check DOWN_LEFT movement
+    if (keybinds.DOWN_LEFT.some((key) => LJS.keyWasPressed(key))) {
+      input.moveX = -1;
+      input.moveY = -1;
+    }
+
+    // Check DOWN_RIGHT movement
+    if (keybinds.DOWN_RIGHT.some((key) => LJS.keyWasPressed(key))) {
+      input.moveX = 1;
+      input.moveY = -1;
+    }
+
+    // Check ACTION
+    if (keybinds.ACTION.some((key) => LJS.keyWasPressed(key))) {
       input.action = true;
+    }
+
+    // Check ZOOM_IN
+    if (keybinds.ZOOM_IN.some((key) => LJS.keyWasPressed(key))) {
+      input.zoomIn = true;
+    }
+
+    // Check ZOOM_OUT
+    if (keybinds.ZOOM_OUT.some((key) => LJS.keyWasPressed(key))) {
+      input.zoomOut = true;
     }
   }
 }

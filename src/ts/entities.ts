@@ -96,6 +96,8 @@ export function createPlayer(
     moveX: 0,
     moveY: 0,
     action: false,
+    zoomIn: false,
+    zoomOut: false,
   });
 
   const playerCoords = getTileCoords(TileSprite.PLAYER_WARRIOR);

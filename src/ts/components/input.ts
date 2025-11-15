@@ -22,4 +22,8 @@ export interface InputComponent {
   moveY: number;
   /** Action button pressed (e.g., attack, interact) */
   action: boolean;
+  /** Zoom in command */
+  zoomIn: boolean;
+  /** Zoom out command */
+  zoomOut: boolean;
 }

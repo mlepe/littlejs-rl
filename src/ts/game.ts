@@ -14,6 +14,7 @@ import * as LJS from 'littlejsengine';
 
 import {
   aiSystem,
+  cameraSystem,
   inputSystem,
   playerMovementSystem,
   renderSystem,
@@ -194,10 +195,8 @@ export default class Game {
     // Process systems in order
     inputSystem(this.ecs); // Capture player input
     playerMovementSystem(this.ecs); // Move player based on input
+    cameraSystem(this.ecs); // Update camera (follow player + zoom)
     aiSystem(this.ecs, this.playerId); // AI behaviors for NPCs/enemies
-
-    // Update camera to follow player
-    this.updateCamera();
   }
 
   /**
@@ -238,19 +237,6 @@ export default class Game {
     // Render UI, HUD, etc.
     if (Game.isDebug) {
       this.renderDebugInfo();
-    }
-  }
-
-  /**
-   * Update camera to follow player
-   */
-  private updateCamera(): void {
-    const playerPos = this.ecs.getComponent<{ x: number; y: number }>(
-      this.playerId,
-      'position'
-    );
-    if (playerPos) {
-      LJS.setCameraPos(LJS.vec2(playerPos.x, playerPos.y));
     }
   }
 
