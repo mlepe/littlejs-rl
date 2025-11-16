@@ -24,6 +24,85 @@ export interface StatModifier {
 }
 
 /**
+ * Component templates for template-mixing feature
+ * These allow entities to be composed from reusable component configurations
+ */
+
+/**
+ * Render template for visual appearance
+ */
+export interface RenderTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  sprite: string; // TileSprite enum value as string
+  color?: string; // Hex color
+  size?: { x: number; y: number }; // Size in tiles (default: 1x1)
+}
+
+/**
+ * Stats template for character attributes
+ */
+export interface StatsTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  stats: {
+    strength: number;
+    dexterity?: number;
+    intelligence?: number;
+    charisma?: number;
+    willpower?: number;
+    toughness?: number;
+    attractiveness?: number;
+  };
+}
+
+/**
+ * AI behavior template
+ */
+export interface AITemplate {
+  id: string;
+  name: string;
+  description?: string;
+  ai: {
+    disposition:
+      | 'peaceful'
+      | 'neutral'
+      | 'defensive'
+      | 'aggressive'
+      | 'hostile'
+      | 'patrol'
+      | 'fleeing';
+    detectionRange: number;
+  };
+}
+
+/**
+ * Health/durability template
+ */
+export interface HealthTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  health: {
+    max: number;
+    regen?: number;
+  };
+}
+
+/**
+ * Component template references for template-mixing
+ * Allows entities to be composed from different template sources
+ */
+export interface ComponentTemplateRefs {
+  renderTemplate?: string; // ID of RenderTemplate
+  statsTemplate?: string; // ID of StatsTemplate
+  aiTemplate?: string; // ID of AITemplate
+  healthTemplate?: string; // ID of HealthTemplate
+}
+
+/**
  * Race template that can be loaded from JSON data files
  */
 export interface RaceTemplate {
@@ -105,7 +184,11 @@ export interface EntityTemplate {
   name: string;
   description?: string;
 
-  // Component data
+  // Template-mixing: Reference component templates
+  // These are resolved first, then overridden by direct component data
+  templates?: ComponentTemplateRefs;
+
+  // Component data (overrides template values if specified)
   health?: {
     current?: number;
     max: number;
@@ -344,4 +427,23 @@ export interface RaceDataFile {
  */
 export interface ClassDataFile {
   classes: ClassTemplate[];
+}
+
+/**
+ * Container for component template data files
+ */
+export interface RenderTemplateDataFile {
+  renderTemplates: RenderTemplate[];
+}
+
+export interface StatsTemplateDataFile {
+  statsTemplates: StatsTemplate[];
+}
+
+export interface AITemplateDataFile {
+  aiTemplates: AITemplate[];
+}
+
+export interface HealthTemplateDataFile {
+  healthTemplates: HealthTemplate[];
 }

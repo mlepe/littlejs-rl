@@ -21,6 +21,12 @@ export { EntityRegistry } from './entityRegistry';
 export { RaceRegistry } from './raceRegistry';
 export { ItemRegistry } from './itemRegistry';
 
+// Component template registries for template-mixing
+export { RenderTemplateRegistry } from './renderTemplateRegistry';
+export { StatsTemplateRegistry } from './statsTemplateRegistry';
+export { AITemplateRegistry } from './aiTemplateRegistry';
+export { HealthTemplateRegistry } from './healthTemplateRegistry';
+
 // Validation and error handling
 export * from './validation';
 export * from './errors';

@@ -1,0 +1,45 @@
+{
+  "healthTemplates": [
+    {
+      "id": "fragileHealth",
+      "name": "Fragile Health",
+      "description": "Low health for weak creatures",
+      "health": {
+        "max": 20
+      }
+    },
+    {
+      "id": "normalHealth",
+      "name": "Normal Health",
+      "description": "Standard health for average creatures",
+      "health": {
+        "max": 50
+      }
+    },
+    {
+      "id": "tankHealth",
+      "name": "Tank Health",
+      "description": "High health for durable enemies",
+      "health": {
+        "max": 100
+      }
+    },
+    {
+      "id": "bossHealth",
+      "name": "Boss Health",
+      "description": "Very high health for boss encounters",
+      "health": {
+        "max": 200
+      }
+    },
+    {
+      "id": "regeneratingHealth",
+      "name": "Regenerating Health",
+      "description": "Moderate health with regeneration",
+      "health": {
+        "max": 70,
+        "regen": 2
+      }
+    }
+  ]
+}

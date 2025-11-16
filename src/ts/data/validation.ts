@@ -273,14 +273,22 @@ export function validateEntityTemplate(
   const warnings: string[] = [];
   const entityId = id || data?.id || DEFAULT_VALUES.ENTITY.id!;
 
+  // Check if entity uses template mixing
+  const hasTemplates = data?.templates && typeof data.templates === 'object';
+  const hasHealthTemplate = hasTemplates && data.templates.healthTemplate;
+  const hasStatsTemplate = hasTemplates && data.templates.statsTemplate;
+  const hasRenderTemplate = hasTemplates && data.templates.renderTemplate;
+  const hasAITemplate = hasTemplates && data.templates.aiTemplate;
+
   // Create a working copy with defaults
   const entity: EntityTemplate = {
     id: entityId,
     name: data?.name || DEFAULT_VALUES.ENTITY.name!,
     type: data?.type || DEFAULT_VALUES.ENTITY.type!,
-    health: data?.health || DEFAULT_VALUES.ENTITY.health!,
-    stats: data?.stats || DEFAULT_VALUES.ENTITY.stats!,
-    render: data?.render || DEFAULT_VALUES.ENTITY.render!,
+    health: data?.health,
+    stats: data?.stats,
+    render: data?.render,
+    templates: data?.templates,
     race: data?.race,
     class: data?.class,
     ai: data?.ai,
@@ -310,77 +318,78 @@ export function validateEntityTemplate(
     );
   }
 
-  // Validate health
-  if (
-    !data.health ||
-    typeof data.health !== 'object' ||
-    typeof data.health.max !== 'number'
-  ) {
+  // Validate health (optional if healthTemplate is specified)
+  if (!data.health && !hasHealthTemplate) {
     warnings.push(
-      `Entity '${entityId}' has invalid health, using default: ${DEFAULT_VALUES.ENTITY.health!.max}`
+      `Entity '${entityId}' has no health data or healthTemplate, will use defaults if needed`
     );
-    entity.health = DEFAULT_VALUES.ENTITY.health!;
+  } else if (data.health) {
+    if (
+      typeof data.health !== 'object' ||
+      typeof data.health.max !== 'number'
+    ) {
+      warnings.push(
+        `Entity '${entityId}' has invalid health format, using default: ${DEFAULT_VALUES.ENTITY.health!.max}`
+      );
+      entity.health = DEFAULT_VALUES.ENTITY.health!;
+    }
   }
 
-  // Validate stats
-  if (!data.stats || typeof data.stats !== 'object') {
+  // Validate stats (optional if statsTemplate is specified)
+  if (!data.stats && !hasStatsTemplate) {
+    warnings.push(
+      `Entity '${entityId}' has no stats data or statsTemplate, will use defaults if needed`
+    );
+  } else if (data.stats && typeof data.stats !== 'object') {
     warnings.push(`Entity '${entityId}' has invalid stats, using defaults`);
     entity.stats = DEFAULT_VALUES.ENTITY.stats!;
-  } else {
-    // Ensure all required stats exist
-    const requiredStats = [
-      'strength',
-      'dexterity',
-      'intelligence',
-      'charisma',
-      'willpower',
-      'toughness',
-      'attractiveness',
-    ];
-    for (const stat of requiredStats) {
-      if (
-        typeof entity.stats![stat as keyof typeof entity.stats] !== 'number'
-      ) {
-        warnings.push(
-          `Entity '${entityId}' is missing or has invalid stat '${stat}', using default: ${DEFAULT_VALUES.ENTITY.stats![stat as keyof typeof DEFAULT_VALUES.ENTITY.stats]}`
+  }
+
+  // Validate stats (optional if statsTemplate is specified)
+  if (!data.stats && !hasStatsTemplate) {
+    warnings.push(
+      `Entity '${entityId}' has no stats data or statsTemplate, will use defaults if needed`
+    );
+  } else if (data.stats && typeof data.stats !== 'object') {
+    warnings.push(`Entity '${entityId}' has invalid stats, using defaults`);
+    entity.stats = DEFAULT_VALUES.ENTITY.stats!;
+  }
+
+  // Validate render (optional if renderTemplate is specified)
+  if (!data.render && !hasRenderTemplate) {
+    errors.push(
+      `Entity '${entityId}' is missing both render configuration and renderTemplate`
+    );
+    entity.render = DEFAULT_VALUES.ENTITY.render!;
+  } else if (data.render) {
+    if (typeof data.render !== 'object') {
+      errors.push(`Entity '${entityId}' has invalid render configuration`);
+      entity.render = DEFAULT_VALUES.ENTITY.render!;
+    } else {
+      if (!data.render.sprite && !hasRenderTemplate) {
+        errors.push(
+          `Entity '${entityId}' is missing render.sprite and has no renderTemplate`
         );
-        entity.stats![stat as keyof typeof entity.stats] =
-          DEFAULT_VALUES.ENTITY.stats![
-            stat as keyof typeof DEFAULT_VALUES.ENTITY.stats
-          ];
+        entity.render.sprite = DEFAULT_VALUES.ENTITY.render!.sprite;
+      }
+      if (!data.render.color && !hasRenderTemplate) {
+        warnings.push(
+          `Entity '${entityId}' is missing render.color, will use template or default`
+        );
       }
     }
   }
 
-  // Validate render
-  if (!data.render || typeof data.render !== 'object') {
-    errors.push(
-      `Entity '${entityId}' is missing required render configuration`
-    );
-    entity.render = DEFAULT_VALUES.ENTITY.render!;
-  } else {
-    if (!data.render.sprite) {
-      errors.push(`Entity '${entityId}' is missing required render.sprite`);
-      entity.render.sprite = DEFAULT_VALUES.ENTITY.render!.sprite;
-    }
-    if (!data.render.color) {
-      warnings.push(
-        `Entity '${entityId}' is missing render.color, using default: ${DEFAULT_VALUES.ENTITY.render!.color}`
-      );
-      entity.render.color = DEFAULT_VALUES.ENTITY.render!.color;
-    }
-  }
-
-  // Validate AI if present (disposition values are validated in the AI component)
+  // Validate AI if present (or if aiTemplate is specified)
   if (data.ai) {
     if (typeof data.ai !== 'object') {
       warnings.push(
         `Entity '${entityId}' has invalid ai configuration, removing`
       );
       entity.ai = undefined;
-    } else if (!data.ai.disposition) {
+    } else if (!data.ai.disposition && !hasAITemplate) {
       warnings.push(
-        `Entity '${entityId}' has AI without disposition, removing`
+        `Entity '${entityId}' has AI without disposition and no aiTemplate, removing`
       );
       entity.ai = undefined;
     }
