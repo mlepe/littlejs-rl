@@ -23,7 +23,17 @@ import ECS from '../ecs';
 import { HealthComponent } from '../components/health';
 import { InventoryComponent } from '../components/inventory';
 import { ItemComponent } from '../components/item';
+import { ModifierType } from '../components/statModifier';
+import { PositionComponent } from '../components/position';
 import { StatsComponent } from '../components/stats';
+import { StatusEffectType } from '../types/elements';
+import { addStatModifier } from './statModifierSystem';
+import {
+  StatusEffectComponent,
+  addStatusEffect,
+  createDefaultStatusEffect,
+  removeStatusEffect,
+} from '../components/statusEffect';
 import { removeItem } from './inventorySystem';
 
 /**
@@ -149,8 +159,12 @@ function applyConsumableEffect(
     }
 
     case 'restore_mana': {
-      // TODO: Implement mana system
-      // For now, just return true
+      const stats = ecs.getComponent<StatsComponent>(targetId, 'stats');
+      if (!stats) return false;
+
+      // TODO: Implement proper mana system with ManaComponent
+      // For now, just return true as placeholder
+      console.log('[ItemUsage] Mana restore (not yet fully implemented)');
       return true;
     }
 
@@ -169,26 +183,37 @@ function applyConsumableEffect(
     case 'buff_intelligence':
     case 'buff_speed':
     case 'buff_defense': {
-      // TODO: Implement stat modifier system for temporary buffs
-      // For now, apply directly to base stats (permanent)
       const stats = ecs.getComponent<StatsComponent>(targetId, 'stats');
       if (!stats) return false;
 
       // Map effect to stat
-      const statMap: Record<string, keyof typeof stats.base> = {
+      const statMap: Record<string, string> = {
         buff_strength: 'strength',
         buff_dexterity: 'dexterity',
         buff_intelligence: 'intelligence',
+        buff_speed: 'speed',
+        buff_defense: 'defense',
       };
 
       const statKey = statMap[effect];
-      if (statKey && statKey in stats.base) {
-        stats.base[statKey] += power;
-        // TODO: Add temporary modifier instead of permanent change
-        // TODO: Use StatModifierComponent for duration-based effects
-        return true;
-      }
-      return false;
+      if (!statKey) return false;
+
+      // Use StatModifierComponent for temporary buffs
+      const buffDuration = duration || 10; // Default 10 turns if not specified
+      addStatModifier(
+        ecs,
+        targetId,
+        statKey,
+        ModifierType.FLAT,
+        power,
+        buffDuration,
+        `buff_${itemId}`
+      );
+
+      console.log(
+        `[ItemUsage] Applied +${power} ${statKey} buff for ${buffDuration} turns`
+      );
+      return true;
     }
 
     case 'damage': {
@@ -199,16 +224,133 @@ function applyConsumableEffect(
       return true;
     }
 
-    case 'cure_poison':
-    case 'cure_curse':
-    case 'teleport':
-    case 'bless':
-    case 'curse':
-    case 'summon':
-    case 'reveal_map':
+    case 'cure_poison': {
+      // Remove poison status effect
+      const statusEffect = ecs.getComponent<StatusEffectComponent>(
+        targetId,
+        'statusEffect'
+      );
+      if (statusEffect) {
+        removeStatusEffect(statusEffect, StatusEffectType.POISONED);
+        console.log('[ItemUsage] Cured poison');
+        return true;
+      }
+      return false;
+    }
+
+    case 'cure_curse': {
+      // Remove cursed status effect
+      const statusEffect = ecs.getComponent<StatusEffectComponent>(
+        targetId,
+        'statusEffect'
+      );
+      if (statusEffect) {
+        removeStatusEffect(statusEffect, StatusEffectType.CURSED);
+        console.log('[ItemUsage] Cured curse');
+        return true;
+      }
+      return false;
+    }
+
+    case 'teleport': {
+      // Teleport entity to random nearby location
+      const position = ecs.getComponent<PositionComponent>(
+        targetId,
+        'position'
+      );
+      if (!position) return false;
+
+      // Teleport within 5-15 tile radius
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 5 + Math.random() * 10;
+      position.x = Math.floor(position.x + Math.cos(angle) * distance);
+      position.y = Math.floor(position.y + Math.sin(angle) * distance);
+
+      console.log(
+        `[ItemUsage] Teleported to (${position.x}, ${position.y})`
+      );
+      return true;
+    }
+
+    case 'bless': {
+      // Apply blessed status effect
+      let statusEffect = ecs.getComponent<StatusEffectComponent>(
+        targetId,
+        'statusEffect'
+      );
+      if (!statusEffect) {
+        // Add statusEffect component if it doesn't exist
+        const newStatusEffect = createDefaultStatusEffect();
+        ecs.addComponent(targetId, 'statusEffect', newStatusEffect);
+        statusEffect = ecs.getComponent<StatusEffectComponent>(
+          targetId,
+          'statusEffect'
+        );
+      }
+      if (statusEffect) {
+        const buffDuration = duration || 20; // Default 20 turns
+        addStatusEffect(
+          statusEffect,
+          StatusEffectType.BLESSED,
+          buffDuration,
+          power
+        );
+        console.log(
+          `[ItemUsage] Applied blessed effect for ${buffDuration} turns`
+        );
+        return true;
+      }
+      return false;
+    }
+
+    case 'curse': {
+      // Apply cursed status effect
+      let statusEffect = ecs.getComponent<StatusEffectComponent>(
+        targetId,
+        'statusEffect'
+      );
+      if (!statusEffect) {
+        // Add statusEffect component if it doesn't exist
+        const newStatusEffect = createDefaultStatusEffect();
+        ecs.addComponent(targetId, 'statusEffect', newStatusEffect);
+        statusEffect = ecs.getComponent<StatusEffectComponent>(
+          targetId,
+          'statusEffect'
+        );
+      }
+      if (statusEffect) {
+        const curseDuration = duration || 20; // Default 20 turns
+        addStatusEffect(
+          statusEffect,
+          StatusEffectType.CURSED,
+          curseDuration,
+          power
+        );
+        console.log(
+          `[ItemUsage] Applied cursed effect for ${curseDuration} turns`
+        );
+        return true;
+      }
+      return false;
+    }
+
+    case 'summon': {
+      // TODO: Implement summoning system
+      // Requires entity factory and spawn system
+      console.log('[ItemUsage] Summon (not yet implemented)');
+      return true;
+    }
+
+    case 'reveal_map': {
+      // TODO: Implement map reveal system
+      // Requires fog of war system
+      console.log('[ItemUsage] Reveal map (not yet implemented)');
+      return true;
+    }
+
     case 'custom': {
-      // TODO: Implement these effects
-      // For now, return true as placeholder
+      // Custom effects handled by external systems
+      console.log('[ItemUsage] Custom effect triggered');
       return true;
     }
 
