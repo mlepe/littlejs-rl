@@ -26,12 +26,14 @@ export interface InputComponent {
   pickup: boolean;
   /** Use/consume item from inventory (U key) */
   useItem: boolean;
-  /** Zoom in command */
-  zoomIn: boolean;
-  /** Zoom out command */
-  zoomOut: boolean;
+  /** Zoom */
+  zoom: boolean;
   /** Toggle collision layer visibility (debug) */
   debugToggleCollision: boolean;
   /** Toggle debug text visibility */
   debugToggleText: boolean;
+  /** Enter world map from location */
+  locationEnterWorldMap: boolean;
+  /** Enter location from world map */
+  worldMapEnterLocation: boolean;
 }

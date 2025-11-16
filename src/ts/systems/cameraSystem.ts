@@ -62,11 +62,12 @@ export function cameraSystem(ecs: ECS): void {
     if (!pos || !input) continue;
 
     // Handle zoom input
-    if (input.zoomIn) {
-      currentZoom = Math.min(currentZoom + ZOOM_STEP, ZOOM_MAX);
-    }
-    if (input.zoomOut) {
-      currentZoom = Math.max(currentZoom - ZOOM_STEP, ZOOM_MIN);
+    if (input.zoom) {
+      if (currentZoom >= ZOOM_MAX) {
+        currentZoom = ZOOM_MIN;
+      } else {
+        currentZoom += ZOOM_STEP;
+      }
     }
 
     // Apply zoom to camera

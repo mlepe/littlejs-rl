@@ -51,8 +51,9 @@ export function inputSystem(ecs: ECS): void {
     ACTION: ['Space', 'Enter', 'KeyE'],
     PICKUP: ['KeyG'],
     USE_ITEM: ['KeyU'],
-    ZOOM_IN: ['Equal', 'NumpadAdd'],
-    ZOOM_OUT: ['Minus', 'NumpadSubtract'],
+    WORLDMAP_ENTER_LOCATION: ['Equal', 'NumpadAdd'],
+    LOCATION_ENTER_WORLDMAP: ['Minus', 'NumpadSubtract'],
+    ZOOM: ['Multiply', 'NumpadMultiply'],
     DEBUG_TOGGLE_COLLISION_DISPLAY: ['KeyC'],
     DEBUG_TOGGLE_DEBUG_TEXT: ['KeyX'],
   } as const;
@@ -67,10 +68,11 @@ export function inputSystem(ecs: ECS): void {
     input.action = false;
     input.pickup = false;
     input.useItem = false;
-    input.zoomIn = false;
-    input.zoomOut = false;
+    input.zoom = false;
     input.debugToggleCollision = false;
     input.debugToggleText = false;
+    input.locationEnterWorldMap = false;
+    input.worldMapEnterLocation = false;
 
     // Read keyboard input (LittleJS)
     // Movement: Use keyIsDown for continuous movement while held
@@ -136,13 +138,22 @@ export function inputSystem(ecs: ECS): void {
     }
 
     // Check ZOOM_IN
-    if (keybinds.ZOOM_IN.some((key) => LJS.keyWasPressed(key))) {
-      input.zoomIn = true;
+    if (
+      keybinds.LOCATION_ENTER_WORLDMAP.some((key) => LJS.keyWasPressed(key))
+    ) {
+      input.locationEnterWorldMap = true;
     }
 
     // Check ZOOM_OUT
-    if (keybinds.ZOOM_OUT.some((key) => LJS.keyWasPressed(key))) {
-      input.zoomOut = true;
+    if (
+      keybinds.WORLDMAP_ENTER_LOCATION.some((key) => LJS.keyWasPressed(key))
+    ) {
+      input.worldMapEnterLocation = true;
+    }
+
+    // Check ZOOM
+    if (keybinds.ZOOM.some((key) => LJS.keyWasPressed(key))) {
+      input.zoom = true;
     }
 
     // Check DEBUG_TOGGLE_COLLISION_DISPLAY
