@@ -322,20 +322,21 @@ export default class Game {
       // Reset turn timer
       this.turnTimer = 0;
 
-      // Check player view mode
+      // Handle view mode transitions FIRST
+      viewModeTransitionSystem(this.ecs);
+
+      // Check player view mode AFTER transitions
       const viewModeComp = this.ecs.getComponent<ViewModeComponent>(
         this.playerId,
         'viewMode'
       );
       const currentViewMode = viewModeComp?.mode || ViewMode.LOCATION;
 
-      // Handle view mode transitions
-      viewModeTransitionSystem(this.ecs);
-
       // Route to appropriate systems based on view mode
       if (currentViewMode === ViewMode.WORLD_MAP) {
         // World map movement (cursor navigation)
         worldMapMovementSystem(this.ecs);
+        cameraSystem(this.ecs); // Camera zoom works in world map too
       } else {
         // Location movement and exploration
         pickupSystem(this.ecs); // Handle item pickup

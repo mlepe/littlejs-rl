@@ -51,9 +51,9 @@ export function inputSystem(ecs: ECS): void {
     ACTION: ['Space', 'Enter', 'KeyE'],
     PICKUP: ['KeyG'],
     USE_ITEM: ['KeyU'],
-    WORLDMAP_ENTER_LOCATION: ['Equal', 'NumpadAdd'],
-    LOCATION_ENTER_WORLDMAP: ['Minus', 'NumpadSubtract'],
-    ZOOM: ['Multiply', 'NumpadMultiply'],
+    WORLDMAP_ENTER_LOCATION: ['BracketRight', 'NumpadAdd'], // ] or numpad +
+    LOCATION_ENTER_WORLDMAP: ['BracketLeft', 'NumpadSubtract'], // [ or numpad -
+    ZOOM: ['NumpadMultiply'], // Numpad *
     DEBUG_TOGGLE_COLLISION_DISPLAY: ['KeyC'],
     DEBUG_TOGGLE_DEBUG_TEXT: ['KeyX'],
   } as const;
@@ -142,6 +142,7 @@ export function inputSystem(ecs: ECS): void {
       keybinds.LOCATION_ENTER_WORLDMAP.some((key) => LJS.keyWasPressed(key))
     ) {
       input.locationEnterWorldMap = true;
+      console.log('[Input] LOCATION_ENTER_WORLDMAP pressed');
     }
 
     // Check WORLDMAP_ENTER_LOCATION (Plus key enters location)
@@ -149,11 +150,13 @@ export function inputSystem(ecs: ECS): void {
       keybinds.WORLDMAP_ENTER_LOCATION.some((key) => LJS.keyWasPressed(key))
     ) {
       input.worldMapEnterLocation = true;
+      console.log('[Input] WORLDMAP_ENTER_LOCATION pressed');
     }
 
     // Check ZOOM
     if (keybinds.ZOOM.some((key) => LJS.keyWasPressed(key))) {
       input.zoom = true;
+      console.log('[Input] ZOOM pressed');
     }
 
     // Check DEBUG_TOGGLE_COLLISION_DISPLAY
