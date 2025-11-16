@@ -7,30 +7,36 @@ This branch implements a comprehensive template-mixing system that allows entiti
 ## What Was Implemented
 
 ### 1. **Component Template System**
+
 - **4 Template Types**: Render, Stats, AI, Health
 - **Registry Classes**: One for each template type with load/get/validation
 - **Data Files**: JSON files with example templates in `src/data/base/templates/`
 
 ### 2. **Template Resolution**
+
 - **Deep Merge**: Direct entity values override template values
 - **Fallback System**: Warns if template not found, uses defaults
 - **EntityRegistry Integration**: Automatic template resolution during spawn
 
 ### 3. **Data Schema Extensions**
+
 - Added `ComponentTemplateRefs` interface
 - Added template types: `RenderTemplate`, `StatsTemplate`, `AITemplate`, `HealthTemplate`
 - Extended `EntityTemplate` with optional `templates` field
 
 ### 4. **Validation Updates**
+
 - Made component data optional when templates are referenced
 - Added template-aware validation logic
 - Graceful handling of missing templates
 
 ### 5. **Example Content**
+
 - 5 example entities in `template_mixed.json` demonstrating various mixing strategies
 - Template files with 6-7 templates each covering common archetypes
 
 ### 6. **Documentation**
+
 - Comprehensive `TEMPLATE-MIXING.md` guide
 - Examples, naming conventions, troubleshooting
 - Implementation details for developers
@@ -38,6 +44,7 @@ This branch implements a comprehensive template-mixing system that allows entiti
 ## File Changes
 
 **New Files:**
+
 - `src/ts/data/renderTemplateRegistry.ts`
 - `src/ts/data/statsTemplateRegistry.ts`
 - `src/ts/data/aiTemplateRegistry.ts`
@@ -50,6 +57,7 @@ This branch implements a comprehensive template-mixing system that allows entiti
 - `TEMPLATE-MIXING.md`
 
 **Modified Files:**
+
 - `src/ts/types/dataSchemas.ts` - Added template types and interfaces
 - `src/ts/data/entityRegistry.ts` - Added template resolution methods
 - `src/ts/data/dataLoader.ts` - Added template loading
@@ -59,6 +67,7 @@ This branch implements a comprehensive template-mixing system that allows entiti
 ## How to Use
 
 ### Basic Example
+
 ```json
 {
   "id": "orc_mage",
@@ -74,6 +83,7 @@ This branch implements a comprehensive template-mixing system that allows entiti
 ```
 
 ### With Overrides
+
 ```json
 {
   "id": "custom_goblin",
@@ -88,6 +98,7 @@ This branch implements a comprehensive template-mixing system that allows entiti
 ```
 
 ### Spawning
+
 ```typescript
 const registry = EntityRegistry.getInstance();
 const entityId = registry.spawn(ecs, 'orc_mage', x, y, worldX, worldY);
