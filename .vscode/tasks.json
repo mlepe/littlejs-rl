@@ -5,12 +5,12 @@
   // to automate common development workflows for ECS architecture.
   //
   // Task Categories:
-  // 1. Documentation tasks - Add JSDoc comments to code
-  // 2. ECS Creation tasks - Create components, systems, and entity factories
-  // 3. Verification tasks - Validate coherence between ECS elements
-  // 4. Composed tasks - Multi-step workflows that run tasks in sequence
+  // 1. NPM tasks - Build, serve, lint
+  // 2. Documentation tasks - Add JSDoc comments, update docs
+  // 3. ECS Creation tasks - Create components, systems, and entity factories
+  // 4. Verification tasks - Validate coherence between ECS elements
   // 5. Interactive tasks - Conversational workflows where Copilot handles conditional logic
-  // 6. Code assistance tasks - Explain, refactor, test, and debug code
+  // 6. Code assistance tasks - Explain, refactor, and debug code
   //
   // Usage: Run tasks via Command Palette (Ctrl+Shift+P) > "Tasks: Run Task"
 
@@ -170,22 +170,6 @@
       "problemMatcher": []
     },
     {
-      // Creates a new test ECS component in the test directory
-      "label": "Copilot: Create Test Component",
-      "type": "shell",
-      "command": "code",
-      "args": [
-        "--reuse-window",
-        "chat",
-        "Create a new ECS component named ${input:componentName}_test in src/ts/test/components/"
-      ],
-      "presentation": {
-        "reveal": "never",
-        "focus": false
-      },
-      "problemMatcher": []
-    },
-    {
       // Creates a new ECS system (pure function that operates on components)
       "label": "Copilot: Create System",
       "type": "shell",
@@ -194,22 +178,6 @@
         "--reuse-window",
         "chat",
         "Create a new ECS system named ${input:systemName} in src/ts/systems/"
-      ],
-      "presentation": {
-        "reveal": "never",
-        "focus": false
-      },
-      "problemMatcher": []
-    },
-    {
-      // Creates a new test ECS system in the test directory
-      "label": "Copilot: Create Test System",
-      "type": "shell",
-      "command": "code",
-      "args": [
-        "--reuse-window",
-        "chat",
-        "Create a new ECS system named ${input:systemName}_test in src/ts/test/systems/"
       ],
       "presentation": {
         "reveal": "never",
@@ -234,39 +202,7 @@
       "problemMatcher": []
     },
     {
-      // Creates a test entity factory function in the test directory
-      "label": "Copilot: Create Test Entity Factory",
-      "type": "shell",
-      "command": "code",
-      "args": [
-        "--reuse-window",
-        "chat",
-        "Create entity factory function create${input:entityType}_test in src/ts/test/entities.ts"
-      ],
-      "presentation": {
-        "reveal": "never",
-        "focus": false
-      },
-      "problemMatcher": []
-    },
-    {
-      // Creates an optional entity factory (skips if name is empty)
-      "label": "Copilot: Create Entity Factory (Optional)",
-      "type": "shell",
-      "command": "code",
-      "args": [
-        "--reuse-window",
-        "chat",
-        "${input:entityTypeOptional:+ and ECS Entity Factory create${input:entityTypeOptional} in src/ts/entities.ts}Create entity factory function create${input:entityTypeOptional} in src/ts/entities.ts${input:entityTypeOptional:- (skip if empty)}"
-      ],
-      "presentation": {
-        "reveal": "never",
-        "focus": false
-      },
-      "problemMatcher": []
-    },
-    {
-      // Provides a detailed implementation plan for a specified feature
+      // Provides a detailed implementation plan for a specified featureture
       "label": "Copilot: Help me implement this feature",
       "type": "shell",
       "command": "code",
@@ -274,22 +210,6 @@
         "--reuse-window",
         "chat",
         "Help me implement this feature: ${input:featureDescription}. Provide a detailed implementation plan. You may ask me for more details if needed."
-      ],
-      "presentation": {
-        "reveal": "never",
-        "focus": false
-      },
-      "problemMatcher": []
-    },
-    {
-      // Provides a detailed implementation plan for a specified feature
-      "label": "Copilot: Verify the coherence of this feature implementation",
-      "type": "shell",
-      "command": "code",
-      "args": [
-        "--reuse-window",
-        "chat",
-        "Verify the coherence of the feature you just helped me implement."
       ],
       "presentation": {
         "reveal": "never",
@@ -320,52 +240,8 @@
     },
 
     // ============================================================================
-    // COMPOSED TASKS (Multi-step workflows)
-    // ============================================================================
-
-    {
-      // Runs: Create Component → Create System → Verify coherence
-      "label": "Copilot: (Composed) Create Component and System",
-      "dependsOn": [
-        "Copilot: Create Component",
-        "Copilot: Create System",
-        "Copilot: Verify Component and System Coherence"
-      ],
-      "dependsOrder": "sequence"
-    },
-    {
-      // Runs: Create Component → Create System → Optionally create Entity Factory → Verify coherence
-      "label": "Copilot: (Composed) Create Component and System (and optionally Entity Factory)",
-      "dependsOn": [
-        "Copilot: Create Component",
-        "Copilot: Create System",
-        "Copilot: Create Entity Factory",
-        "Copilot: Verify Component and System (and optionally Entity Factory) Coherence"
-      ],
-      "dependsOrder": "sequence"
-    },
-    {
-      // Runs: Create Component → Create System → Create Entity Factory → Verify coherence
-      "label": "Copilot: (Composed) Create Component, System and Entity Factory",
-      "dependsOn": [
-        "Copilot: Create Component",
-        "Copilot: Create System",
-        "Copilot: Create Entity Factory",
-        "Copilot: Verify Component and System Coherence"
-      ],
-      "dependsOrder": "sequence"
-    },
-    {
-      "label": "Copilot: (Composed) Help me implement this feature and verify coherence",
-      "dependsOn": [
-        "Copilot: Help me implement this feature",
-        "Copilot: Verify the coherence of this feature implementation"
-      ],
-      "dependsOrder": "sequence"
-    },
-
-    // ============================================================================
     // INTERACTIVE TASKS
+    // These tasks use Copilot's conversational abilities to handle conditional logic
     // ============================================================================
 
     {
@@ -385,22 +261,6 @@
       "problemMatcher": []
     },
     {
-      // Interactive workflow: Explains implementation approach for a specified feature
-      "label": "Copilot: Explain how you would implement a specified feature (Interactive)",
-      "type": "shell",
-      "command": "code",
-      "args": [
-        "--reuse-window",
-        "chat",
-        "I want you to explain how I could implement a specified feature. Ask me which feature and provide a detailed explanation of how to implement it."
-      ],
-      "presentation": {
-        "reveal": "never",
-        "focus": false
-      },
-      "problemMatcher": []
-    },
-    {
       // Interactive workflow: Copilot proposes features based on instructions (mostly game inspirations) and handles the logic
       "label": "Copilot: Propose features based on instructions (Interactive)",
       "type": "shell",
@@ -409,38 +269,6 @@
         "--reuse-window",
         "chat",
         "I want you to propose features based on the instructions in `.github/instructions/` and `copilot-instructions.md`. Ask me which feature I want to implement and provide a detailed explanation of how to implement it. You can suggest multiple features and let me choose. You can also ask me if I want to implement a feature based on a specific game inspiration or mechanic."
-      ],
-      "presentation": {
-        "reveal": "never",
-        "focus": false
-      },
-      "problemMatcher": []
-    },
-    {
-      // Interactive workflow: Copilot helps implement features from a given game inspiration and handles the logic
-      "label": "Copilot: Help me implement features suggested from a game inspiration (Interactive)",
-      "type": "shell",
-      "command": "code",
-      "args": [
-        "--reuse-window",
-        "chat",
-        "I want you to help me implement features based on a specific game inspiration from the instructions in `.github/instructions/`. Ask me which game I want to take features from and provide a list of features from that game that could be implemented. Let me choose which features to implement and provide a detailed explanation of how to implement them."
-      ],
-      "presentation": {
-        "reveal": "never",
-        "focus": false
-      },
-      "problemMatcher": []
-    },
-    {
-      // Interactive workflow: Implements a specific feature from a chosen game inspiration
-      "label": "Copilot: Help me implement a specific feature from a game inspiration (Interactive)",
-      "type": "shell",
-      "command": "code",
-      "args": [
-        "--reuse-window",
-        "chat",
-        "I want you to help me implement a specific feature based on a specific game inspiration from the instructions in `.github/instructions/`. Ask me which feature I want to implement from which game, and help me implement it by providing a detailed explanation of how to implement it."
       ],
       "presentation": {
         "reveal": "never",
@@ -580,40 +408,6 @@
       "id": "bugDescription",
       "type": "promptString",
       "description": "Describe the bug or issue"
-    },
-    {
-      "id": "ecsArgsSelection",
-      "type": "pickString",
-      "options": ["component", "system", "entity factory"],
-      "description": "Selection of ECS elements to create or verify"
-    },
-    {
-      "id": "wantComponent",
-      "type": "pickString",
-      "options": ["yes", "no"],
-      "description": "Do you want to create a component?"
-    },
-    {
-      "id": "wantSystem",
-      "type": "pickString",
-      "options": ["yes", "no"],
-      "description": "Do you want to create a system?"
-    },
-    {
-      "id": "wantEntityFactory",
-      "type": "pickString",
-      "options": ["yes", "no"],
-      "description": "Do you want to create an entity factory?"
-    },
-    {
-      "id": "elementsToCreate",
-      "type": "promptString",
-      "description": "Describe the elements to create. Specify component, system, and/or entity factory."
-    },
-    {
-      "id": "elementsProperties",
-      "type": "promptString",
-      "description": "Describe the properties of the elements to create."
     },
     {
       "id": "featureDescription",
