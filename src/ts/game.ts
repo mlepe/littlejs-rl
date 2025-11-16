@@ -12,6 +12,7 @@
 
 import * as LJS from 'littlejsengine';
 
+import { BiomeType, LocationType } from './locationType';
 import {
   addCharges,
   addConsumable,
@@ -26,6 +27,7 @@ import {
   identificationSystem,
   inputSystem,
   itemUsageInputSystem,
+  locationTransitionSystem,
   pickupSystem,
   playerMovementSystem,
   renderSystem,
@@ -140,10 +142,12 @@ export default class Game {
     await dataLoader.loadAllData();
     console.log('[Game] Game data loaded');
 
-    // Set up initial location
+    // Set up initial location (WILDERNESS for open world exploration)
     this.world.setCurrentLocation(
       this.currentWorldPos.x,
-      this.currentWorldPos.y
+      this.currentWorldPos.y,
+      LocationType.WILDERNESS,
+      BiomeType.FOREST
     );
     const startLocation = this.world.getCurrentLocation();
 
@@ -305,6 +309,7 @@ export default class Game {
 
       pickupSystem(this.ecs); // Handle item pickup
       playerMovementSystem(this.ecs); // Move player based on input
+      locationTransitionSystem(this.ecs); // Handle location transitions at edges
       cameraSystem(this.ecs); // Update camera (follow player + zoom)
 
       // Item systems
