@@ -13,6 +13,7 @@
 import * as LJS from 'littlejsengine';
 
 import { BiomeType, LocationType, getBiomePalette } from './locationType';
+import { TileSprite, getTileCoords } from './tileConfig';
 
 import World from './world';
 
@@ -175,6 +176,35 @@ export default class WorldMap {
   }
 
   /**
+   * Get tile sprite for a biome
+   * @private
+   */
+  private getBiomeTileSprite(biome: BiomeType): TileSprite {
+    switch (biome) {
+      case BiomeType.FOREST:
+        return TileSprite.FLOOR_GRASS;
+      case BiomeType.MOUNTAIN:
+        return TileSprite.FLOOR_MOUNTAIN;
+      case BiomeType.SNOWY:
+        return TileSprite.FLOOR_SNOW;
+      case BiomeType.BARREN:
+        return TileSprite.FLOOR_BARREN;
+      case BiomeType.DESERT:
+        return TileSprite.FLOOR_DESERT;
+      case BiomeType.BEACH:
+        return TileSprite.FLOOR_BEACH;
+      case BiomeType.WATER:
+        return TileSprite.WATER_DEEP;
+      case BiomeType.VOLCANIC:
+        return TileSprite.FLOOR_VOLCANIC_ROCK;
+      case BiomeType.SWAMP:
+        return TileSprite.FLOOR_SWAMP;
+      default:
+        return TileSprite.FLOOR_STONE;
+    }
+  }
+
+  /**
    * Render the world map
    * @param cursorX - Current cursor/player X position
    * @param cursorY - Current cursor/player Y position
@@ -191,41 +221,37 @@ export default class WorldMap {
 
         const posX = offsetX + x * tileSize;
         const posY = offsetY + y * tileSize;
+        const pos = LJS.vec2(posX + tileSize / 2, posY + tileSize / 2);
+        const size = LJS.vec2(tileSize * 0.9, tileSize * 0.9);
 
-        // Determine tile color
-        let color: LJS.Color;
-        if (!tile.discovered) {
-          // Undiscovered tiles are dark gray
-          color = LJS.rgb(0.2, 0.2, 0.2);
-        } else if (tile.visited) {
-          // Visited tiles show full biome color
-          color = getBiomePalette(tile.biome).floor;
-        } else {
-          // Discovered but not visited - darker biome color
-          const biomeColor = getBiomePalette(tile.biome).floor;
-          color = LJS.rgb(
-            biomeColor.r * 0.6,
-            biomeColor.g * 0.6,
-            biomeColor.b * 0.6
-          );
-        }
-
-        // Draw tile
-        LJS.drawRect(
-          LJS.vec2(posX + tileSize / 2, posY + tileSize / 2),
-          LJS.vec2(tileSize * 0.9, tileSize * 0.9),
-          color
+        // Get tile sprite for biome
+        const tileSprite = this.getBiomeTileSprite(tile.biome);
+        const coords = getTileCoords(tileSprite);
+        const tileInfo = new LJS.TileInfo(
+          LJS.vec2(coords.x * 16, coords.y * 16),
+          LJS.vec2(16, 16),
+          0
         );
 
-        // Highlight cursor position
+        // Determine tile color/alpha based on discovery state
+        let color: LJS.Color;
+        if (!tile.discovered) {
+          // Undiscovered tiles are very dark
+          color = new LJS.Color(0.1, 0.1, 0.1, 1);
+        } else if (tile.visited) {
+          // Visited tiles show full color
+          color = new LJS.Color(1, 1, 1, 1);
+        } else {
+          // Discovered but not visited - dimmed
+          color = new LJS.Color(0.6, 0.6, 0.6, 1);
+        }
+
+        // Draw tile using LittleJS tile rendering
+        LJS.drawTile(pos, size, tileInfo, color, 0, false);
+
+        // Highlight cursor position with yellow semi-transparent overlay
         if (x === cursorX && y === cursorY) {
-          LJS.drawRect(
-            LJS.vec2(posX + tileSize / 2, posY + tileSize / 2),
-            LJS.vec2(tileSize, tileSize),
-            LJS.rgb(1, 1, 0), // Yellow highlight
-            0,
-            false // Outline only
-          );
+          LJS.drawRect(pos, size, new LJS.Color(1, 1, 0, 0.3));
         }
       }
     }

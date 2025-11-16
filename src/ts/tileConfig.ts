@@ -56,11 +56,18 @@ export enum TileSprite {
   FLOOR_LAVA_EDGE = 14,
   FLOOR_WATER_SHALLOW = 15,
   FLOOR_CHECKERBOARD = 16,
+  FLOOR_SNOW = 17, // Snowy terrain
+  FLOOR_VOLCANIC_ROCK = 18, // Volcanic terrain
+  FLOOR_SWAMP = 19, // Swamp terrain
+  FLOOR_BEACH = 20, // Beach sand
+  FLOOR_MOUNTAIN = 21, // Rocky mountain floor
+  FLOOR_DESERT = 22, // Desert sand (different from beach)
+  FLOOR_BARREN = 23, // Barren wasteland
 
   // ============================================================================
   // CHARACTERS - Columns 24-31, Rows 0-9 (Tiles 24-31, 72-79, 120-127, etc.)
   // ============================================================================
-  
+
   // Row 0: Columns 24-31 (Player characters, human-like)
   CHAR_WARRIOR_1 = 24,
   CHAR_WARRIOR_2 = 25,
@@ -70,9 +77,9 @@ export enum TileSprite {
   CHAR_ROGUE_2 = 29,
   CHAR_CLERIC_1 = 30,
   CHAR_CLERIC_2 = 31,
-  
+
   // Row 1: Columns 24-31 (More player classes)
-  CHAR_RANGER_1 = 72,  // 48 + 24
+  CHAR_RANGER_1 = 72, // 48 + 24
   CHAR_RANGER_2 = 73,
   CHAR_PALADIN_1 = 74,
   CHAR_PALADIN_2 = 75,
@@ -80,9 +87,9 @@ export enum TileSprite {
   CHAR_DRUID_2 = 77,
   CHAR_BARD_1 = 78,
   CHAR_BARD_2 = 79,
-  
+
   // Row 2: Columns 24-31 (NPCs)
-  CHAR_MERCHANT_1 = 120,  // 96 + 24
+  CHAR_MERCHANT_1 = 120, // 96 + 24
   CHAR_MERCHANT_2 = 121,
   CHAR_GUARD_1 = 122,
   CHAR_GUARD_2 = 123,
@@ -90,9 +97,9 @@ export enum TileSprite {
   CHAR_NOBLE_2 = 125,
   CHAR_PEASANT_1 = 126,
   CHAR_PEASANT_2 = 127,
-  
+
   // Row 3: Columns 24-31 (More NPCs)
-  CHAR_WIZARD_1 = 168,  // 144 + 24
+  CHAR_WIZARD_1 = 168, // 144 + 24
   CHAR_WIZARD_2 = 169,
   CHAR_PRIEST_1 = 170,
   CHAR_PRIEST_2 = 171,
@@ -100,9 +107,9 @@ export enum TileSprite {
   CHAR_ELDER_2 = 173,
   CHAR_CHILD_1 = 174,
   CHAR_CHILD_2 = 175,
-  
+
   // Row 4: Columns 24-31 (Common enemies)
-  CHAR_GOBLIN_1 = 216,  // 192 + 24
+  CHAR_GOBLIN_1 = 216, // 192 + 24
   CHAR_GOBLIN_2 = 217,
   CHAR_ORC_1 = 218,
   CHAR_ORC_2 = 219,
@@ -110,9 +117,9 @@ export enum TileSprite {
   CHAR_KOBOLD_2 = 221,
   CHAR_BANDIT_1 = 222,
   CHAR_BANDIT_2 = 223,
-  
+
   // Row 5: Columns 24-31 (Undead enemies)
-  CHAR_SKELETON_1 = 264,  // 240 + 24
+  CHAR_SKELETON_1 = 264, // 240 + 24
   CHAR_SKELETON_2 = 265,
   CHAR_ZOMBIE_1 = 266,
   CHAR_ZOMBIE_2 = 267,
@@ -120,9 +127,9 @@ export enum TileSprite {
   CHAR_GHOST_2 = 269,
   CHAR_WRAITH_1 = 270,
   CHAR_WRAITH_2 = 271,
-  
+
   // Row 6: Columns 24-31 (Creatures)
-  CHAR_WOLF_1 = 312,  // 288 + 24
+  CHAR_WOLF_1 = 312, // 288 + 24
   CHAR_WOLF_2 = 313,
   CHAR_BEAR_1 = 314,
   CHAR_BEAR_2 = 315,
@@ -130,9 +137,9 @@ export enum TileSprite {
   CHAR_SPIDER_2 = 317,
   CHAR_SNAKE_1 = 318,
   CHAR_SNAKE_2 = 319,
-  
+
   // Row 7: Columns 24-31 (More creatures)
-  CHAR_RAT_GIANT_1 = 360,  // 336 + 24
+  CHAR_RAT_GIANT_1 = 360, // 336 + 24
   CHAR_RAT_GIANT_2 = 361,
   CHAR_BAT_1 = 362,
   CHAR_BAT_2 = 363,
@@ -140,9 +147,9 @@ export enum TileSprite {
   CHAR_SLIME_2 = 365,
   CHAR_DOG_1 = 366,
   CHAR_DOG_2 = 367,
-  
+
   // Row 8: Columns 24-31 (Advanced enemies)
-  CHAR_TROLL_1 = 408,  // 384 + 24
+  CHAR_TROLL_1 = 408, // 384 + 24
   CHAR_TROLL_2 = 409,
   CHAR_OGRE_1 = 410,
   CHAR_OGRE_2 = 411,
@@ -150,9 +157,9 @@ export enum TileSprite {
   CHAR_MINOTAUR_2 = 413,
   CHAR_DEMON_1 = 414,
   CHAR_DEMON_2 = 415,
-  
+
   // Row 9: Columns 24-31 (Bosses and special)
-  CHAR_DRAGON_1 = 456,  // 432 + 24
+  CHAR_DRAGON_1 = 456, // 432 + 24
   CHAR_DRAGON_2 = 457,
   CHAR_LICH_1 = 458,
   CHAR_LICH_2 = 459,
@@ -162,7 +169,7 @@ export enum TileSprite {
   CHAR_BOSS_2 = 463,
 
   // Legacy character aliases (for backward compatibility)
-  PLAYER_WARRIOR = 24,  // CHAR_WARRIOR_1
+  PLAYER_WARRIOR = 24, // CHAR_WARRIOR_1
 
   // ============================================================================
   // ROW 1 (Tiles 48-95): TERRAIN - WALLS
