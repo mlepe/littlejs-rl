@@ -13,8 +13,8 @@
 import * as LJS from 'littlejsengine';
 
 import { BiomeType, LocationType, getBiomePalette } from './locationType';
-import { TileSprite, getTileCoords } from './tileConfig';
 
+import { TileSprite } from './tileConfig';
 import World from './world';
 
 /**
@@ -54,16 +54,24 @@ export interface WorldMapTile {
 export default class WorldMap {
   private readonly world: World;
   private readonly tiles: Map<string, WorldMapTile>;
+  private readonly tileLayer: LJS.TileLayer;
+  private readonly tileSize: number = 2; // Each world map tile is 2x2 units
 
   constructor(world: World) {
     this.world = world;
     this.tiles = new Map();
 
+    // Initialize LittleJS tile layer for world map
+    // Position at negative offset to center the world map
+    const layerPos = LJS.vec2(-this.world.width, -this.world.height);
+    const layerSize = LJS.vec2(this.world.width, this.world.height);
+    const tileInfo = new LJS.TileInfo(LJS.vec2(0, 0), LJS.vec2(16, 16));
+
+    this.tileLayer = new LJS.TileLayer(layerPos, layerSize, tileInfo);
+
     // Initialize all tiles as undiscovered
     this.initializeTiles();
-  }
-
-  /**
+  } /**
    * Initialize world map tiles
    * @private
    */
@@ -71,14 +79,18 @@ export default class WorldMap {
     for (let y = 0; y < this.world.height; y++) {
       for (let x = 0; x < this.world.width; x++) {
         const key = this.getKey(x, y);
+        const biome = this.determineBiome(x, y);
         this.tiles.set(key, {
           worldX: x,
           worldY: y,
           locationType: LocationType.WILDERNESS, // Default
-          biome: this.determineBiome(x, y),
+          biome: biome,
           visited: false,
           discovered: false,
         });
+
+        // Set tile layer data (initially undiscovered - very dark)
+        this.updateTileLayer(x, y);
       }
     }
   }
@@ -131,6 +143,7 @@ export default class WorldMap {
     const tile = this.getTile(x, y);
     if (tile) {
       tile.discovered = true;
+      this.updateTileLayer(x, y);
     }
   }
 
@@ -144,6 +157,7 @@ export default class WorldMap {
     if (tile) {
       tile.visited = true;
       tile.discovered = true; // Visiting auto-discovers
+      this.updateTileLayer(x, y);
     }
   }
 
@@ -173,6 +187,39 @@ export default class WorldMap {
    */
   canMoveTo(x: number, y: number): boolean {
     return this.world.isInBounds(x, y);
+  }
+
+  /**
+   * Update tile layer data for a specific tile
+   * @private
+   */
+  private updateTileLayer(x: number, y: number): void {
+    const tile = this.getTile(x, y);
+    if (!tile) return;
+
+    const tileSprite = this.getBiomeTileSprite(tile.biome);
+
+    // Determine tile color based on discovery state
+    let color: LJS.Color;
+    if (!tile.discovered) {
+      // Undiscovered tiles are very dark
+      color = new LJS.Color(0.1, 0.1, 0.1, 1);
+    } else if (tile.visited) {
+      // Visited tiles show full color
+      color = new LJS.Color(1, 1, 1, 1);
+    } else {
+      // Discovered but not visited - dimmed
+      color = new LJS.Color(0.6, 0.6, 0.6, 1);
+    }
+
+    const pos = LJS.vec2(x, y);
+    const tileData = new LJS.TileLayerData(
+      tileSprite,
+      0, // direction
+      false, // mirror
+      color
+    );
+    this.tileLayer.setData(pos, tileData);
   }
 
   /**
@@ -210,51 +257,18 @@ export default class WorldMap {
    * @param cursorY - Current cursor/player Y position
    */
   render(cursorX: number, cursorY: number): void {
-    const tileSize = 2; // Each world map tile is 2x2 units
+    // Render the tile layer (automatically renders behind entities)
+    this.tileLayer.render();
+
+    // Highlight cursor position with yellow semi-transparent overlay
     const offsetX = -this.world.width;
     const offsetY = -this.world.height;
+    const posX = offsetX + cursorX * this.tileSize;
+    const posY = offsetY + cursorY * this.tileSize;
+    const pos = LJS.vec2(posX + this.tileSize / 2, posY + this.tileSize / 2);
+    const size = LJS.vec2(this.tileSize * 0.9, this.tileSize * 0.9);
 
-    for (let y = 0; y < this.world.height; y++) {
-      for (let x = 0; x < this.world.width; x++) {
-        const tile = this.getTile(x, y);
-        if (!tile) continue;
-
-        const posX = offsetX + x * tileSize;
-        const posY = offsetY + y * tileSize;
-        const pos = LJS.vec2(posX + tileSize / 2, posY + tileSize / 2);
-        const size = LJS.vec2(tileSize * 0.9, tileSize * 0.9);
-
-        // Get tile sprite for biome
-        const tileSprite = this.getBiomeTileSprite(tile.biome);
-        const coords = getTileCoords(tileSprite);
-        const tileInfo = new LJS.TileInfo(
-          LJS.vec2(coords.x * 16, coords.y * 16),
-          LJS.vec2(16, 16),
-          0
-        );
-
-        // Determine tile color/alpha based on discovery state
-        let color: LJS.Color;
-        if (!tile.discovered) {
-          // Undiscovered tiles are very dark
-          color = new LJS.Color(0.1, 0.1, 0.1, 1);
-        } else if (tile.visited) {
-          // Visited tiles show full color
-          color = new LJS.Color(1, 1, 1, 1);
-        } else {
-          // Discovered but not visited - dimmed
-          color = new LJS.Color(0.6, 0.6, 0.6, 1);
-        }
-
-        // Draw tile using LittleJS tile rendering
-        LJS.drawTile(pos, size, tileInfo, color, 0, false);
-
-        // Highlight cursor position with yellow semi-transparent overlay
-        if (x === cursorX && y === cursorY) {
-          LJS.drawRect(pos, size, new LJS.Color(1, 1, 0, 0.3));
-        }
-      }
-    }
+    LJS.drawRect(pos, size, new LJS.Color(1, 1, 0, 0.3));
   }
 
   /**
