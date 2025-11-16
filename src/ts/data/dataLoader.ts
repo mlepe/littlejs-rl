@@ -134,7 +134,7 @@ export class DataLoader {
     // Load items
     console.log('[DataLoader] Loading items...');
     try {
-      const { ItemRegistry } = await import('./itemRegistry');
+      const { ItemRegistry } = await import('./itemRegistry.js');
       await ItemRegistry.getInstance().loadFromFiles(
         'src/data/base/items/base_items.json',
         'src/data/base/items/item_properties.json'
