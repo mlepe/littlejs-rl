@@ -32,3 +32,4 @@ export * from './equipment';
 export * from './identification';
 export * from './charges';
 export * from './consumable';
+export * from './lootTable';

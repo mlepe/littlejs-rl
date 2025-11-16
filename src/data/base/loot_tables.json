@@ -1,0 +1,274 @@
+{
+  "lootTables": {
+    "goblin": {
+      "id": "goblin",
+      "name": "Goblin Loot",
+      "entries": [
+        {
+          "itemId": "gold_coin",
+          "dropChance": 1.0,
+          "minQuantity": 1,
+          "maxQuantity": 5
+        },
+        {
+          "itemId": "bread",
+          "dropChance": 0.3,
+          "minQuantity": 1,
+          "maxQuantity": 2
+        },
+        {
+          "itemId": "health_potion",
+          "dropChance": 0.15,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        }
+      ]
+    },
+    "orc": {
+      "id": "orc",
+      "name": "Orc Loot",
+      "entries": [
+        {
+          "itemId": "gold_coin",
+          "dropChance": 1.0,
+          "minQuantity": 5,
+          "maxQuantity": 15
+        },
+        {
+          "itemId": "iron_sword",
+          "dropChance": 0.4,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "qualityRange": {
+            "min": 0,
+            "max": 1
+          }
+        },
+        {
+          "itemId": "leather_armor",
+          "dropChance": 0.3,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        },
+        {
+          "itemId": "health_potion",
+          "dropChance": 0.25,
+          "minQuantity": 1,
+          "maxQuantity": 2
+        }
+      ]
+    },
+    "boss": {
+      "id": "boss",
+      "name": "Boss Loot",
+      "entries": [
+        {
+          "itemId": "gold_coin",
+          "dropChance": 1.0,
+          "minQuantity": 50,
+          "maxQuantity": 150
+        },
+        {
+          "itemId": "steel_sword",
+          "dropChance": 0.8,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "qualityRange": {
+            "min": 1,
+            "max": 3
+          },
+          "blessChance": 0.3
+        },
+        {
+          "itemId": "iron_armor",
+          "dropChance": 0.6,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "qualityRange": {
+            "min": 0,
+            "max": 2
+          }
+        },
+        {
+          "itemId": "health_potion",
+          "dropChance": 1.0,
+          "minQuantity": 3,
+          "maxQuantity": 5
+        },
+        {
+          "itemId": "mana_potion",
+          "dropChance": 0.8,
+          "minQuantity": 2,
+          "maxQuantity": 4
+        },
+        {
+          "itemId": "scroll_identify",
+          "dropChance": 0.5,
+          "minQuantity": 1,
+          "maxQuantity": 2
+        },
+        {
+          "itemId": "rod_lightning",
+          "dropChance": 0.4,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "blessChance": 0.2
+        },
+        {
+          "itemId": "mithril_sword",
+          "dropChance": 0.05,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "blessChance": 0.5
+        }
+      ]
+    },
+    "chest_common": {
+      "id": "chest_common",
+      "name": "Common Chest",
+      "entries": [
+        {
+          "itemId": "gold_coin",
+          "dropChance": 1.0,
+          "minQuantity": 10,
+          "maxQuantity": 30
+        },
+        {
+          "itemId": "health_potion",
+          "dropChance": 0.6,
+          "minQuantity": 1,
+          "maxQuantity": 3
+        },
+        {
+          "itemId": "bread",
+          "dropChance": 0.5,
+          "minQuantity": 2,
+          "maxQuantity": 5
+        },
+        {
+          "itemId": "iron_ore",
+          "dropChance": 0.4,
+          "minQuantity": 1,
+          "maxQuantity": 3
+        }
+      ]
+    },
+    "chest_rare": {
+      "id": "chest_rare",
+      "name": "Rare Chest",
+      "entries": [
+        {
+          "itemId": "gold_coin",
+          "dropChance": 1.0,
+          "minQuantity": 50,
+          "maxQuantity": 100
+        },
+        {
+          "itemId": "steel_sword",
+          "dropChance": 0.7,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "qualityRange": {
+            "min": 1,
+            "max": 2
+          },
+          "blessChance": 0.15
+        },
+        {
+          "itemId": "iron_armor",
+          "dropChance": 0.6,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "qualityRange": {
+            "min": 0,
+            "max": 1
+          }
+        },
+        {
+          "itemId": "health_potion",
+          "dropChance": 0.8,
+          "minQuantity": 2,
+          "maxQuantity": 4
+        },
+        {
+          "itemId": "mana_potion",
+          "dropChance": 0.7,
+          "minQuantity": 2,
+          "maxQuantity": 3
+        },
+        {
+          "itemId": "scroll_identify",
+          "dropChance": 0.5,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        },
+        {
+          "itemId": "magic_amulet",
+          "dropChance": 0.3,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "blessChance": 0.4
+        }
+      ]
+    },
+    "merchant": {
+      "id": "merchant",
+      "name": "Merchant Loot (if killed)",
+      "entries": [
+        {
+          "itemId": "gold_coin",
+          "dropChance": 1.0,
+          "minQuantity": 100,
+          "maxQuantity": 300
+        },
+        {
+          "itemId": "health_potion",
+          "dropChance": 0.9,
+          "minQuantity": 5,
+          "maxQuantity": 10
+        },
+        {
+          "itemId": "mana_potion",
+          "dropChance": 0.8,
+          "minQuantity": 3,
+          "maxQuantity": 7
+        },
+        {
+          "itemId": "scroll_identify",
+          "dropChance": 0.7,
+          "minQuantity": 2,
+          "maxQuantity": 4
+        },
+        {
+          "itemId": "travel_cloak",
+          "dropChance": 0.5,
+          "minQuantity": 1,
+          "maxQuantity": 1
+        }
+      ]
+    },
+    "wildlife": {
+      "id": "wildlife",
+      "name": "Wildlife Loot",
+      "entries": [
+        {
+          "itemId": "bread",
+          "dropChance": 0.4,
+          "minQuantity": 1,
+          "maxQuantity": 2,
+          "customEffect": "raw_meat"
+        },
+        {
+          "itemId": "leather_armor",
+          "dropChance": 0.15,
+          "minQuantity": 1,
+          "maxQuantity": 1,
+          "qualityRange": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      ]
+    }
+  }
+}
