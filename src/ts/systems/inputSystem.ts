@@ -137,14 +137,14 @@ export function inputSystem(ecs: ECS): void {
       input.useItem = true;
     }
 
-    // Check ZOOM_IN
+    // Check LOCATION_ENTER_WORLDMAP (Minus key opens world map)
     if (
       keybinds.LOCATION_ENTER_WORLDMAP.some((key) => LJS.keyWasPressed(key))
     ) {
       input.locationEnterWorldMap = true;
     }
 
-    // Check ZOOM_OUT
+    // Check WORLDMAP_ENTER_LOCATION (Plus key enters location)
     if (
       keybinds.WORLDMAP_ENTER_LOCATION.some((key) => LJS.keyWasPressed(key))
     ) {
