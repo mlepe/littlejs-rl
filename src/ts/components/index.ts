@@ -33,3 +33,4 @@ export * from './identification';
 export * from './charges';
 export * from './consumable';
 export * from './lootTable';
+export * from './viewMode';

@@ -18,6 +18,7 @@ import {
   MovableComponent,
   PositionComponent,
   RenderComponent,
+  ViewModeComponent,
 } from './components';
 import {
   SPRITE_BOSS,
@@ -99,10 +100,18 @@ export function createPlayer(
     action: false,
     pickup: false,
     useItem: false,
-    zoomIn: false,
-    zoomOut: false,
+    zoom: false,
     debugToggleCollision: false,
     debugToggleText: false,
+    locationEnterWorldMap: false,
+    worldMapEnterLocation: false,
+  });
+
+  // Add view mode component (starts in LOCATION view)
+  ecs.addComponent<ViewModeComponent>(playerId, 'viewMode', {
+    mode: 'location' as any, // ViewMode.LOCATION
+    worldMapCursorX: worldX,
+    worldMapCursorY: worldY,
   });
 
   // Add empty inventory (capacity calculated from strength in derived stats)

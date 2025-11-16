@@ -31,13 +31,18 @@ import {
   pickupSystem,
   playerMovementSystem,
   renderSystem,
+  viewModeTransitionSystem,
+  worldMapMovementSystem,
 } from './systems';
 import { createEnemy, createPlayer } from './entities';
 
 import { DataLoader } from './data/dataLoader';
 import ECS from './ecs';
 import { ItemComponent } from './components/item';
+import { ViewMode } from './components/viewMode';
+import { ViewModeComponent } from './components';
 import World from './world';
+import WorldMap from './worldMap';
 import { dropItemAtPosition } from './systems/lootSystem';
 
 /**
@@ -81,6 +86,7 @@ export default class Game {
   // Core systems
   private readonly ecs: ECS;
   private readonly world: World;
+  private readonly worldMap: WorldMap;
 
   // Game state
   private playerId: number;
@@ -103,6 +109,7 @@ export default class Game {
       locationSize.x,
       locationSize.y
     );
+    this.worldMap = new WorldMap(this.world);
     this.currentWorldPos = LJS.vec2(5, 5); // Start in center
     this.playerId = -1; // Will be set in init
   }
@@ -190,6 +197,14 @@ export default class Game {
 
       // Set camera to player position
       LJS.setCameraPos(LJS.vec2(spawnX, spawnY));
+
+      // Discover starting location and surrounding tiles on world map
+      this.worldMap.visitTile(this.currentWorldPos.x, this.currentWorldPos.y);
+      this.worldMap.discoverRadius(
+        this.currentWorldPos.x,
+        this.currentWorldPos.y,
+        2
+      );
 
       if (Game.isDebug) {
         console.log(`Player spawned at (${spawnX}, ${spawnY})`);
@@ -307,20 +322,37 @@ export default class Game {
       // Reset turn timer
       this.turnTimer = 0;
 
-      pickupSystem(this.ecs); // Handle item pickup
-      playerMovementSystem(this.ecs); // Move player based on input
-      locationTransitionSystem(this.ecs); // Handle location transitions at edges
-      cameraSystem(this.ecs); // Update camera (follow player + zoom)
+      // Check player view mode
+      const viewModeComp = this.ecs.getComponent<ViewModeComponent>(
+        this.playerId,
+        'viewMode'
+      );
+      const currentViewMode = viewModeComp?.mode || ViewMode.LOCATION;
 
-      // Item systems
-      chargesSystem(this.ecs); // Passive charge regeneration for rods/wands
-      identificationSystem(this.ecs); // Auto-identify items based on intelligence
+      // Handle view mode transitions
+      viewModeTransitionSystem(this.ecs);
 
-      // Combat (simple collision-based for testing)
-      collisionDamageSystem(this.ecs); // Apply damage when entities collide
+      // Route to appropriate systems based on view mode
+      if (currentViewMode === ViewMode.WORLD_MAP) {
+        // World map movement (cursor navigation)
+        worldMapMovementSystem(this.ecs);
+      } else {
+        // Location movement and exploration
+        pickupSystem(this.ecs); // Handle item pickup
+        playerMovementSystem(this.ecs); // Move player based on input
+        locationTransitionSystem(this.ecs); // Handle location transitions at edges
+        cameraSystem(this.ecs); // Update camera (follow player + zoom)
 
-      aiSystem(this.ecs, this.playerId); // AI behaviors for NPCs/enemies
-      deathSystem(this.ecs); // Handle entity death and loot drops
+        // Item systems
+        chargesSystem(this.ecs); // Passive charge regeneration for rods/wands
+        identificationSystem(this.ecs); // Auto-identify items based on intelligence
+
+        // Combat (simple collision-based for testing)
+        collisionDamageSystem(this.ecs); // Apply damage when entities collide
+
+        aiSystem(this.ecs, this.playerId); // AI behaviors for NPCs/enemies
+        deathSystem(this.ecs); // Handle entity death and loot drops
+      }
     }
   } /**
    * Post-update logic (after LittleJS updates)
@@ -338,17 +370,35 @@ export default class Game {
   render(): void {
     if (!this.initialized) return;
 
-    // TileLayer and TileCollisionLayer are automatically rendered by LittleJS
-    // Render collision overlay if enabled (runtime toggle)
-    if (this.showCollisionOverlay) {
-      const location = this.world.getCurrentLocation();
-      if (location) {
-        location.renderDebug(); // Shows collision overlay
-      }
-    }
+    // Check player view mode
+    const viewModeComp = this.ecs.getComponent<ViewModeComponent>(
+      this.playerId,
+      'viewMode'
+    );
+    const currentViewMode = viewModeComp?.mode || ViewMode.LOCATION;
 
-    // Render all entities
-    renderSystem(this.ecs);
+    if (currentViewMode === ViewMode.WORLD_MAP) {
+      // Render world map
+      if (viewModeComp) {
+        this.worldMap.render(
+          viewModeComp.worldMapCursorX,
+          viewModeComp.worldMapCursorY
+        );
+      }
+    } else {
+      // Render location view
+      // TileLayer and TileCollisionLayer are automatically rendered by LittleJS
+      // Render collision overlay if enabled (runtime toggle)
+      if (this.showCollisionOverlay) {
+        const location = this.world.getCurrentLocation();
+        if (location) {
+          location.renderDebug(); // Shows collision overlay
+        }
+      }
+
+      // Render all entities
+      renderSystem(this.ecs);
+    }
   }
 
   /**
@@ -455,6 +505,13 @@ export default class Game {
    */
   getWorld(): World {
     return this.world;
+  }
+
+  /**
+   * Get the WorldMap instance
+   */
+  getWorldMap(): WorldMap {
+    return this.worldMap;
   }
 
   /**
