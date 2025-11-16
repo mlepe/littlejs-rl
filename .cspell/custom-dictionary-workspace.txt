@@ -24,6 +24,7 @@ multishot
 playthrough
 Quasimorph
 replayability
+respawns
 Roguebasin
 Roguelike
 roguelikedev
