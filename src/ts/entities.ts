@@ -141,11 +141,11 @@ export function createPlayer(
     enabled: true,
   });
 
-  // TODO: Update to actual player sprite once tileset is finalized
-  // Using first character tile temporarily: column 24 (index 24), row 0
+  // Render component - using proper enum reference
+  const coords = getTileCoords(TileSprite.PLAYER_WARRIOR);
   ecs.addComponent<RenderComponent>(playerId, 'render', {
     tileInfo: new LJS.TileInfo(
-      LJS.vec2(24 * 16, 0 * 16), // Column 24, Row 0 in pixels
+      LJS.vec2(coords.x * 16, coords.y * 16),
       LJS.vec2(16, 16),
       0
     ),
