@@ -72,6 +72,10 @@ export default class Game {
   private showCollisionOverlay = false;
   private showDebugText = true; // Default to true
 
+  // Turn-based timing
+  private turnTimer = 0;
+  private readonly turnDelay = 0.15; // Seconds per turn (150ms)
+
   // Core systems
   private readonly ecs: ECS;
   private readonly world: World;
@@ -281,26 +285,38 @@ export default class Game {
   update(): void {
     if (!this.initialized) return;
 
-    // Process systems in order
+    // Accumulate turn timer
+    this.turnTimer += LJS.timeDelta;
+
+    // Only process turn-based actions when timer exceeds delay
+    const shouldProcessTurn = this.turnTimer >= this.turnDelay;
+
+    // Always process input (captures key states)
     inputSystem(this.ecs); // Capture player input
     itemUsageInputSystem(this.ecs); // Handle U key press for using items
 
     // Handle debug toggles from player input
     this.handleDebugToggles();
 
-    pickupSystem(this.ecs); // Handle item pickup
-    playerMovementSystem(this.ecs); // Move player based on input
-    cameraSystem(this.ecs); // Update camera (follow player + zoom)
+    // Process turn-based actions only when timer allows
+    if (shouldProcessTurn) {
+      // Reset turn timer
+      this.turnTimer = 0;
 
-    // Item systems
-    chargesSystem(this.ecs); // Passive charge regeneration for rods/wands
-    identificationSystem(this.ecs); // Auto-identify items based on intelligence
+      pickupSystem(this.ecs); // Handle item pickup
+      playerMovementSystem(this.ecs); // Move player based on input
+      cameraSystem(this.ecs); // Update camera (follow player + zoom)
 
-    // Combat (simple collision-based for testing)
-    collisionDamageSystem(this.ecs); // Apply damage when entities collide
+      // Item systems
+      chargesSystem(this.ecs); // Passive charge regeneration for rods/wands
+      identificationSystem(this.ecs); // Auto-identify items based on intelligence
 
-    aiSystem(this.ecs, this.playerId); // AI behaviors for NPCs/enemies
-    deathSystem(this.ecs); // Handle entity death and loot drops
+      // Combat (simple collision-based for testing)
+      collisionDamageSystem(this.ecs); // Apply damage when entities collide
+
+      aiSystem(this.ecs, this.playerId); // AI behaviors for NPCs/enemies
+      deathSystem(this.ecs); // Handle entity death and loot drops
+    }
   } /**
    * Post-update logic (after LittleJS updates)
    */

@@ -72,48 +72,50 @@ export function inputSystem(ecs: ECS): void {
     input.debugToggleCollision = false;
     input.debugToggleText = false;
 
-    // Read keyboard input (LittleJS) - use keyWasPressed for turn-based movement
+    // Read keyboard input (LittleJS)
+    // Movement: Use keyIsDown for continuous movement while held
+    // Actions: Use keyWasPressed for single activation
 
     // Check LEFT movement
-    if (keybinds.LEFT.some((key) => LJS.keyWasPressed(key))) {
+    if (keybinds.LEFT.some((key) => LJS.keyIsDown(key))) {
       input.moveX = -1;
     }
 
     // Check RIGHT movement
-    if (keybinds.RIGHT.some((key) => LJS.keyWasPressed(key))) {
+    if (keybinds.RIGHT.some((key) => LJS.keyIsDown(key))) {
       input.moveX = 1;
     }
 
     // Check UP movement (Y axis is inverted in screen coordinates)
-    if (keybinds.UP.some((key) => LJS.keyWasPressed(key))) {
+    if (keybinds.UP.some((key) => LJS.keyIsDown(key))) {
       input.moveY = 1;
     }
 
     // Check DOWN movement
-    if (keybinds.DOWN.some((key) => LJS.keyWasPressed(key))) {
+    if (keybinds.DOWN.some((key) => LJS.keyIsDown(key))) {
       input.moveY = -1;
     }
 
     // Check UP_LEFT movement (Y axis is inverted in screen coordinates)
-    if (keybinds.UP_LEFT.some((key) => LJS.keyWasPressed(key))) {
+    if (keybinds.UP_LEFT.some((key) => LJS.keyIsDown(key))) {
       input.moveX = -1;
       input.moveY = 1;
     }
 
     // Check UP_RIGHT movement
-    if (keybinds.UP_RIGHT.some((key) => LJS.keyWasPressed(key))) {
+    if (keybinds.UP_RIGHT.some((key) => LJS.keyIsDown(key))) {
       input.moveX = 1;
       input.moveY = 1;
     }
 
     // Check DOWN_LEFT movement
-    if (keybinds.DOWN_LEFT.some((key) => LJS.keyWasPressed(key))) {
+    if (keybinds.DOWN_LEFT.some((key) => LJS.keyIsDown(key))) {
       input.moveX = -1;
       input.moveY = -1;
     }
 
     // Check DOWN_RIGHT movement
-    if (keybinds.DOWN_RIGHT.some((key) => LJS.keyWasPressed(key))) {
+    if (keybinds.DOWN_RIGHT.some((key) => LJS.keyIsDown(key))) {
       input.moveX = 1;
       input.moveY = -1;
     }
