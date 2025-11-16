@@ -79,7 +79,8 @@ export default class Location {
     this.tiles = new Map();
 
     // Initialize LittleJS tile layers
-    const layerPos = LJS.vec2(width / 2, height / 2); // Center the layer
+    // Layer position should be at origin (0,0) so tile coordinates match world coordinates
+    const layerPos = LJS.vec2(0, 0);
     const layerSize = LJS.vec2(width, height);
     const tileInfo = new LJS.TileInfo(LJS.vec2(0, 0), Global.vTilesize);
 
