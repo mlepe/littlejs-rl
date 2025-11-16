@@ -41,10 +41,14 @@ import {
 } from './errors';
 import { TileSprite, getTileCoords } from '../tileConfig';
 
+import { AITemplateRegistry } from './aiTemplateRegistry';
 import { ClassRegistry } from './classRegistry';
 import ECS from '../ecs';
 import { ElementType } from '../types/elements';
+import { HealthTemplateRegistry } from './healthTemplateRegistry';
 import { RaceRegistry } from './raceRegistry';
+import { RenderTemplateRegistry } from './renderTemplateRegistry';
+import { StatsTemplateRegistry } from './statsTemplateRegistry';
 import { applyClassBonuses } from '../systems/classSystem';
 import { applyRacialBonuses } from '../systems/raceSystem';
 import { calculateDerivedStats } from '../systems/derivedStatsSystem';
@@ -210,6 +214,139 @@ export class EntityRegistry {
   }
 
   /**
+   * Resolve health data from template and direct values
+   * Direct values override template values (deep merge)
+   */
+  private resolveHealth(
+    template: EntityTemplate
+  ): { current?: number; max: number; regen?: number } | undefined {
+    let health = template.health ? { ...template.health } : undefined;
+
+    // If template reference exists, load from template registry
+    if (template.templates?.healthTemplate) {
+      const healthTemplateRegistry = HealthTemplateRegistry.getInstance();
+      const healthTemplate = healthTemplateRegistry.get(
+        template.templates.healthTemplate
+      );
+
+      if (healthTemplate) {
+        // Start with template values
+        health = { ...healthTemplate.health };
+
+        // Override with direct entity values (deep merge)
+        if (template.health) {
+          health = { ...health, ...template.health };
+        }
+      } else {
+        console.warn(
+          `[EntityRegistry] Health template '${template.templates.healthTemplate}' not found for entity '${template.id}'. Using direct values or defaults.`
+        );
+      }
+    }
+
+    return health;
+  }
+
+  /**
+   * Resolve stats data from template and direct values
+   * Direct values override template values (deep merge)
+   */
+  private resolveStats(template: EntityTemplate): EntityTemplate['stats'] {
+    let stats = template.stats ? { ...template.stats } : undefined;
+
+    // If template reference exists, load from template registry
+    if (template.templates?.statsTemplate) {
+      const statsTemplateRegistry = StatsTemplateRegistry.getInstance();
+      const statsTemplate = statsTemplateRegistry.get(
+        template.templates.statsTemplate
+      );
+
+      if (statsTemplate) {
+        // Start with template values
+        stats = { ...statsTemplate.stats };
+
+        // Override with direct entity values (deep merge)
+        if (template.stats) {
+          stats = { ...stats, ...template.stats };
+        }
+      } else {
+        console.warn(
+          `[EntityRegistry] Stats template '${template.templates.statsTemplate}' not found for entity '${template.id}'. Using direct values or defaults.`
+        );
+      }
+    }
+
+    return stats;
+  }
+
+  /**
+   * Resolve AI data from template and direct values
+   * Direct values override template values (deep merge)
+   */
+  private resolveAI(template: EntityTemplate): EntityTemplate['ai'] {
+    let ai = template.ai ? { ...template.ai } : undefined;
+
+    // If template reference exists, load from template registry
+    if (template.templates?.aiTemplate) {
+      const aiTemplateRegistry = AITemplateRegistry.getInstance();
+      const aiTemplate = aiTemplateRegistry.get(template.templates.aiTemplate);
+
+      if (aiTemplate) {
+        // Start with template values
+        ai = { ...aiTemplate.ai };
+
+        // Override with direct entity values (deep merge)
+        if (template.ai) {
+          ai = { ...ai, ...template.ai };
+        }
+      } else {
+        console.warn(
+          `[EntityRegistry] AI template '${template.templates.aiTemplate}' not found for entity '${template.id}'. Using direct values or defaults.`
+        );
+      }
+    }
+
+    return ai;
+  }
+
+  /**
+   * Resolve render data from template and direct values
+   * Direct values override template values (deep merge)
+   */
+  private resolveRender(
+    template: EntityTemplate
+  ): EntityTemplate['render'] | undefined {
+    let render = template.render ? { ...template.render } : undefined;
+
+    // If template reference exists, load from template registry
+    if (template.templates?.renderTemplate) {
+      const renderTemplateRegistry = RenderTemplateRegistry.getInstance();
+      const renderTemplate = renderTemplateRegistry.get(
+        template.templates.renderTemplate
+      );
+
+      if (renderTemplate) {
+        // Start with template values
+        render = {
+          sprite: renderTemplate.sprite,
+          color: renderTemplate.color,
+        };
+
+        // Override with direct entity values (deep merge)
+        if (template.render) {
+          render = { ...render, ...template.render };
+        }
+      } else {
+        console.warn(
+          `[EntityRegistry] Render template '${template.templates.renderTemplate}' not found for entity '${template.id}'. Using direct values or defaults.`
+        );
+      }
+    }
+
+    return render;
+  }
+
+  /**
    * Spawn an entity from a template
    */
   spawn(
@@ -237,25 +374,31 @@ export class EntityRegistry {
       worldY,
     });
 
+    // Resolve component data from templates and direct values
+    const resolvedHealth = this.resolveHealth(template);
+    const resolvedStats = this.resolveStats(template);
+    const resolvedAI = this.resolveAI(template);
+    const resolvedRender = this.resolveRender(template);
+
     // Add health
-    if (template.health) {
-      const current = template.health.current ?? template.health.max;
+    if (resolvedHealth) {
+      const current = resolvedHealth.current ?? resolvedHealth.max;
       ecs.addComponent<HealthComponent>(entityId, 'health', {
         current,
-        max: template.health.max,
+        max: resolvedHealth.max,
       });
     }
 
     // Add stats
-    if (template.stats) {
+    if (resolvedStats) {
       const baseStats = {
-        strength: template.stats.strength,
-        dexterity: template.stats.dexterity ?? 10,
-        intelligence: template.stats.intelligence ?? 10,
-        charisma: template.stats.charisma ?? 10,
-        willpower: template.stats.willpower ?? 10,
-        toughness: template.stats.toughness ?? 10,
-        attractiveness: template.stats.attractiveness ?? 10,
+        strength: resolvedStats.strength,
+        dexterity: resolvedStats.dexterity ?? 10,
+        intelligence: resolvedStats.intelligence ?? 10,
+        charisma: resolvedStats.charisma ?? 10,
+        willpower: resolvedStats.willpower ?? 10,
+        toughness: resolvedStats.toughness ?? 10,
+        attractiveness: resolvedStats.attractiveness ?? 10,
       };
       ecs.addComponent<StatsComponent>(entityId, 'stats', {
         base: baseStats,
@@ -264,31 +407,33 @@ export class EntityRegistry {
     }
 
     // Add AI
-    if (template.ai) {
+    if (resolvedAI) {
       ecs.addComponent<AIComponent>(entityId, 'ai', {
-        disposition: template.ai.disposition,
-        detectionRange: template.ai.detectionRange,
+        disposition: resolvedAI.disposition,
+        detectionRange: resolvedAI.detectionRange,
         state: 'idle',
       });
     }
 
     // Add render component
-    try {
-      const sprite = this.getSpriteFromString(template.render.sprite);
-      const color = template.render.color
-        ? this.hexToColor(template.render.color)
-        : new LJS.Color(1, 1, 1, 1);
+    if (resolvedRender) {
+      try {
+        const sprite = this.getSpriteFromString(resolvedRender.sprite);
+        const color = resolvedRender.color
+          ? this.hexToColor(resolvedRender.color)
+          : new LJS.Color(1, 1, 1, 1);
 
-      ecs.addComponent<RenderComponent>(entityId, 'render', {
-        tileInfo: sprite,
-        color,
-        size: new LJS.Vector2(1, 1),
-      });
-    } catch (error) {
-      console.error(
-        `[EntityRegistry] Failed to create render component for ${templateId}:`,
-        error
-      );
+        ecs.addComponent<RenderComponent>(entityId, 'render', {
+          tileInfo: sprite,
+          color,
+          size: new LJS.Vector2(1, 1),
+        });
+      } catch (error) {
+        console.error(
+          `[EntityRegistry] Failed to create render component for ${templateId}:`,
+          error
+        );
+      }
     }
 
     // Add movable component (always add it, speed comes from derived stats)

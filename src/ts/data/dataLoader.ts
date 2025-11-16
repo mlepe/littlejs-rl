@@ -12,9 +12,13 @@
 
 import { FileLoadError, ParseError, logError } from './errors';
 
+import { AITemplateRegistry } from './aiTemplateRegistry';
 import { ClassRegistry } from './classRegistry';
 import { EntityRegistry } from './entityRegistry';
+import { HealthTemplateRegistry } from './healthTemplateRegistry';
 import { RaceRegistry } from './raceRegistry';
+import { RenderTemplateRegistry } from './renderTemplateRegistry';
+import { StatsTemplateRegistry } from './statsTemplateRegistry';
 
 /**
  * Central data loading system
@@ -82,7 +86,15 @@ export class DataLoader {
 
     const errors: Error[] = [];
 
-    // Load races and classes first (entities depend on them)
+    // Load component templates first (entities may reference them)
+    try {
+      await this.loadComponentTemplates();
+    } catch (error) {
+      errors.push(error as Error);
+      logError(error as Error, 'Loading Component Templates');
+    }
+
+    // Load races and classes (entities depend on them)
     try {
       await this.loadRaces(raceRegistry);
     } catch (error) {
@@ -105,7 +117,10 @@ export class DataLoader {
     }
 
     // Load entity definitions
-    const entityFiles = ['src/data/base/entities/characters.json'];
+    const entityFiles = [
+      'src/data/base/entities/characters.json',
+      'src/data/base/entities/template_mixed.json',
+    ];
 
     for (const file of entityFiles) {
       try {
@@ -132,6 +147,55 @@ export class DataLoader {
 
     // Future: Load other registries
     // await TileRegistry.getInstance().loadFromFile('src/data/base/tiles/tile-definitions.json');
+  }
+
+  /**
+   * Load component templates for template-mixing
+   */
+  private async loadComponentTemplates(): Promise<void> {
+    console.log('[DataLoader] Loading component templates...');
+
+    const renderRegistry = RenderTemplateRegistry.getInstance();
+    const statsRegistry = StatsTemplateRegistry.getInstance();
+    const aiRegistry = AITemplateRegistry.getInstance();
+    const healthRegistry = HealthTemplateRegistry.getInstance();
+
+    const templateFiles = [
+      {
+        path: 'src/data/base/templates/render.json',
+        registry: renderRegistry,
+        name: 'Render',
+      },
+      {
+        path: 'src/data/base/templates/stats.json',
+        registry: statsRegistry,
+        name: 'Stats',
+      },
+      {
+        path: 'src/data/base/templates/ai.json',
+        registry: aiRegistry,
+        name: 'AI',
+      },
+      {
+        path: 'src/data/base/templates/health.json',
+        registry: healthRegistry,
+        name: 'Health',
+      },
+    ];
+
+    for (const { path, registry, name } of templateFiles) {
+      try {
+        await registry.loadFromFile(path);
+      } catch (error) {
+        // Template files are optional - log but continue
+        console.warn(
+          `[DataLoader] Failed to load ${name} templates from ${path}`
+        );
+        logError(error as Error, `Loading ${name} Templates`);
+      }
+    }
+
+    console.log('[DataLoader] Component templates loaded');
   }
 
   /**
@@ -226,6 +290,13 @@ export class DataLoader {
     EntityRegistry.getInstance().clear();
     RaceRegistry.getInstance().clear();
     ClassRegistry.getInstance().clear();
+
+    // Clear template registries
+    RenderTemplateRegistry.getInstance().clear();
+    StatsTemplateRegistry.getInstance().clear();
+    AITemplateRegistry.getInstance().clear();
+    HealthTemplateRegistry.getInstance().clear();
+
     // Future: Clear other registries
 
     this.loaded = false;

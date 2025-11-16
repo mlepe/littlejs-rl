@@ -1,0 +1,81 @@
+{
+  "entities": [
+    {
+      "id": "orc_mage",
+      "name": "Orc Mage",
+      "description": "An unusually intelligent orc wielding dark magic. Uses the brutish appearance of an orc but with mage stats and aggressive behavior.",
+      "type": "character",
+      "templates": {
+        "renderTemplate": "orcWarriorRender",
+        "statsTemplate": "mageStats",
+        "aiTemplate": "aggressiveAI",
+        "healthTemplate": "normalHealth"
+      },
+      "stats": {
+        "intelligence": 20,
+        "strength": 8
+      }
+    },
+    {
+      "id": "agile_troll",
+      "name": "Agile Troll",
+      "description": "A surprisingly quick troll that breaks the mold of slow, brutish trolls.",
+      "type": "creature",
+      "templates": {
+        "renderTemplate": "trollBruteRender",
+        "statsTemplate": "agileStats",
+        "aiTemplate": "fleeingAI",
+        "healthTemplate": "normalHealth"
+      }
+    },
+    {
+      "id": "skeleton_brute",
+      "name": "Skeleton Brute",
+      "description": "An undead skeleton animated with incredible strength.",
+      "type": "creature",
+      "templates": {
+        "renderTemplate": "skeletonWarriorRender",
+        "statsTemplate": "bruteStats",
+        "aiTemplate": "hostileAI",
+        "healthTemplate": "tankHealth"
+      }
+    },
+    {
+      "id": "merchant_warrior",
+      "name": "Merchant Warrior",
+      "description": "A combat-trained merchant who can defend their goods.",
+      "type": "character",
+      "templates": {
+        "renderTemplate": "merchantRender",
+        "statsTemplate": "balancedStats",
+        "aiTemplate": "defensiveAI",
+        "healthTemplate": "normalHealth"
+      },
+      "stats": {
+        "charisma": 16,
+        "strength": 12
+      }
+    },
+    {
+      "id": "custom_goblin",
+      "name": "Custom Goblin",
+      "description": "Demonstrates full template mixing with selective overrides.",
+      "type": "creature",
+      "templates": {
+        "renderTemplate": "goblinScoutRender",
+        "statsTemplate": "weakStats",
+        "aiTemplate": "fleeingAI",
+        "healthTemplate": "fragileHealth"
+      },
+      "render": {
+        "color": "#ff00ff"
+      },
+      "stats": {
+        "dexterity": 20
+      },
+      "ai": {
+        "detectionRange": 15
+      }
+    }
+  ]
+}

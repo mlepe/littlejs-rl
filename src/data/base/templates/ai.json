@@ -1,0 +1,67 @@
+{
+  "aiTemplates": [
+    {
+      "id": "aggressiveAI",
+      "name": "Aggressive AI",
+      "description": "Attacks on sight within detection range",
+      "ai": {
+        "disposition": "aggressive",
+        "detectionRange": 10
+      }
+    },
+    {
+      "id": "hostileAI",
+      "name": "Hostile AI",
+      "description": "Extremely aggressive, pursues relentlessly",
+      "ai": {
+        "disposition": "hostile",
+        "detectionRange": 15
+      }
+    },
+    {
+      "id": "peacefulAI",
+      "name": "Peaceful AI",
+      "description": "Never attacks, wanders passively",
+      "ai": {
+        "disposition": "peaceful",
+        "detectionRange": 5
+      }
+    },
+    {
+      "id": "neutralAI",
+      "name": "Neutral AI",
+      "description": "Wanders, attacks if provoked",
+      "ai": {
+        "disposition": "neutral",
+        "detectionRange": 8
+      }
+    },
+    {
+      "id": "defensiveAI",
+      "name": "Defensive AI",
+      "description": "Defends territory but doesn't pursue far",
+      "ai": {
+        "disposition": "defensive",
+        "detectionRange": 6
+      }
+    },
+    {
+      "id": "fleeingAI",
+      "name": "Fleeing AI",
+      "description": "Runs away from threats",
+      "ai": {
+        "disposition": "fleeing",
+        "detectionRange": 12
+      }
+    },
+    {
+      "id": "patrolAI",
+      "name": "Patrol AI",
+      "description": "Patrols area, attacks intruders",
+      "ai": {
+        "disposition": "patrol",
+        "detectionRange": 10
+      }
+    }
+  ]
+}

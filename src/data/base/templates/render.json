@@ -1,0 +1,46 @@
+{
+  "renderTemplates": [
+    {
+      "id": "orcWarriorRender",
+      "name": "Orc Warrior Appearance",
+      "description": "Green-skinned orc warrior with battle scars",
+      "sprite": "ENEMY_ORC",
+      "color": "#00ff00"
+    },
+    {
+      "id": "goblinScoutRender",
+      "name": "Goblin Scout Appearance",
+      "description": "Small, sneaky goblin with orange skin",
+      "sprite": "ENEMY_GOBLIN",
+      "color": "#ffaa00"
+    },
+    {
+      "id": "trollBruteRender",
+      "name": "Troll Brute Appearance",
+      "description": "Massive gray-skinned troll",
+      "sprite": "ENEMY_TROLL",
+      "color": "#808080"
+    },
+    {
+      "id": "skeletonWarriorRender",
+      "name": "Skeleton Warrior Appearance",
+      "description": "Animated skeleton with pale bones",
+      "sprite": "ENEMY_SKELETON",
+      "color": "#ffffff"
+    },
+    {
+      "id": "merchantRender",
+      "name": "Merchant Appearance",
+      "description": "Friendly merchant NPC",
+      "sprite": "NPC_MERCHANT",
+      "color": "#4169e1"
+    },
+    {
+      "id": "villagerRender",
+      "name": "Villager Appearance",
+      "description": "Peaceful village resident",
+      "sprite": "NPC_VILLAGER",
+      "color": "#90ee90"
+    }
+  ]
+}

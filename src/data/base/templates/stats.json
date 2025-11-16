@@ -1,0 +1,88 @@
+{
+  "statsTemplates": [
+    {
+      "id": "bruteStats",
+      "name": "Brute Stats",
+      "description": "High strength and toughness, low dexterity and intelligence",
+      "stats": {
+        "strength": 15,
+        "dexterity": 6,
+        "intelligence": 5,
+        "charisma": 4,
+        "willpower": 8,
+        "toughness": 18,
+        "attractiveness": 3
+      }
+    },
+    {
+      "id": "agileStats",
+      "name": "Agile Stats",
+      "description": "High dexterity and speed, low strength",
+      "stats": {
+        "strength": 5,
+        "dexterity": 18,
+        "intelligence": 10,
+        "charisma": 8,
+        "willpower": 8,
+        "toughness": 6,
+        "attractiveness": 10
+      }
+    },
+    {
+      "id": "mageStats",
+      "name": "Mage Stats",
+      "description": "High intelligence and willpower, low physical stats",
+      "stats": {
+        "strength": 4,
+        "dexterity": 8,
+        "intelligence": 18,
+        "charisma": 10,
+        "willpower": 16,
+        "toughness": 6,
+        "attractiveness": 8
+      }
+    },
+    {
+      "id": "balancedStats",
+      "name": "Balanced Stats",
+      "description": "Well-rounded attributes with no weaknesses",
+      "stats": {
+        "strength": 10,
+        "dexterity": 10,
+        "intelligence": 10,
+        "charisma": 10,
+        "willpower": 10,
+        "toughness": 10,
+        "attractiveness": 10
+      }
+    },
+    {
+      "id": "weakStats",
+      "name": "Weak Stats",
+      "description": "Low overall stats for weak creatures",
+      "stats": {
+        "strength": 3,
+        "dexterity": 4,
+        "intelligence": 2,
+        "charisma": 2,
+        "willpower": 3,
+        "toughness": 4,
+        "attractiveness": 3
+      }
+    },
+    {
+      "id": "merchantStats",
+      "name": "Merchant Stats",
+      "description": "High charisma and intelligence for trading",
+      "stats": {
+        "strength": 6,
+        "dexterity": 8,
+        "intelligence": 14,
+        "charisma": 18,
+        "willpower": 12,
+        "toughness": 7,
+        "attractiveness": 14
+      }
+    }
+  ]
+}
