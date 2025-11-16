@@ -6,10 +6,10 @@
       "description": "An unusually intelligent orc wielding dark magic. Uses the brutish appearance of an orc but with mage stats and aggressive behavior.",
       "type": "character",
       "templates": {
-        "renderTemplate": "orcWarriorRender",
-        "statsTemplate": "mageStats",
-        "aiTemplate": "aggressiveAI",
-        "healthTemplate": "normalHealth"
+        "renderTemplates": ["orcWarriorRender"],
+        "statsTemplates": ["mageStats"],
+        "aiTemplates": ["aggressiveAI"],
+        "healthTemplates": ["normalHealth"]
       },
       "stats": {
         "intelligence": 20,
@@ -22,10 +22,10 @@
       "description": "A surprisingly quick troll that breaks the mold of slow, brutish trolls.",
       "type": "creature",
       "templates": {
-        "renderTemplate": "trollBruteRender",
-        "statsTemplate": "agileStats",
-        "aiTemplate": "fleeingAI",
-        "healthTemplate": "normalHealth"
+        "renderTemplates": ["trollBruteRender"],
+        "statsTemplates": ["agileStats"],
+        "aiTemplates": ["fleeingAI"],
+        "healthTemplates": ["normalHealth"]
       }
     },
     {
@@ -34,10 +34,10 @@
       "description": "An undead skeleton animated with incredible strength.",
       "type": "creature",
       "templates": {
-        "renderTemplate": "skeletonWarriorRender",
-        "statsTemplate": "bruteStats",
-        "aiTemplate": "hostileAI",
-        "healthTemplate": "tankHealth"
+        "renderTemplates": ["skeletonWarriorRender"],
+        "statsTemplates": ["bruteStats"],
+        "aiTemplates": ["hostileAI"],
+        "healthTemplates": ["tankHealth"]
       }
     },
     {
@@ -46,10 +46,10 @@
       "description": "A combat-trained merchant who can defend their goods.",
       "type": "character",
       "templates": {
-        "renderTemplate": "merchantRender",
-        "statsTemplate": "balancedStats",
-        "aiTemplate": "defensiveAI",
-        "healthTemplate": "normalHealth"
+        "renderTemplates": ["merchantRender"],
+        "statsTemplates": ["balancedStats"],
+        "aiTemplates": ["defensiveAI"],
+        "healthTemplates": ["normalHealth"]
       },
       "stats": {
         "charisma": 16,
@@ -62,10 +62,10 @@
       "description": "Demonstrates full template mixing with selective overrides.",
       "type": "creature",
       "templates": {
-        "renderTemplate": "goblinScoutRender",
-        "statsTemplate": "weakStats",
-        "aiTemplate": "fleeingAI",
-        "healthTemplate": "fragileHealth"
+        "renderTemplates": ["goblinScoutRender"],
+        "statsTemplates": ["weakStats"],
+        "aiTemplates": ["fleeingAI"],
+        "healthTemplates": ["fragileHealth"]
       },
       "render": {
         "color": "#ff00ff"
@@ -75,6 +75,57 @@
       },
       "ai": {
         "detectionRange": 15
+      }
+    },
+    {
+      "id": "veteran_orc_warrior",
+      "name": "Veteran Orc Warrior",
+      "description": "Demonstrates layered stats: base brute stats + veteran bonus modifier",
+      "type": "character",
+      "templates": {
+        "renderTemplates": ["orcWarriorRender"],
+        "statsTemplates": ["bruteStats", "veteranBonus"],
+        "aiTemplates": ["aggressiveAI"],
+        "healthTemplates": ["tankHealth"]
+      }
+    },
+    {
+      "id": "blessed_paladin",
+      "name": "Blessed Paladin",
+      "description": "Demonstrates triple template mixing: balanced base + elder wisdom + divine blessing",
+      "type": "character",
+      "templates": {
+        "renderTemplates": ["merchantRender"],
+        "statsTemplates": ["balancedStats", "elderBonus", "blessedModifier"],
+        "aiTemplates": ["defensiveAI"],
+        "healthTemplates": ["normalHealth", "regenBoost"]
+      }
+    },
+    {
+      "id": "swift_assassin",
+      "name": "Swift Assassin",
+      "description": "Agile base + swift modifier for extreme speed",
+      "type": "character",
+      "templates": {
+        "renderTemplates": ["goblinScoutRender"],
+        "statsTemplates": ["agileStats", "swiftModifier"],
+        "aiTemplates": ["hostileAI"],
+        "healthTemplates": ["normalHealth"]
+      },
+      "stats": {
+        "intelligence": 14
+      }
+    },
+    {
+      "id": "regenerating_troll_boss",
+      "name": "Regenerating Troll Boss",
+      "description": "Boss-tier troll with layered health: boss base + health boost + regen boost",
+      "type": "boss",
+      "templates": {
+        "renderTemplates": ["trollBruteRender"],
+        "statsTemplates": ["bruteStats", "veteranBonus"],
+        "aiTemplates": ["hostileAI"],
+        "healthTemplates": ["bossHealth", "healthBoost", "regenBoost"]
       }
     }
   ]

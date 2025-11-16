@@ -83,6 +83,59 @@
         "toughness": 7,
         "attractiveness": 14
       }
+    },
+    {
+      "id": "veteranBonus",
+      "name": "Veteran Bonus",
+      "description": "Modifier for experienced warriors (+5 strength, +3 toughness)",
+      "stats": {
+        "strength": 5,
+        "toughness": 3,
+        "willpower": 2
+      }
+    },
+    {
+      "id": "elderBonus",
+      "name": "Elder Bonus",
+      "description": "Modifier for wise elders (+7 intelligence, +5 willpower)",
+      "stats": {
+        "intelligence": 7,
+        "willpower": 5,
+        "charisma": 3
+      }
+    },
+    {
+      "id": "blessedModifier",
+      "name": "Blessed Modifier",
+      "description": "Divine blessing modifier (+3 to all stats)",
+      "stats": {
+        "strength": 3,
+        "dexterity": 3,
+        "intelligence": 3,
+        "charisma": 3,
+        "willpower": 3,
+        "toughness": 3,
+        "attractiveness": 3
+      }
+    },
+    {
+      "id": "cursedModifier",
+      "name": "Cursed Modifier",
+      "description": "Curse penalty (-2 to physical stats, +2 willpower from suffering)",
+      "stats": {
+        "strength": -2,
+        "dexterity": -2,
+        "toughness": -2,
+        "willpower": 2
+      }
+    },
+    {
+      "id": "swiftModifier",
+      "name": "Swift Modifier",
+      "description": "Speed enhancement (+8 dexterity)",
+      "stats": {
+        "dexterity": 8
+      }
     }
   ]
 }

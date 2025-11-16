@@ -215,32 +215,49 @@ export class EntityRegistry {
 
   /**
    * Resolve health data from template and direct values
-   * Direct values override template values (deep merge)
+   * Multiple templates are merged in order: [0] → [1] → ... → direct values
    */
   private resolveHealth(
     template: EntityTemplate
   ): { current?: number; max: number; regen?: number } | undefined {
     let health = template.health ? { ...template.health } : undefined;
 
-    // If template reference exists, load from template registry
-    if (template.templates?.healthTemplate) {
+    // If template references exist, load and merge in order
+    if (
+      template.templates?.healthTemplates &&
+      template.templates.healthTemplates.length > 0
+    ) {
       const healthTemplateRegistry = HealthTemplateRegistry.getInstance();
-      const healthTemplate = healthTemplateRegistry.get(
-        template.templates.healthTemplate
-      );
 
-      if (healthTemplate) {
-        // Start with template values
-        health = { ...healthTemplate.health };
+      // Start with first template
+      const firstTemplateId = template.templates.healthTemplates[0];
+      const firstTemplate = healthTemplateRegistry.get(firstTemplateId);
 
-        // Override with direct entity values (deep merge)
-        if (template.health) {
-          health = { ...health, ...template.health };
-        }
+      if (firstTemplate) {
+        health = { ...firstTemplate.health };
       } else {
         console.warn(
-          `[EntityRegistry] Health template '${template.templates.healthTemplate}' not found for entity '${template.id}'. Using direct values or defaults.`
+          `[EntityRegistry] Health template '${firstTemplateId}' not found for entity '${template.id}'. Skipping.`
         );
+      }
+
+      // Merge remaining templates
+      for (let i = 1; i < template.templates.healthTemplates.length; i++) {
+        const templateId = template.templates.healthTemplates[i];
+        const healthTemplate = healthTemplateRegistry.get(templateId);
+
+        if (healthTemplate) {
+          health = { ...health, ...healthTemplate.health };
+        } else {
+          console.warn(
+            `[EntityRegistry] Health template '${templateId}' not found for entity '${template.id}'. Skipping.`
+          );
+        }
+      }
+
+      // Finally, override with direct entity values (deep merge)
+      if (template.health) {
+        health = { ...health, ...template.health };
       }
     }
 
@@ -249,30 +266,47 @@ export class EntityRegistry {
 
   /**
    * Resolve stats data from template and direct values
-   * Direct values override template values (deep merge)
+   * Multiple templates are merged in order: [0] → [1] → ... → direct values
    */
   private resolveStats(template: EntityTemplate): EntityTemplate['stats'] {
     let stats = template.stats ? { ...template.stats } : undefined;
 
-    // If template reference exists, load from template registry
-    if (template.templates?.statsTemplate) {
+    // If template references exist, load and merge in order
+    if (
+      template.templates?.statsTemplates &&
+      template.templates.statsTemplates.length > 0
+    ) {
       const statsTemplateRegistry = StatsTemplateRegistry.getInstance();
-      const statsTemplate = statsTemplateRegistry.get(
-        template.templates.statsTemplate
-      );
 
-      if (statsTemplate) {
-        // Start with template values
-        stats = { ...statsTemplate.stats };
+      // Start with first template
+      const firstTemplateId = template.templates.statsTemplates[0];
+      const firstTemplate = statsTemplateRegistry.get(firstTemplateId);
 
-        // Override with direct entity values (deep merge)
-        if (template.stats) {
-          stats = { ...stats, ...template.stats };
-        }
+      if (firstTemplate) {
+        stats = { ...firstTemplate.stats };
       } else {
         console.warn(
-          `[EntityRegistry] Stats template '${template.templates.statsTemplate}' not found for entity '${template.id}'. Using direct values or defaults.`
+          `[EntityRegistry] Stats template '${firstTemplateId}' not found for entity '${template.id}'. Skipping.`
         );
+      }
+
+      // Merge remaining templates
+      for (let i = 1; i < template.templates.statsTemplates.length; i++) {
+        const templateId = template.templates.statsTemplates[i];
+        const statsTemplate = statsTemplateRegistry.get(templateId);
+
+        if (statsTemplate) {
+          stats = { ...stats, ...statsTemplate.stats };
+        } else {
+          console.warn(
+            `[EntityRegistry] Stats template '${templateId}' not found for entity '${template.id}'. Skipping.`
+          );
+        }
+      }
+
+      // Finally, override with direct entity values (deep merge)
+      if (template.stats) {
+        stats = { ...stats, ...template.stats };
       }
     }
 
@@ -281,28 +315,47 @@ export class EntityRegistry {
 
   /**
    * Resolve AI data from template and direct values
-   * Direct values override template values (deep merge)
+   * Multiple templates are merged in order: [0] → [1] → ... → direct values
    */
   private resolveAI(template: EntityTemplate): EntityTemplate['ai'] {
     let ai = template.ai ? { ...template.ai } : undefined;
 
-    // If template reference exists, load from template registry
-    if (template.templates?.aiTemplate) {
+    // If template references exist, load and merge in order
+    if (
+      template.templates?.aiTemplates &&
+      template.templates.aiTemplates.length > 0
+    ) {
       const aiTemplateRegistry = AITemplateRegistry.getInstance();
-      const aiTemplate = aiTemplateRegistry.get(template.templates.aiTemplate);
 
-      if (aiTemplate) {
-        // Start with template values
-        ai = { ...aiTemplate.ai };
+      // Start with first template
+      const firstTemplateId = template.templates.aiTemplates[0];
+      const firstTemplate = aiTemplateRegistry.get(firstTemplateId);
 
-        // Override with direct entity values (deep merge)
-        if (template.ai) {
-          ai = { ...ai, ...template.ai };
-        }
+      if (firstTemplate) {
+        ai = { ...firstTemplate.ai };
       } else {
         console.warn(
-          `[EntityRegistry] AI template '${template.templates.aiTemplate}' not found for entity '${template.id}'. Using direct values or defaults.`
+          `[EntityRegistry] AI template '${firstTemplateId}' not found for entity '${template.id}'. Skipping.`
         );
+      }
+
+      // Merge remaining templates
+      for (let i = 1; i < template.templates.aiTemplates.length; i++) {
+        const templateId = template.templates.aiTemplates[i];
+        const aiTemplate = aiTemplateRegistry.get(templateId);
+
+        if (aiTemplate) {
+          ai = { ...ai, ...aiTemplate.ai };
+        } else {
+          console.warn(
+            `[EntityRegistry] AI template '${templateId}' not found for entity '${template.id}'. Skipping.`
+          );
+        }
+      }
+
+      // Finally, override with direct entity values (deep merge)
+      if (template.ai) {
+        ai = { ...ai, ...template.ai };
       }
     }
 
@@ -311,35 +364,56 @@ export class EntityRegistry {
 
   /**
    * Resolve render data from template and direct values
-   * Direct values override template values (deep merge)
+   * Multiple templates are merged in order: [0] → [1] → ... → direct values
    */
   private resolveRender(
     template: EntityTemplate
   ): EntityTemplate['render'] | undefined {
     let render = template.render ? { ...template.render } : undefined;
 
-    // If template reference exists, load from template registry
-    if (template.templates?.renderTemplate) {
+    // If template references exist, load and merge in order
+    if (
+      template.templates?.renderTemplates &&
+      template.templates.renderTemplates.length > 0
+    ) {
       const renderTemplateRegistry = RenderTemplateRegistry.getInstance();
-      const renderTemplate = renderTemplateRegistry.get(
-        template.templates.renderTemplate
-      );
 
-      if (renderTemplate) {
-        // Start with template values
+      // Start with first template
+      const firstTemplateId = template.templates.renderTemplates[0];
+      const firstTemplate = renderTemplateRegistry.get(firstTemplateId);
+
+      if (firstTemplate) {
         render = {
-          sprite: renderTemplate.sprite,
-          color: renderTemplate.color,
+          sprite: firstTemplate.sprite,
+          color: firstTemplate.color,
         };
-
-        // Override with direct entity values (deep merge)
-        if (template.render) {
-          render = { ...render, ...template.render };
-        }
       } else {
         console.warn(
-          `[EntityRegistry] Render template '${template.templates.renderTemplate}' not found for entity '${template.id}'. Using direct values or defaults.`
+          `[EntityRegistry] Render template '${firstTemplateId}' not found for entity '${template.id}'. Skipping.`
         );
+      }
+
+      // Merge remaining templates
+      for (let i = 1; i < template.templates.renderTemplates.length; i++) {
+        const templateId = template.templates.renderTemplates[i];
+        const renderTemplate = renderTemplateRegistry.get(templateId);
+
+        if (renderTemplate) {
+          render = {
+            ...render,
+            sprite: renderTemplate.sprite,
+            color: renderTemplate.color,
+          };
+        } else {
+          console.warn(
+            `[EntityRegistry] Render template '${templateId}' not found for entity '${template.id}'. Skipping.`
+          );
+        }
+      }
+
+      // Finally, override with direct entity values (deep merge)
+      if (template.render) {
+        render = { ...render, ...template.render };
       }
     }
 

@@ -275,10 +275,22 @@ export function validateEntityTemplate(
 
   // Check if entity uses template mixing
   const hasTemplates = data?.templates && typeof data.templates === 'object';
-  const hasHealthTemplate = hasTemplates && data.templates.healthTemplate;
-  const hasStatsTemplate = hasTemplates && data.templates.statsTemplate;
-  const hasRenderTemplate = hasTemplates && data.templates.renderTemplate;
-  const hasAITemplate = hasTemplates && data.templates.aiTemplate;
+  const hasHealthTemplate =
+    hasTemplates &&
+    Array.isArray(data.templates.healthTemplates) &&
+    data.templates.healthTemplates.length > 0;
+  const hasStatsTemplate =
+    hasTemplates &&
+    Array.isArray(data.templates.statsTemplates) &&
+    data.templates.statsTemplates.length > 0;
+  const hasRenderTemplate =
+    hasTemplates &&
+    Array.isArray(data.templates.renderTemplates) &&
+    data.templates.renderTemplates.length > 0;
+  const hasAITemplate =
+    hasTemplates &&
+    Array.isArray(data.templates.aiTemplates) &&
+    data.templates.aiTemplates.length > 0;
 
   // Create a working copy with defaults
   const entity: EntityTemplate = {

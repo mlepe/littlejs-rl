@@ -40,6 +40,22 @@
         "max": 70,
         "regen": 2
       }
+    },
+    {
+      "id": "healthBoost",
+      "name": "Health Boost",
+      "description": "Additional health modifier (+30 max HP)",
+      "health": {
+        "max": 30
+      }
+    },
+    {
+      "id": "regenBoost",
+      "name": "Regen Boost",
+      "description": "Enhanced regeneration (+3 regen/turn)",
+      "health": {
+        "regen": 3
+      }
     }
   ]
 }

@@ -1,14 +1,17 @@
 # Template-Mixing Feature
 
-The template-mixing feature allows you to compose entities from reusable component templates, providing flexibility and reducing data duplication in entity definitions.
+The template-mixing feature allows you to compose entities from **multiple reusable component templates**, providing flexibility and reducing data duplication in entity definitions.
 
 ## Overview
 
 Instead of defining all component data (health, stats, AI, render) directly in each entity, you can:
 
 1. Create reusable **component templates** for common configurations
-2. Reference these templates in entity definitions
-3. Override specific values when needed (deep merge)
+2. **Layer multiple templates** of the same type for modular composition
+3. Reference these templates in entity definitions
+4. Override specific values when needed (deep merge)
+
+**Key Feature**: Each component type (render, stats, AI, health) can reference **multiple templates** that are merged sequentially, enabling powerful composition patterns like "base stats + veteran bonus + blessed modifier".
 
 ## Component Template Types
 
@@ -76,7 +79,7 @@ Define durability:
 
 ### Basic Template Mixing
 
-Reference templates in your entity definition:
+Reference templates in your entity definition using **arrays**:
 
 ```json
 {
@@ -85,10 +88,10 @@ Reference templates in your entity definition:
   "type": "character",
 
   "templates": {
-    "renderTemplate": "orcWarriorRender",
-    "statsTemplate": "mageStats",
-    "aiTemplate": "aggressiveAI",
-    "healthTemplate": "normalHealth"
+    "renderTemplates": ["orcWarriorRender"],
+    "statsTemplates": ["mageStats"],
+    "aiTemplates": ["aggressiveAI"],
+    "healthTemplates": ["normalHealth"]
   }
 }
 ```
@@ -99,6 +102,53 @@ This entity will:
 - Have mage stats (high intelligence/willpower)
 - Behave aggressively
 - Have normal health pool
+
+### Multiple Template Mixing (Layering)
+
+**NEW**: You can now layer multiple templates per component type!
+
+```json
+{
+  "id": "veteran_orc_warrior",
+  "name": "Veteran Orc Warrior",
+  "type": "character",
+
+  "templates": {
+    "renderTemplates": ["orcWarriorRender"],
+    "statsTemplates": ["bruteStats", "veteranBonus"],
+    "aiTemplates": ["aggressiveAI"],
+    "healthTemplates": ["tankHealth"]
+  }
+}
+```
+
+**Merge order**: Templates merge left-to-right, then direct values override:
+
+```
+bruteStats → veteranBonus → direct entity stats
+```
+
+Result: Base brute gets +5 strength, +3 toughness, +2 willpower from veteran bonus!
+
+### Advanced Layering Example
+
+```json
+{
+  "id": "blessed_paladin",
+  "name": "Blessed Paladin",
+  "type": "character",
+
+  "templates": {
+    "statsTemplates": ["balancedStats", "elderBonus", "blessedModifier"],
+    "healthTemplates": ["normalHealth", "regenBoost"]
+  }
+}
+```
+
+**Stats merge**: `balancedStats` (10 all) → `elderBonus` (+7 int, +5 will, +3 cha) → `blessedModifier` (+3 all)
+**Health merge**: `normalHealth` (50 max) → `regenBoost` (+3 regen/turn)
+
+Final result: Well-rounded paladin with divine blessing and regeneration!
 
 ### Selective Overrides (Deep Merge)
 
@@ -111,10 +161,10 @@ You can override specific values from templates:
   "type": "creature",
 
   "templates": {
-    "renderTemplate": "goblinScoutRender",
-    "statsTemplate": "weakStats",
-    "aiTemplate": "fleeingAI",
-    "healthTemplate": "fragileHealth"
+    "renderTemplates": ["goblinScoutRender"],
+    "statsTemplates": ["weakStats"],
+    "aiTemplates": ["fleeingAI"],
+    "healthTemplates": ["fragileHealth"]
   },
 
   "render": {
@@ -131,7 +181,13 @@ You can override specific values from templates:
 }
 ```
 
-**Override Priority**: Direct entity values > Template values > System defaults
+**Override Priority**:
+
+```
+Template[0] → Template[1] → ... → Template[n] → Direct entity values
+```
+
+Direct entity values **always** have final say!
 
 ## File Organization
 
@@ -160,22 +216,24 @@ src/data/base/entities/
 1. **Reduced Duplication**: Define common configurations once, reuse everywhere
 2. **Consistency**: All "brute" characters use the same `bruteStats` template
 3. **Flexibility**: Mix any combination of templates to create unique entities
-4. **Maintainability**: Update a template to affect all entities using it
-5. **Readability**: Entity definitions focus on what's unique, not repeated boilerplate
+4. **Modularity**: Layer multiple templates per component for fine-grained control
+5. **Maintainability**: Update a template to affect all entities using it
+6. **Readability**: Entity definitions focus on what's unique, not repeated boilerplate
+7. **Composition Patterns**: Create "base + modifier" patterns (e.g., `agileStats` + `swiftModifier`)
 
 ## Examples
 
-### Example 1: Orc Mage
+### Example 1: Simple Mixing (Single Templates)
 
 An intelligent orc combining brutish appearance with magical prowess:
 
 ```json
 {
   "templates": {
-    "renderTemplate": "orcWarriorRender", // Looks like orc
-    "statsTemplate": "mageStats", // Plays like mage
-    "aiTemplate": "aggressiveAI",
-    "healthTemplate": "normalHealth"
+    "renderTemplates": ["orcWarriorRender"],
+    "statsTemplates": ["mageStats"],
+    "aiTemplates": ["aggressiveAI"],
+    "healthTemplates": ["normalHealth"]
   },
   "stats": {
     "intelligence": 20, // Even smarter than typical mage
@@ -184,39 +242,64 @@ An intelligent orc combining brutish appearance with magical prowess:
 }
 ```
 
-### Example 2: Agile Troll
+### Example 2: Layered Stats (Multiple Templates)
 
-Breaking the "slow brute" troll stereotype:
+Veteran warrior with enhanced stats:
 
 ```json
 {
+  "id": "veteran_orc_warrior",
   "templates": {
-    "renderTemplate": "trollBruteRender", // Looks like troll
-    "statsTemplate": "agileStats", // Fast and nimble
-    "aiTemplate": "fleeingAI", // Runs away!
-    "healthTemplate": "normalHealth"
+    "statsTemplates": ["bruteStats", "veteranBonus"]
   }
 }
 ```
 
-### Example 3: Merchant Warrior
+**Merge result**:
 
-A combat-trained merchant who defends their goods:
+- Base: `bruteStats` (15 str, 18 tough)
+- Add: `veteranBonus` (+5 str, +3 tough, +2 will)
+- Final: 20 str, 21 tough, 10 will
+
+### Example 3: Triple Layering
+
+Divine paladin with multiple stat modifiers:
 
 ```json
 {
+  "id": "blessed_paladin",
   "templates": {
-    "renderTemplate": "merchantRender",
-    "statsTemplate": "balancedStats",
-    "aiTemplate": "defensiveAI",
-    "healthTemplate": "normalHealth"
-  },
-  "stats": {
-    "charisma": 16, // Extra charisma for trading
-    "strength": 12 // Can defend themselves
+    "statsTemplates": ["balancedStats", "elderBonus", "blessedModifier"]
   }
 }
 ```
+
+**Merge result**:
+
+- Base: `balancedStats` (10 all)
+- Add: `elderBonus` (+7 int, +5 will, +3 cha)
+- Add: `blessedModifier` (+3 all)
+- Final: 13 str, 13 dex, 20 int, 16 cha, 18 will, 13 tough, 13 attr
+
+### Example 4: Health Layering
+
+Boss enemy with massive regenerating health pool:
+
+```json
+{
+  "id": "regenerating_troll_boss",
+  "templates": {
+    "healthTemplates": ["bossHealth", "healthBoost", "regenBoost"]
+  }
+}
+```
+
+**Merge result**:
+
+- Base: `bossHealth` (200 max)
+- Add: `healthBoost` (+30 max)
+- Add: `regenBoost` (+3 regen/turn)
+- Final: 230 max HP, 3 HP regen/turn
 
 ## Validation
 
@@ -238,10 +321,22 @@ The validation system handles template references gracefully:
 
 When spawning an entity:
 
-1. Load referenced templates from registries
-2. Start with template values
-3. Deep merge with direct entity values
-4. Apply defaults for any missing data
+1. Load referenced templates from registries (in array order)
+2. Start with first template values
+3. Deep merge each subsequent template
+4. Deep merge with direct entity values (final override)
+5. Apply defaults for any missing data
+
+**Example merge flow for stats**:
+
+```
+statsTemplates: ["bruteStats", "veteranBonus"]
+stats: { "intelligence": 15 }
+
+Step 1: Load bruteStats → { str: 15, dex: 6, int: 5, ... }
+Step 2: Merge veteranBonus → { str: 20, dex: 6, int: 5, tough: 21, will: 10, ... }
+Step 3: Override with direct → { str: 20, dex: 6, int: 15, tough: 21, will: 10, ... }
+```
 
 ### Code Example
 
@@ -293,20 +388,30 @@ The `DataLoader` automatically loads all template files during initialization.
 
 Template IDs follow `{descriptor}{ComponentType}` pattern:
 
+**Base Templates** (full configurations):
+
 - Render: `orcWarriorRender`, `goblinScoutRender`
 - Stats: `bruteStats`, `mageStats`, `agileStats`
 - AI: `aggressiveAI`, `fleeingAI`, `patrolAI`
 - Health: `tankHealth`, `fragileHealth`, `bossHealth`
 
+**Modifier Templates** (partial enhancements for layering):
+
+- Stats: `veteranBonus`, `elderBonus`, `blessedModifier`, `swiftModifier`
+- Health: `healthBoost`, `regenBoost`
+
+Use **base templates** as the first element, then add **modifiers** for incremental changes.
+
 ## Future Enhancements
 
 Potential expansions:
 
-- **Granular templates**: Sub-templates for even finer control (sprite templates, color palettes)
-- **Template inheritance**: Templates that extend other templates
+- **Template inheritance**: Templates that extend other templates within registry
+- **Template priority/weights**: Explicit merge order control beyond array position
 - **Entity-type sections**: Organize templates by enemy/npc/boss categories
 - **Mod support**: Load templates from mod directories
 - **Template validation**: Dedicated validation for template definitions
+- **Conditional templates**: Apply templates based on entity context (level, location, etc.)
 
 ## Troubleshooting
 

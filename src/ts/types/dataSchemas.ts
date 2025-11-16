@@ -93,13 +93,14 @@ export interface HealthTemplate {
 
 /**
  * Component template references for template-mixing
- * Allows entities to be composed from different template sources
+ * Allows entities to be composed from multiple templates per component type
+ * Templates are merged in array order: [0] → [1] → ... → [n] → direct entity values
  */
 export interface ComponentTemplateRefs {
-  renderTemplate?: string; // ID of RenderTemplate
-  statsTemplate?: string; // ID of StatsTemplate
-  aiTemplate?: string; // ID of AITemplate
-  healthTemplate?: string; // ID of HealthTemplate
+  renderTemplates?: string[]; // Array of RenderTemplate IDs
+  statsTemplates?: string[]; // Array of StatsTemplate IDs
+  aiTemplates?: string[]; // Array of AITemplate IDs
+  healthTemplates?: string[]; // Array of HealthTemplate IDs
 }
 
 /**
