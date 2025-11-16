@@ -20,6 +20,7 @@ import {
   RenderComponent,
   ViewModeComponent,
 } from './components';
+import { ViewMode } from './components/viewMode';
 import {
   SPRITE_BOSS,
   SPRITE_ENEMY,
@@ -109,7 +110,7 @@ export function createPlayer(
 
   // Add view mode component (starts in LOCATION view)
   ecs.addComponent<ViewModeComponent>(playerId, 'viewMode', {
-    mode: 'location' as any, // ViewMode.LOCATION
+    mode: ViewMode.LOCATION,
     worldMapCursorX: worldX,
     worldMapCursorY: worldY,
   });

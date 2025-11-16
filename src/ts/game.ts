@@ -317,13 +317,13 @@ export default class Game {
     // Handle debug toggles from player input
     this.handleDebugToggles();
 
+    // Handle view mode transitions (must be outside turn-based block to respond immediately)
+    viewModeTransitionSystem(this.ecs);
+
     // Process turn-based actions only when timer allows
     if (shouldProcessTurn) {
       // Reset turn timer
       this.turnTimer = 0;
-
-      // Handle view mode transitions FIRST
-      viewModeTransitionSystem(this.ecs);
 
       // Check player view mode AFTER transitions
       const viewModeComp = this.ecs.getComponent<ViewModeComponent>(
@@ -388,10 +388,13 @@ export default class Game {
       }
     } else {
       // Render location view
-      // TileLayer and TileCollisionLayer are automatically rendered by LittleJS
+      const location = this.world.getCurrentLocation();
+      if (location) {
+        location.render(); // Render location tiles
+      }
+
       // Render collision overlay if enabled (runtime toggle)
       if (this.showCollisionOverlay) {
-        const location = this.world.getCurrentLocation();
         if (location) {
           location.renderDebug(); // Shows collision overlay
         }
@@ -454,13 +457,14 @@ export default class Game {
       this.playerId,
       'position'
     );
-    const viewMode = this.ecs.getComponent<{ mode: number }>(
+    const viewMode = this.ecs.getComponent<ViewModeComponent>(
       this.playerId,
       'viewMode'
     );
 
-    // Determine current view mode (0 = LOCATION, 1 = WORLD_MAP)
-    const viewModeText = viewMode?.mode === 1 ? 'WORLD_MAP' : 'LOCATION';
+    // Determine current view mode
+    const viewModeText =
+      viewMode?.mode === ViewMode.WORLD_MAP ? 'WORLD_MAP' : 'LOCATION';
 
     const debugInfo = [
       `Game v${Game.version}`,

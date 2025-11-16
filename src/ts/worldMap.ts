@@ -272,6 +272,14 @@ export default class WorldMap {
   }
 
   /**
+   * Redraw the tile layer
+   * Call this after updating tiles to make changes visible
+   */
+  redraw(): void {
+    this.tileLayer.redraw();
+  }
+
+  /**
    * Get the world reference
    */
   getWorld(): World {

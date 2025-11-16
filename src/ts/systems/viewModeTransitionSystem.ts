@@ -56,13 +56,31 @@ export function viewModeTransitionSystem(ecs: ECS): void {
     );
     const pos = ecs.getComponent<PositionComponent>(entityId, 'position');
 
-    if (!viewMode || !input || !locationComp || !pos) continue;
+    if (!viewMode || !input || !locationComp || !pos) {
+      console.log('[ViewMode] Missing component:', {
+        hasViewMode: !!viewMode,
+        hasInput: !!input,
+        hasLocation: !!locationComp,
+        hasPosition: !!pos,
+      });
+      continue;
+    }
 
     const game = Game.getInstance();
     const worldMap = game.getWorldMap();
 
+    // Debug: Log current state
+    if (input.locationEnterWorldMap || input.worldMapEnterLocation) {
+      console.log('[ViewMode] Transition request:', {
+        currentMode: viewMode.mode,
+        locationEnterWorldMap: input.locationEnterWorldMap,
+        worldMapEnterLocation: input.worldMapEnterLocation,
+      });
+    }
+
     // Transition from LOCATION to WORLD_MAP
     if (viewMode.mode === ViewMode.LOCATION && input.locationEnterWorldMap) {
+      console.log('[ViewMode] TRANSITIONING: LOCATION -> WORLD_MAP');
       viewMode.mode = ViewMode.WORLD_MAP;
 
       // Set cursor to current world position
@@ -71,6 +89,9 @@ export function viewModeTransitionSystem(ecs: ECS): void {
 
       // Discover surrounding tiles
       worldMap.discoverRadius(locationComp.worldX, locationComp.worldY, 2);
+
+      // Redraw world map to show discovered tiles
+      worldMap.redraw();
 
       // Update camera for world map view
       LJS.setCameraPos(

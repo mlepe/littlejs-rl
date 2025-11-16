@@ -51,8 +51,8 @@ export function inputSystem(ecs: ECS): void {
     ACTION: ['Space', 'Enter', 'KeyE'],
     PICKUP: ['KeyG'],
     USE_ITEM: ['KeyU'],
-    WORLDMAP_ENTER_LOCATION: ['BracketRight', 'NumpadAdd'], // ] or numpad +
-    LOCATION_ENTER_WORLDMAP: ['BracketLeft', 'NumpadSubtract'], // [ or numpad -
+    LOCATION_ENTER_WORLDMAP: ['BracketLeft', 'NumpadSubtract'], // [ opens world map
+    WORLDMAP_ENTER_LOCATION: ['BracketRight', 'NumpadAdd'], // ] enters location
     ZOOM: ['NumpadMultiply'], // Numpad *
     DEBUG_TOGGLE_COLLISION_DISPLAY: ['KeyC'],
     DEBUG_TOGGLE_DEBUG_TEXT: ['KeyX'],
