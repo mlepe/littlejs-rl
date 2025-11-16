@@ -98,6 +98,7 @@ export function createPlayer(
     moveY: 0,
     action: false,
     pickup: false,
+    useItem: false,
     zoomIn: false,
     zoomOut: false,
     debugToggleCollision: false,

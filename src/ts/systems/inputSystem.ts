@@ -50,6 +50,7 @@ export function inputSystem(ecs: ECS): void {
     DOWN_RIGHT: ['Numpad3'],
     ACTION: ['Space', 'Enter', 'KeyE'],
     PICKUP: ['KeyG'],
+    USE_ITEM: ['KeyU'],
     ZOOM_IN: ['Equal', 'NumpadAdd'],
     ZOOM_OUT: ['Minus', 'NumpadSubtract'],
     DEBUG_TOGGLE_COLLISION_DISPLAY: ['KeyC'],
@@ -65,6 +66,7 @@ export function inputSystem(ecs: ECS): void {
     input.moveY = 0;
     input.action = false;
     input.pickup = false;
+    input.useItem = false;
     input.zoomIn = false;
     input.zoomOut = false;
     input.debugToggleCollision = false;
@@ -124,6 +126,11 @@ export function inputSystem(ecs: ECS): void {
     // Check PICKUP
     if (keybinds.PICKUP.some((key) => LJS.keyWasPressed(key))) {
       input.pickup = true;
+    }
+
+    // Check USE_ITEM
+    if (keybinds.USE_ITEM.some((key) => LJS.keyWasPressed(key))) {
+      input.useItem = true;
     }
 
     // Check ZOOM_IN

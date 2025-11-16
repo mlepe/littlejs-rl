@@ -28,6 +28,7 @@ export * from './inventorySystem';
 export * from './equipmentSystem';
 export * from './identificationSystem';
 export * from './itemUsageSystem';
+export * from './itemUsageInputSystem';
 export * from './itemGenerationSystem';
 export * from './lootSystem';
 export * from './deathSystem';

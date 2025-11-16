@@ -25,6 +25,7 @@ import {
   deathSystem,
   identificationSystem,
   inputSystem,
+  itemUsageInputSystem,
   pickupSystem,
   playerMovementSystem,
   renderSystem,
@@ -282,6 +283,7 @@ export default class Game {
 
     // Process systems in order
     inputSystem(this.ecs); // Capture player input
+    itemUsageInputSystem(this.ecs); // Handle U key press for using items
 
     // Handle debug toggles from player input
     this.handleDebugToggles();

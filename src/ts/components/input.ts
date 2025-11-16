@@ -24,6 +24,8 @@ export interface InputComponent {
   action: boolean;
   /** Pickup item at current position (G key) */
   pickup: boolean;
+  /** Use/consume item from inventory (U key) */
+  useItem: boolean;
   /** Zoom in command */
   zoomIn: boolean;
   /** Zoom out command */
