@@ -19,6 +19,7 @@
  * 3. Verify template resolution and overrides
  */
 
+import { AIComponent, HealthComponent, StatsComponent } from '../components';
 import {
   AITemplateRegistry,
   DataLoader,
@@ -80,10 +81,10 @@ async function templateMixingExample() {
       console.log(`  ✓ Spawned: ${entityId} (ID: ${entity})`);
 
       // Get components to verify
-      const stats = ecs.getComponent(entity, 'stats');
+      const stats = ecs.getComponent<StatsComponent>(entity, 'stats');
       const render = ecs.getComponent(entity, 'render');
-      const ai = ecs.getComponent(entity, 'ai');
-      const health = ecs.getComponent(entity, 'health');
+      const ai = ecs.getComponent<AIComponent>(entity, 'ai');
+      const health = ecs.getComponent<HealthComponent>(entity, 'health');
 
       console.log(
         `    Stats: str=${stats?.base.strength}, int=${stats?.base.intelligence}`
