@@ -22,6 +22,8 @@ export interface InputComponent {
   moveY: number;
   /** Action button pressed (e.g., attack, interact) */
   action: boolean;
+  /** Pickup item at current position (G key) */
+  pickup: boolean;
   /** Zoom in command */
   zoomIn: boolean;
   /** Zoom out command */

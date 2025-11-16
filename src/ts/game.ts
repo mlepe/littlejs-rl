@@ -13,17 +13,26 @@
 import * as LJS from 'littlejsengine';
 
 import {
+  addCharges,
+  addConsumable,
+  generateItem,
+} from './systems/itemGenerationSystem';
+import {
   aiSystem,
   cameraSystem,
+  deathSystem,
   inputSystem,
+  pickupSystem,
   playerMovementSystem,
   renderSystem,
 } from './systems';
+import { createEnemy, createPlayer } from './entities';
 
 import { DataLoader } from './data/dataLoader';
 import ECS from './ecs';
+import { ItemComponent } from './components/item';
 import World from './world';
-import { createPlayer } from './entities';
+import { dropItemAtPosition } from './systems/lootSystem';
 
 /**
  * Main Game class - Singleton pattern
@@ -178,6 +187,11 @@ export default class Game {
     // Initialize relations between all entities
     this.world.initializeRelations(this.ecs);
 
+    // Spawn test items for development
+    if (Game.isDebug) {
+      this.spawnTestItems();
+    }
+
     this.initialized = true;
 
     if (Game.isDebug) {
@@ -188,6 +202,99 @@ export default class Game {
         `Initialized relations for ${this.ecs.query('relation').length} entities`
       );
     }
+  }
+
+  /**
+   * Spawn test items for development/testing
+   * @private
+   */
+  private spawnTestItems(): void {
+    const location = this.world.getCurrentLocation();
+    const playerPos = this.ecs.getComponent<{ x: number; y: number }>(
+      this.playerId,
+      'position'
+    );
+
+    if (!location || !playerPos) return;
+
+    // Spawn a test enemy nearby with loot
+    const enemyX = Math.floor(playerPos.x + 5);
+    const enemyY = Math.floor(playerPos.y);
+
+    if (location.isWalkable(enemyX, enemyY)) {
+      const enemyId = createEnemy(
+        this.ecs,
+        enemyX,
+        enemyY,
+        this.currentWorldPos.x,
+        this.currentWorldPos.y
+      );
+      console.log(
+        `[Debug] Spawned test enemy at (${enemyX}, ${enemyY}) - ID: ${enemyId}`
+      );
+    }
+
+    // Spawn test items on the ground near player
+    const itemX = Math.floor(playerPos.x + 2);
+    const itemY = Math.floor(playerPos.y);
+
+    // Create a health potion
+    const potionId = generateItem(this.ecs, 'health_potion');
+    this.ecs.addComponent<ItemComponent>(potionId, 'item', {
+      id: 'health_potion',
+      name: 'Health Potion',
+      description: 'Restores 50 health',
+      weight: 0.5,
+      value: 25,
+      itemType: 'potion',
+      identified: 'identified',
+      blessState: 'normal',
+      stackable: true,
+      quantity: 1,
+      quality: 0,
+      material: 'crystal',
+    });
+    addConsumable(this.ecs, potionId, {
+      effect: 'heal',
+      power: 50,
+      requiresTarget: false,
+      consumeOnUse: true,
+    });
+    dropItemAtPosition(
+      this.ecs,
+      potionId,
+      itemX,
+      itemY,
+      this.currentWorldPos.x,
+      this.currentWorldPos.y
+    );
+
+    // Create bread
+    const breadId = generateItem(this.ecs, 'bread');
+    this.ecs.addComponent<ItemComponent>(breadId, 'item', {
+      id: 'bread',
+      name: 'Bread',
+      description: 'Restores hunger',
+      weight: 0.2,
+      value: 5,
+      itemType: 'food',
+      identified: 'identified',
+      blessState: 'normal',
+      stackable: true,
+      quantity: 3,
+      quality: 0,
+      material: 'unknown',
+    });
+    dropItemAtPosition(
+      this.ecs,
+      breadId,
+      itemX + 1,
+      itemY,
+      this.currentWorldPos.x,
+      this.currentWorldPos.y
+    );
+
+    console.log(`[Debug] Spawned test items at (${itemX}, ${itemY})`);
   }
 
   /**
@@ -202,9 +309,11 @@ export default class Game {
     // Handle debug toggles from player input
     this.handleDebugToggles();
 
+    pickupSystem(this.ecs); // Handle item pickup
     playerMovementSystem(this.ecs); // Move player based on input
     cameraSystem(this.ecs); // Update camera (follow player + zoom)
     aiSystem(this.ecs, this.playerId); // AI behaviors for NPCs/enemies
+    deathSystem(this.ecs); // Handle entity death and loot drops
   }
 
   /**

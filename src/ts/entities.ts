@@ -34,6 +34,7 @@ import ECS from './ecs';
 import { InputComponent } from './components/input';
 import { PlayerComponent } from './components/player';
 import { StatsComponent } from './components/stats';
+import { addLootTable } from './systems/lootSystem';
 import { calculateDerivedStats } from './systems/derivedStatsSystem';
 
 /**
@@ -96,6 +97,7 @@ export function createPlayer(
     moveX: 0,
     moveY: 0,
     action: false,
+    pickup: false,
     zoomIn: false,
     zoomOut: false,
     debugToggleCollision: false,
@@ -215,6 +217,18 @@ export function createEnemy(
   });
 
   ecs.addComponent<MovableComponent>(enemyId, 'movable', { speed: 1 });
+
+  // Add loot table (goblin drops)
+  addLootTable(ecs, enemyId, [
+    { itemId: 'gold_coin', dropChance: 1.0, minQuantity: 1, maxQuantity: 5 },
+    { itemId: 'bread', dropChance: 0.3, minQuantity: 1, maxQuantity: 2 },
+    {
+      itemId: 'health_potion',
+      dropChance: 0.15,
+      minQuantity: 1,
+      maxQuantity: 1,
+    },
+  ]);
 
   return enemyId;
 }
@@ -422,6 +436,40 @@ export function createBoss(
   });
 
   ecs.addComponent<MovableComponent>(bossId, 'movable', { speed: 1 });
+
+  // Add boss loot table (rare items with high quality)
+  addLootTable(ecs, bossId, [
+    { itemId: 'gold_coin', dropChance: 1.0, minQuantity: 50, maxQuantity: 150 },
+    {
+      itemId: 'steel_sword',
+      dropChance: 0.8,
+      minQuantity: 1,
+      maxQuantity: 1,
+      qualityRange: { min: 1, max: 3 },
+      blessChance: 0.3,
+    },
+    {
+      itemId: 'iron_armor',
+      dropChance: 0.6,
+      minQuantity: 1,
+      maxQuantity: 1,
+      qualityRange: { min: 0, max: 2 },
+    },
+    {
+      itemId: 'health_potion',
+      dropChance: 1.0,
+      minQuantity: 3,
+      maxQuantity: 5,
+    },
+    { itemId: 'mana_potion', dropChance: 0.8, minQuantity: 2, maxQuantity: 4 },
+    {
+      itemId: 'mithril_sword',
+      dropChance: 0.05,
+      minQuantity: 1,
+      maxQuantity: 1,
+      blessChance: 0.5,
+    },
+  ]);
 
   return bossId;
 }

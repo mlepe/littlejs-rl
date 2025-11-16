@@ -30,3 +30,5 @@ export * from './identificationSystem';
 export * from './itemUsageSystem';
 export * from './itemGenerationSystem';
 export * from './lootSystem';
+export * from './deathSystem';
+export * from './pickupSystem';
