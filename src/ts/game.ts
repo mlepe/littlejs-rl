@@ -453,10 +453,18 @@ export default class Game {
       this.playerId,
       'position'
     );
+    const viewMode = this.ecs.getComponent<{ mode: number }>(
+      this.playerId,
+      'viewMode'
+    );
+
+    // Determine current view mode (0 = LOCATION, 1 = WORLD_MAP)
+    const viewModeText = viewMode?.mode === 1 ? 'WORLD_MAP' : 'LOCATION';
 
     const debugInfo = [
       `Game v${Game.version}`,
       `FPS: ${LJS.frame}`,
+      `View: ${viewModeText}`,
       `Location: ${location?.name || 'None'}`,
       `Player: (${playerPos?.x ?? '?'}, ${playerPos?.y ?? '?'})`,
       `Entities: ${this.ecs.query('position').length}`,
