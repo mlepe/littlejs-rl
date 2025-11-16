@@ -141,9 +141,14 @@ export function createPlayer(
     enabled: true,
   });
 
-  const playerCoords = getTileCoords(TileSprite.PLAYER_WARRIOR);
+  // TODO: Update to actual player sprite once tileset is finalized
+  // Using first character tile temporarily: column 24 (index 24), row 0
   ecs.addComponent<RenderComponent>(playerId, 'render', {
-    tileInfo: new LJS.TileInfo(LJS.vec2(playerCoords.x, playerCoords.y)),
+    tileInfo: new LJS.TileInfo(
+      LJS.vec2(24 * 16, 0 * 16), // Column 24, Row 0 in pixels
+      LJS.vec2(16, 16),
+      0
+    ),
     color: new LJS.Color(1, 1, 1), // White
     size: new LJS.Vector2(1, 1),
   });
@@ -211,7 +216,11 @@ export function createEnemy(
 
   const enemyCoords = getTileCoords(SPRITE_ENEMY);
   ecs.addComponent<RenderComponent>(enemyId, 'render', {
-    tileInfo: new LJS.TileInfo(LJS.vec2(enemyCoords.x, enemyCoords.y)),
+    tileInfo: new LJS.TileInfo(
+      LJS.vec2(enemyCoords.x * 16, enemyCoords.y * 16),
+      LJS.vec2(16, 16),
+      0
+    ),
     color: new LJS.Color(1, 0, 0), // Red
     size: new LJS.Vector2(1, 1),
   });
@@ -291,7 +300,11 @@ export function createNPC(
 
   const npcCoords = getTileCoords(SPRITE_NPC);
   ecs.addComponent<RenderComponent>(npcId, 'render', {
-    tileInfo: new LJS.TileInfo(LJS.vec2(npcCoords.x, npcCoords.y)),
+    tileInfo: new LJS.TileInfo(
+      LJS.vec2(npcCoords.x * 16, npcCoords.y * 16),
+      LJS.vec2(16, 16),
+      0
+    ),
     color: new LJS.Color(0, 1, 0), // Green
     size: new LJS.Vector2(1, 1),
   });
@@ -362,7 +375,11 @@ export function createFleeingCreature(
 
   const creatureCoords = getTileCoords(SPRITE_FLEEING_CREATURE);
   ecs.addComponent<RenderComponent>(creatureId, 'render', {
-    tileInfo: new LJS.TileInfo(LJS.vec2(creatureCoords.x, creatureCoords.y)),
+    tileInfo: new LJS.TileInfo(
+      LJS.vec2(creatureCoords.x * 16, creatureCoords.y * 16),
+      LJS.vec2(16, 16),
+      0
+    ),
     color: new LJS.Color(1, 1, 0), // Yellow
     size: new LJS.Vector2(1, 1),
   });
@@ -430,7 +447,11 @@ export function createBoss(
 
   const bossCoords = getTileCoords(SPRITE_BOSS);
   ecs.addComponent<RenderComponent>(bossId, 'render', {
-    tileInfo: new LJS.TileInfo(LJS.vec2(bossCoords.x, bossCoords.y)),
+    tileInfo: new LJS.TileInfo(
+      LJS.vec2(bossCoords.x * 16, bossCoords.y * 16),
+      LJS.vec2(16, 16),
+      0
+    ),
     color: new LJS.Color(0.5, 0, 0.5), // Purple
     size: new LJS.Vector2(2, 2), // Larger size
   });
