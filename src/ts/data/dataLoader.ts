@@ -16,6 +16,7 @@ import { AITemplateRegistry } from './aiTemplateRegistry';
 import { ClassRegistry } from './classRegistry';
 import { EntityRegistry } from './entityRegistry';
 import { HealthTemplateRegistry } from './healthTemplateRegistry';
+import { ItemRegistry } from './itemRegistry';
 import { RaceRegistry } from './raceRegistry';
 import { RenderTemplateRegistry } from './renderTemplateRegistry';
 import { StatsTemplateRegistry } from './statsTemplateRegistry';
@@ -134,7 +135,6 @@ export class DataLoader {
     // Load items
     console.log('[DataLoader] Loading items...');
     try {
-      const { ItemRegistry } = await import('./itemRegistry.js');
       await ItemRegistry.getInstance().loadFromFiles(
         'src/data/base/items/base_items.json',
         'src/data/base/items/item_properties.json'
