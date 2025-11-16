@@ -1,0 +1,200 @@
+{
+  "itemProperties": {
+    "health_potion": {
+      "consumable": {
+        "effect": "heal",
+        "power": 50,
+        "requiresTarget": false,
+        "consumeOnUse": true
+      }
+    },
+    "mana_potion": {
+      "consumable": {
+        "effect": "restore_mana",
+        "power": 50,
+        "requiresTarget": false,
+        "consumeOnUse": true
+      }
+    },
+    "scroll_fireball": {
+      "charges": {
+        "current": 1,
+        "max": 1,
+        "deleteWhenEmpty": true,
+        "rechargeable": false
+      },
+      "consumable": {
+        "effect": "damage",
+        "power": 30,
+        "requiresTarget": true,
+        "targetRange": 8,
+        "areaOfEffect": 2,
+        "consumeOnUse": true
+      }
+    },
+    "scroll_heal": {
+      "charges": {
+        "current": 1,
+        "max": 1,
+        "deleteWhenEmpty": true,
+        "rechargeable": false
+      },
+      "consumable": {
+        "effect": "heal",
+        "power": 40,
+        "requiresTarget": false,
+        "consumeOnUse": true
+      }
+    },
+    "scroll_identify": {
+      "charges": {
+        "current": 1,
+        "max": 1,
+        "deleteWhenEmpty": true,
+        "rechargeable": false
+      },
+      "consumable": {
+        "effect": "identify",
+        "power": 1,
+        "requiresTarget": false,
+        "consumeOnUse": true
+      }
+    },
+    "scroll_identify_all": {
+      "charges": {
+        "current": 1,
+        "max": 1,
+        "deleteWhenEmpty": true,
+        "rechargeable": false
+      },
+      "consumable": {
+        "effect": "identify",
+        "power": 999,
+        "requiresTarget": false,
+        "consumeOnUse": true,
+        "customEffect": "identify_all_inventory"
+      }
+    },
+    "rod_lightning": {
+      "charges": {
+        "current": 10,
+        "max": 20,
+        "deleteWhenEmpty": false,
+        "rechargeable": true,
+        "rechargeRate": 0.05
+      },
+      "consumable": {
+        "effect": "damage",
+        "power": 25,
+        "requiresTarget": true,
+        "targetRange": 10,
+        "consumeOnUse": false
+      }
+    },
+    "bread": {
+      "consumable": {
+        "effect": "custom",
+        "power": 30,
+        "requiresTarget": false,
+        "consumeOnUse": true,
+        "customEffect": "restore_hunger"
+      }
+    },
+    "strength_potion": {
+      "consumable": {
+        "effect": "buff_strength",
+        "power": 5,
+        "duration": 300,
+        "requiresTarget": false,
+        "consumeOnUse": true
+      }
+    },
+    "dexterity_potion": {
+      "consumable": {
+        "effect": "buff_dexterity",
+        "power": 5,
+        "duration": 300,
+        "requiresTarget": false,
+        "consumeOnUse": true
+      }
+    },
+    "intelligence_potion": {
+      "consumable": {
+        "effect": "buff_intelligence",
+        "power": 5,
+        "duration": 300,
+        "requiresTarget": false,
+        "consumeOnUse": true
+      }
+    },
+    "cure_poison_potion": {
+      "consumable": {
+        "effect": "cure_poison",
+        "power": 1,
+        "requiresTarget": false,
+        "consumeOnUse": true
+      }
+    },
+    "scroll_teleport": {
+      "charges": {
+        "current": 1,
+        "max": 1,
+        "deleteWhenEmpty": true,
+        "rechargeable": false
+      },
+      "consumable": {
+        "effect": "teleport",
+        "power": 1,
+        "requiresTarget": false,
+        "consumeOnUse": true
+      }
+    },
+    "scroll_curse_removal": {
+      "charges": {
+        "current": 1,
+        "max": 1,
+        "deleteWhenEmpty": true,
+        "rechargeable": false
+      },
+      "consumable": {
+        "effect": "cure_curse",
+        "power": 1,
+        "requiresTarget": false,
+        "consumeOnUse": true
+      }
+    },
+    "rod_fireball": {
+      "charges": {
+        "current": 15,
+        "max": 25,
+        "deleteWhenEmpty": false,
+        "rechargeable": true,
+        "rechargeRate": 0.1
+      },
+      "consumable": {
+        "effect": "damage",
+        "power": 40,
+        "requiresTarget": true,
+        "targetRange": 12,
+        "areaOfEffect": 3,
+        "consumeOnUse": false
+      }
+    },
+    "wand_healing": {
+      "charges": {
+        "current": 8,
+        "max": 15,
+        "deleteWhenEmpty": false,
+        "rechargeable": true,
+        "rechargeRate": 0.02
+      },
+      "consumable": {
+        "effect": "heal",
+        "power": 30,
+        "requiresTarget": true,
+        "targetRange": 5,
+        "consumeOnUse": false
+      }
+    }
+  }
+}

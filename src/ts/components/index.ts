@@ -29,3 +29,6 @@ export * from './class';
 export * from './item';
 export * from './inventory';
 export * from './equipment';
+export * from './identification';
+export * from './charges';
+export * from './consumable';

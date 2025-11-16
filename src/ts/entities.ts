@@ -130,6 +130,15 @@ export function createPlayer(
     feet: undefined,
   });
 
+  // Add identification component (intelligence-based auto-identify)
+  ecs.addComponent(playerId, 'identification', {
+    autoIdentifyRate: playerBase.intelligence * 0.1, // 1.0 progress per second at 10 int
+    itemProgress: new Map(),
+    partialThreshold: 100,
+    fullThreshold: 200,
+    enabled: true,
+  });
+
   const playerCoords = getTileCoords(TileSprite.PLAYER_WARRIOR);
   ecs.addComponent<RenderComponent>(playerId, 'render', {
     tileInfo: LJS.tile(TileSprite.PLAYER_WARRIOR),

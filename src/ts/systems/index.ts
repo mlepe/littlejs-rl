@@ -26,3 +26,5 @@ export * from './raceSystem';
 export * from './classSystem';
 export * from './inventorySystem';
 export * from './equipmentSystem';
+export * from './identificationSystem';
+export * from './itemUsageSystem';
