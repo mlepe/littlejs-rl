@@ -165,3 +165,13 @@ Once basic functionality is verified:
 
 - Run `npm run build` to see specific errors
 - Check that all imports are correct
+
+**Issue**: Player spawns outside level / not visible
+
+- Fixed: TileLayer now positioned at origin (0,0) instead of centered
+- Tile coordinates now directly map to world coordinates
+
+**Issue**: Player sprite not rendering correctly
+
+- Fixed: Player TileInfo now properly created with coordinate conversion
+- Fixed: Sprites now centered on tiles with +0.5 offset

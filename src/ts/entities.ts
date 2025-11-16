@@ -143,7 +143,7 @@ export function createPlayer(
 
   const playerCoords = getTileCoords(TileSprite.PLAYER_WARRIOR);
   ecs.addComponent<RenderComponent>(playerId, 'render', {
-    tileInfo: LJS.tile(TileSprite.PLAYER_WARRIOR),
+    tileInfo: new LJS.TileInfo(LJS.vec2(playerCoords.x, playerCoords.y)),
     color: new LJS.Color(1, 1, 1), // White
     size: new LJS.Vector2(1, 1),
   });

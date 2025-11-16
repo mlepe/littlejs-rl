@@ -45,7 +45,8 @@ export function renderSystem(ecs: ECS): void {
 
     if (pos && render) {
       // Use LittleJS drawTile instead of EngineObject to avoid trails
-      const position = LJS.vec2(pos.x, pos.y);
+      // Add 0.5 offset to center sprite on tile (tiles are bottom-left anchored)
+      const position = LJS.vec2(pos.x + 0.5, pos.y + 0.5);
       LJS.drawTile(
         position,
         render.size,
