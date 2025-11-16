@@ -116,8 +116,21 @@ export class DataLoader {
       }
     }
 
+    // Load items
+    console.log('[DataLoader] Loading items...');
+    try {
+      const { ItemRegistry } = await import('./itemRegistry');
+      await ItemRegistry.getInstance().loadFromFiles(
+        'src/data/base/items/base_items.json',
+        'src/data/base/items/item_properties.json'
+      );
+    } catch (error) {
+      logError(error as Error, 'Loading items');
+      // Items are critical - rethrow
+      throw error;
+    }
+
     // Future: Load other registries
-    // await ItemRegistry.getInstance().loadFromFile('src/data/base/items/weapons.json');
     // await TileRegistry.getInstance().loadFromFile('src/data/base/tiles/tile-definitions.json');
   }
 

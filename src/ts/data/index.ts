@@ -19,13 +19,13 @@ export { ClassRegistry } from './classRegistry';
 export { DataLoader } from './dataLoader';
 export { EntityRegistry } from './entityRegistry';
 export { RaceRegistry } from './raceRegistry';
+export { ItemRegistry } from './itemRegistry';
 
 // Validation and error handling
 export * from './validation';
 export * from './errors';
 
 // Future: Export other registries when implemented
-// export { ItemRegistry } from './itemRegistry';
 // export { TileRegistry } from './tileRegistry';
 // export { BiomeRegistry } from './biomeRegistry';
 // export { ModLoader } from './modLoader';

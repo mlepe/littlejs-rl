@@ -32,3 +32,4 @@ export * from './itemGenerationSystem';
 export * from './lootSystem';
 export * from './deathSystem';
 export * from './pickupSystem';
+export * from './collisionDamageSystem';

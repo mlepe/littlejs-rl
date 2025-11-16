@@ -21,6 +21,7 @@ import {
 import { ChargesComponent } from '../components/charges';
 import { ConsumableComponent } from '../components/consumable';
 import ECS from '../ecs';
+import { ItemRegistry } from '../data/itemRegistry';
 
 /**
  * Generate a random item from a template with randomized properties
@@ -59,11 +60,61 @@ export function generateItem(
     quantity?: number;
   }
 ): number {
-  const itemId = ecs.createEntity();
+  // Try to spawn from ItemRegistry first
+  const registry = ItemRegistry.getInstance();
+  if (registry.has(templateId)) {
+    const itemId = registry.spawn(ecs, templateId);
 
-  // TODO: Load template from data system
-  // For now, create basic item component
-  // In full implementation, this would load from EntityRegistry/DataLoader
+    if (itemId === -1) {
+      console.error(
+        `[generateItem] Failed to spawn item from registry: ${templateId}`
+      );
+      return -1;
+    }
+
+    // Apply options to spawned item
+    const item = ecs.getComponent<ItemComponent>(itemId, 'item');
+    if (item) {
+      // Override quantity if specified
+      if (options?.quantity) {
+        item.quantity = options.quantity;
+      }
+
+      // Apply random quality if range specified
+      if (options?.qualityRange) {
+        applyRandomQuality(
+          ecs,
+          itemId,
+          options.qualityRange.min,
+          options.qualityRange.max
+        );
+      }
+
+      // Apply random blessing/curse
+      if (options?.blessChance || options?.curseChance) {
+        applyRandomBlessState(
+          ecs,
+          itemId,
+          options?.blessChance || 0,
+          options?.curseChance || 0
+        );
+      }
+
+      // Override identification level if specified
+      if (options?.identificationLevel) {
+        item.identified = options.identificationLevel;
+      }
+    }
+
+    return itemId;
+  }
+
+  // Fallback: create placeholder item if not in registry
+  console.warn(
+    `[generateItem] Template not found in registry: ${templateId}, creating placeholder`
+  );
+
+  const itemId = ecs.createEntity();
 
   // Determine blessing state
   let blessState: ItemBlessState = 'normal';

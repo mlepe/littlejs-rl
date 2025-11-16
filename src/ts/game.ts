@@ -20,7 +20,10 @@ import {
 import {
   aiSystem,
   cameraSystem,
+  chargesSystem,
+  collisionDamageSystem,
   deathSystem,
+  identificationSystem,
   inputSystem,
   pickupSystem,
   playerMovementSystem,
@@ -234,67 +237,41 @@ export default class Game {
       );
     }
 
-    // Spawn test items on the ground near player
+    // Spawn test items on the ground near player using data system
     const itemX = Math.floor(playerPos.x + 2);
     const itemY = Math.floor(playerPos.y);
 
-    // Create a health potion
-    const potionId = generateItem(this.ecs, 'health_potion');
-    this.ecs.addComponent<ItemComponent>(potionId, 'item', {
-      id: 'health_potion',
-      name: 'Health Potion',
-      description: 'Restores 50 health',
-      weight: 0.5,
-      value: 25,
-      itemType: 'potion',
-      identified: 'identified',
-      blessState: 'normal',
-      stackable: true,
-      quantity: 1,
-      quality: 0,
-      material: 'crystal',
-    });
-    addConsumable(this.ecs, potionId, {
-      effect: 'heal',
-      power: 50,
-      requiresTarget: false,
-      consumeOnUse: true,
-    });
-    dropItemAtPosition(
-      this.ecs,
-      potionId,
-      itemX,
-      itemY,
-      this.currentWorldPos.x,
-      this.currentWorldPos.y
-    );
+    // Generate items from data templates
+    const itemsToSpawn = [
+      { id: 'health_potion', offsetX: 0 },
+      { id: 'bread', offsetX: 1 },
+      { id: 'scroll_fireball', offsetX: 2 },
+      { id: 'iron_sword', offsetX: 3 },
+    ];
 
-    // Create bread
-    const breadId = generateItem(this.ecs, 'bread');
-    this.ecs.addComponent<ItemComponent>(breadId, 'item', {
-      id: 'bread',
-      name: 'Bread',
-      description: 'Restores hunger',
-      weight: 0.2,
-      value: 5,
-      itemType: 'food',
-      identified: 'identified',
-      blessState: 'normal',
-      stackable: true,
-      quantity: 3,
-      quality: 0,
-      material: 'unknown',
-    });
-    dropItemAtPosition(
-      this.ecs,
-      breadId,
-      itemX + 1,
-      itemY,
-      this.currentWorldPos.x,
-      this.currentWorldPos.y
-    );
+    for (const itemDef of itemsToSpawn) {
+      const itemId = generateItem(this.ecs, itemDef.id);
 
-    console.log(`[Debug] Spawned test items at (${itemX}, ${itemY})`);
+      if (this.ecs.hasComponent(itemId, 'item')) {
+        dropItemAtPosition(
+          this.ecs,
+          itemId,
+          itemX + itemDef.offsetX,
+          itemY,
+          this.currentWorldPos.x,
+          this.currentWorldPos.y
+        );
+
+        const item = this.ecs.getComponent<ItemComponent>(itemId, 'item');
+        console.log(
+          `[Debug] Spawned ${item?.name || itemDef.id} at (${itemX + itemDef.offsetX}, ${itemY})`
+        );
+      }
+    }
+
+    console.log(
+      `[Debug] Spawned ${itemsToSpawn.length} test items near player`
+    );
   }
 
   /**
@@ -312,11 +289,17 @@ export default class Game {
     pickupSystem(this.ecs); // Handle item pickup
     playerMovementSystem(this.ecs); // Move player based on input
     cameraSystem(this.ecs); // Update camera (follow player + zoom)
+
+    // Item systems
+    chargesSystem(this.ecs); // Passive charge regeneration for rods/wands
+    identificationSystem(this.ecs); // Auto-identify items based on intelligence
+
+    // Combat (simple collision-based for testing)
+    collisionDamageSystem(this.ecs); // Apply damage when entities collide
+
     aiSystem(this.ecs, this.playerId); // AI behaviors for NPCs/enemies
     deathSystem(this.ecs); // Handle entity death and loot drops
-  }
-
-  /**
+  } /**
    * Post-update logic (after LittleJS updates)
    */
   updatePost(): void {
