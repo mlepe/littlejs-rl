@@ -127,6 +127,22 @@
       "problemMatcher": []
     },
     {
+      // Updates the main copilot-instructions.md file to reflect recent code changes, especially about/on prompt information. 
+      "label": "Copilot: Update copilot-instructions.md based on recent changes (with additional information)",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "--reuse-window",
+        "chat",
+        "Update copilot-instructions.md based on recent changes, especially about/on ${input:promptInformation}."
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
       // Updates or creates any documentation files based on recent changes
       "label": "Copilot: Update or create documentation or instructions as needed based on recent changes",
       "type": "shell",
@@ -469,9 +485,10 @@
       "defaultValue": "[IDENTIFIERS TBD]"
     },
     {
-      "id": "variableName",
+      "id": "promptInformation",
       "type": "promptString",
-      "description": "Name of the variable to print"
+      "description": "Additional informations for this task.",
+      "defaultValue": "[ASK ME FOR MORE INFORMATION]"
     }
   ]
 }
