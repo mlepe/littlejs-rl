@@ -238,8 +238,101 @@ export function movementSystem(ecs: ECS, dx: number, dy: number): void {
 - Use `LJS.*` prefix for all LittleJS types and functions
 - Extend `LJS.EngineObject` for game objects that need rendering
 - Use `LJS.Vector2` for positions and sizes
-- Use `LJS.Color` for colors
+- Use `LJS.Color` for colors (via `ColorPaletteManager` or `rgba()` helper)
 - Use `LJS.TileInfo` for sprite information
+
+### Color Palette System
+
+**CRITICAL: Always use the color palette system for colors, never hardcode RGB/hex values.**
+
+The game uses a centralized color palette system (`src/ts/colorPalette.ts`) to ensure consistent theming and allow palette switching.
+
+#### Creating Colors
+
+```typescript
+import { rgba, getColor, BaseColor } from './colorPalette';
+
+// Option 1: Use semantic color names (PREFERRED for UI and entities)
+const playerColor = getColor(BaseColor.PLAYER);
+const dangerColor = getColor(BaseColor.DANGER);
+const wallColor = getColor(BaseColor.WALL);
+
+// Option 2: Use rgba() helper for custom colors (only when necessary)
+const customColor = rgba(255, 128, 0); // Orange
+const transparentBlue = rgba(0, 0, 255, 0.5); // Semi-transparent blue
+```
+
+#### Available Color Categories
+
+**UI Colors (semantic):**
+
+- `PRIMARY`, `SECONDARY`, `ACCENT` - UI theme colors
+- `BACKGROUND`, `TEXT` - Background and text colors
+- `SUCCESS`, `WARNING`, `DANGER`, `INFO` - State colors
+
+**Entity Colors (semantic):**
+
+- `PLAYER`, `ENEMY`, `NPC`, `ITEM` - Entity category colors
+
+**Environment Colors (semantic):**
+
+- `FLOOR`, `WALL`, `WATER`, `GRASS`, `LAVA` - Terrain colors
+
+**Basic Colors (for variety):**
+
+- `RED`, `GREEN`, `BLUE`, `YELLOW`, `CYAN`, `MAGENTA`, `ORANGE`, `PURPLE`, `PINK`, `BROWN`
+- `LIME`, `TEAL`, `VIOLET`, `GOLD`, `SILVER`
+- `GRAY`, `DARK_GRAY`, `LIGHT_GRAY`, `WHITE`, `BLACK`
+
+**Special Colors:**
+
+- `HIGHLIGHT`, `SHADOW`, `DISABLED`
+
+#### Using Colors in Components
+
+```typescript
+// In RenderComponent
+ecs.addComponent<RenderComponent>(entityId, 'render', {
+  tileInfo: new LJS.TileInfo(vec2(0, 0), vec2(16, 16)),
+  color: getColor(BaseColor.ENEMY),  // ✅ Use palette
+  size: vec2(1, 1)
+});
+
+// In data files (JSON)
+{
+  "render": {
+    "sprite": "ENEMY_ORC",
+    "color": "red"  // ✅ Use BaseColor enum name (lowercase)
+  }
+}
+```
+
+#### Palette Management
+
+```typescript
+import { ColorPaletteManager, setPalette } from './colorPalette';
+
+// Switch palettes
+setPalette('vibrant'); // Bright, saturated colors
+setPalette('monochrome'); // Grayscale
+setPalette('retro'); // CGA-inspired
+setPalette('default'); // Classic roguelike
+
+// Get available palettes
+const palettes = ColorPaletteManager.getInstance().getAvailablePalettes();
+
+// Register custom palette
+ColorPaletteManager.getInstance().registerPalette('custom', customPalette);
+```
+
+#### Color Palette Best Practices
+
+1. **Always use `getColor(BaseColor.*)` for semantic colors** (player, enemy, UI elements)
+2. **Use `rgba()` only for custom/temporary colors** that don't fit palette categories
+3. **Never hardcode hex strings or RGB objects** - they won't respond to palette changes
+4. **In JSON data, use lowercase enum names** - `"color": "red"` not `"color": "#ff0000"`
+5. **Use semantic names over basic colors** when possible - `BaseColor.ENEMY` instead of `BaseColor.RED`
+6. **IDEs show color previews** for `rgba()` calls, making them easier to work with
 
 ### Available Components
 
@@ -255,12 +348,43 @@ export function movementSystem(ecs: ECS, dx: number, dy: number): void {
 - `StatsComponent` - strength, defense, speed
 - `PlayerComponent` - isPlayer tag
 - `InputComponent` - moveX, moveY, action
+- `ClassComponent` - character class (warrior, mage, rogue, etc.)
+- `RaceComponent` - character race (human, elf, orc, etc.)
+
+**Item Components:**
+
+- `ItemComponent` - name, type, description, state, material, value
+- `WeightComponent` - weight for carry capacity
+- `StackableComponent` - quantity, maxStackSize for stackable items
+- `IdentificationComponent` - identification level (unidentified/partial/full)
+- `QualityComponent` - quality/enhancement level (+1, -1, etc.)
+- `EquipmentComponent` - slot, equipped status
+- `ConsumableComponent` - uses, effects
+- `ChargesComponent` - charges for rods/wands
+
+**Combat Components:**
+
+- `ElementalDamageComponent` - elemental damage types and amounts
+- `ElementalResistanceComponent` - resistances to element types
+- `StatusEffectComponent` - active status effects (burn, freeze, poison, etc.)
+- `StatModifierComponent` - temporary stat modifications
+
+**Inventory Components:**
+
+- `InventoryComponent` - items array, maxCarryWeight, currentWeight
+- `InventoryUIComponent` - UI state for inventory display
+- `LootTableComponent` - loot generation data
 
 **AI Components:**
 
 - `AIComponent` - disposition (peaceful/neutral/defensive/aggressive/hostile/patrol/fleeing), detectionRange, state, target
 - `RelationComponent` - relations Map tracking scores with multiple entities (Map<entityId, RelationData>)
 - `RelationData` - relationScore, minRelationScore, maxRelationScore for individual relationships
+
+**World Components:**
+
+- `LocationComponent` - tracks which location an entity is in (worldX, worldY)
+- `ViewModeComponent` - UI view mode state (normal, inventory, examine)
 
 **Disposition System:**
 
@@ -574,6 +698,8 @@ if (health) {
 19. **Always use `create_file` tool for creating markdown/documentation files** - Never use `echo` or `node -e` on Windows
 20. **Relation system is event-driven** - Call `relationSystem()` when actions affect relationships, not in main loop
 21. Relations are automatically initialized via `world.initializeRelations(ecs)` in `Game.init()`
+22. **Always use color palette system** - Use `getColor(BaseColor.*)` for semantic colors, `rgba()` for custom colors
+23. **Never hardcode colors in JSON** - Use BaseColor enum names (lowercase) like `"color": "red"`
 
 ### Game Loop with Systems
 
@@ -711,9 +837,53 @@ const orcTemplate = registry.get('orc_warrior');
 
 **See `DATA-SYSTEM.md` for comprehensive documentation.**
 **See `DISPOSITION-SYSTEM.md` for entity behavior system.**
+**See `ITEM-SYSTEM.md` for item, inventory, and equipment documentation.**
+**See `ELEMENTAL-SYSTEM.md` for elemental damage, resistances, and status effects.**
 
 ## Debugging
 
 - Set `GAME_DEBUG=true` in `.env` for debug mode
 - Use `Game.isDebug` to conditionally execute debug code
 - LittleJS provides built-in debug rendering and console logging
+
+## Recent Features Summary
+
+### Color Palette System
+
+- Centralized color management with multiple palettes (default, vibrant, monochrome, retro)
+- Semantic color names for consistent theming
+- Support for custom palettes
+- **Always use `getColor(BaseColor.*)` or `rgba()` - never hardcode colors**
+
+### Item System
+
+- Complete item management with unlimited inventory (limited by weight)
+- Automatic item stacking for identical items
+- Equipment system with multiple slots
+- Item identification (unidentified → partial → full)
+- Item quality/enhancement levels
+- Item states (normal, blessed, cursed)
+- Item materials (iron, steel, silver, etc.)
+
+### Elemental Combat System
+
+- Multiple damage types (physical: slashing/piercing/bludgeoning, magical: fire/cold/lightning/etc.)
+- Resistance system with flat reduction and percentage resistance
+- Status effects (burn, freeze, poison, etc.) with durations
+- Element interactions and tactical opportunities
+
+### Data-Driven Architecture
+
+- Entities, items, stats, and balance configurable via JSON
+- Template-based entity creation
+- Registry system for entity spawning
+- Validation and error handling
+- **See `DATA-SYSTEM.md`, `ITEM-SYSTEM.md`, and `ELEMENTAL-SYSTEM.md` for details**
+
+### World System Enhancements
+
+- Location-based entity management
+- World map with multiple locations
+- Location transitions and lazy loading
+- Biome system integration ready
+- View modes (normal, inventory, examine)
