@@ -14,41 +14,37 @@
   //
   // Usage: Run tasks via Command Palette (Ctrl+Shift+P) > "Tasks: Run Task"
 
+  "$schema": "https://json.schemastore.org/task.json",
   "version": "2.0.0",
   "tasks": [
     // ============================================================================
     // NPM TASKS
     // ============================================================================
     {
-      "name": "npm dev",
-      "label": "Build and serve TypeScript",
+      "label": "npm dev",
+      "detail": "Build and serve TypeScript",
       "type": "npm",
       "script": "dev",
-      "problemMatcher": ["$tsc"], // Parse TypeScript errors
+      "problemMatcher": ["$tsc"],
       "group": {
         "kind": "build",
         "isDefault": true
       }
     },
     {
-      "name": "npm build",
-      "label": "Build TypeScript",
+      "label": "npm build",
+      "detail": "Compile TypeScript to JavaScript",
       "type": "npm",
       "script": "build",
-      "problemMatcher": ["$tsc"], // Parse TypeScript errors
-      "group": {
-        "kind": "build",
-        "isDefault": false
-      }
+      "problemMatcher": ["$tsc"]
     },
     {
-      "name": "npm serve",
-      "label": "Serve TypeScript",
+      "label": "npm serve",
+      "detail": "Serve TypeScript",
       "type": "npm",
       "script": "serve",
       "problemMatcher": ["$tsc"], // Parse TypeScript errors
       "group": {
-        "kind": "none",
         "isDefault": false
       }
     },
@@ -59,7 +55,6 @@
       "script": "lint",
       "problemMatcher": ["$eslint-stylish"], // Parse lint errors
       "group": {
-        "kind": "none",
         "isDefault": false
       }
     },
@@ -161,6 +156,22 @@
         "--reuse-window",
         "chat",
         "Is the extension ${input:extensionName} (${input:extensionIdentifier}) redundant with you?"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      // Provides a detailed implementation plan for a specified featureture
+      "label": "Copilot: Are those extensions redundant with you?",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "--reuse-window",
+        "chat",
+        "Are the extensions ${input:extensionName} (${input:extensionIdentifier}) redundant with you?"
       ],
       "presentation": {
         "reveal": "never",
@@ -437,12 +448,31 @@
     {
       "id": "extensionName",
       "type": "promptString",
-      "description": "Name of the extension."
+      "description": "Name of the extension.",
+      "defaultValue": "[ASK ME NAME]"
     },
     {
       "id": "extensionIdentifier",
       "type": "promptString",
-      "description": "Identifier of the extension."
+      "description": "Identifier of the extension.",
+      "defaultValue": "[IDENTIFIER TBD]&"
+    },
+    {
+      "id": "extensionNames",
+      "type": "promptString",
+      "description": "Names of the extensions.",
+      "defaultValue": "[ASK ME NAMES]"
+    },
+    {
+      "id": "extensionIdentifiers",
+      "type": "promptString",
+      "description": "Identifiers of the extensions.",
+      "defaultValue": "[IDENTIFIERS TBD]"
+    },
+    {
+      "id": "variableName",
+      "type": "promptString",
+      "description": "Name of the variable to print"
     }
   ]
 }
