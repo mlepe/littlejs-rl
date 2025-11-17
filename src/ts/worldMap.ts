@@ -207,17 +207,21 @@ export default class WorldMap {
 
     const tileSprite = this.getBiomeTileSprite(tile.biome);
 
-    // Determine tile color based on discovery state
+    // Get biome palette color (floor color represents the biome)
+    const biomePalette = getBiomePalette(tile.biome);
+    const baseColor = biomePalette.floor;
+
+    // Modify alpha based on discovery state
     let color: LJS.Color;
     if (!tile.discovered) {
-      // Undiscovered tiles are dark gray (still visible)
-      color = new LJS.Color(0.3, 0.3, 0.3, 1);
+      // Undiscovered tiles are very dim (30% alpha)
+      color = new LJS.Color(baseColor.r, baseColor.g, baseColor.b, 0.3);
     } else if (tile.visited) {
-      // Visited tiles show full color
-      color = new LJS.Color(1, 1, 1, 1);
+      // Visited tiles show full color (100% alpha)
+      color = new LJS.Color(baseColor.r, baseColor.g, baseColor.b, 1.0);
     } else {
-      // Discovered but not visited - dimmed
-      color = new LJS.Color(0.6, 0.6, 0.6, 1);
+      // Discovered but not visited - dimmed (60% alpha)
+      color = new LJS.Color(baseColor.r, baseColor.g, baseColor.b, 0.6);
     }
 
     const pos = LJS.vec2(x, y);
