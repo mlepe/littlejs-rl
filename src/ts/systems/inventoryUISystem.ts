@@ -12,7 +12,6 @@
 
 import * as LJS from 'littlejsengine';
 
-import ECS from '../ecs';
 import {
   EquipmentComponent,
   InventoryComponent,
@@ -22,7 +21,42 @@ import {
   ViewMode,
   ViewModeComponent,
 } from '../components';
+
+import ECS from '../ecs';
 import { EquipmentSlot } from '../components/item';
+
+/**
+ * Helper function to draw a rectangle in screen space (pixels)
+ * LittleJS's drawRect uses world coordinates, so we use the canvas context directly
+ */
+function drawRectScreen(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  color: LJS.Color
+): void {
+  const ctx = LJS.mainContext;
+  ctx.fillStyle = color.toString();
+  ctx.fillRect(x, y, width, height);
+}
+
+/**
+ * Helper function to draw a rectangle outline in screen space
+ */
+function drawRectOutlineScreen(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  color: LJS.Color,
+  lineWidth: number = 2
+): void {
+  const ctx = LJS.mainContext;
+  ctx.strokeStyle = color.toString();
+  ctx.lineWidth = lineWidth;
+  ctx.strokeRect(x, y, width, height);
+}
 
 /**
  * Inventory UI Layout Constants
@@ -258,8 +292,8 @@ function handleInventoryInput(
     }
   }
 
-  // Close inventory (I key or Escape)
-  if (LJS.keyWasPressed('KeyI') || LJS.keyWasPressed('Escape')) {
+  // Close inventory (I key only - ESC is reserved for debug overlay)
+  if (LJS.keyWasPressed('KeyI')) {
     const viewMode = ecs.getComponent<ViewModeComponent>(playerId, 'viewMode');
     if (viewMode) {
       viewMode.mode = ViewMode.LOCATION;
