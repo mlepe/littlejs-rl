@@ -21,7 +21,7 @@
     // NPM TASKS
     // ============================================================================
     {
-      "label": "npm dev",
+      "label": "npm: npm dev",
       "detail": "Build and serve TypeScript",
       "type": "npm",
       "script": "dev",
@@ -32,14 +32,14 @@
       }
     },
     {
-      "label": "npm build",
+      "label": "npm: npm build",
       "detail": "Compile TypeScript to JavaScript",
       "type": "npm",
       "script": "build",
       "problemMatcher": ["$tsc"]
     },
     {
-      "label": "npm serve",
+      "label": "npm: npm serve",
       "detail": "Serve TypeScript",
       "type": "npm",
       "script": "serve",
@@ -49,8 +49,7 @@
       }
     },
     {
-      "name": "npm lint",
-      "label": "Lint TypeScript",
+      "label": "npm: npm lint",
       "type": "npm",
       "script": "lint",
       "problemMatcher": ["$eslint-stylish"], // Parse lint errors

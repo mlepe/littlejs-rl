@@ -28,6 +28,7 @@ export namespace Global {
   export enum RenderOrder {
     TILE_LAYER_RENDER_ORDER = 0,
     TILE_COLLISION_LAYER_RENDER_ORDER = 1,
+    ENTITY_RENDER_ORDER = 2,
   }
 }
 

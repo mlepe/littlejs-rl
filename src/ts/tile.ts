@@ -128,6 +128,21 @@ export function getTileProperties(type: TileType): TileProperties {
 }
 
 /**
+ * Map TileType enum to correct sprite indices from TileSprite
+ */
+const TILE_SPRITE_MAP: Record<TileType, number> = {
+  [TileType.VOID]: 0, // TileSprite.VOID
+  [TileType.FLOOR]: 1, // TileSprite.FLOOR_STONE
+  [TileType.WALL]: 48, // TileSprite.WALL_STONE
+  [TileType.DOOR_OPEN]: 97, // TileSprite.DOOR_OPEN_WOOD
+  [TileType.DOOR_CLOSED]: 96, // TileSprite.DOOR_CLOSED_WOOD
+  [TileType.STAIRS_UP]: 102, // TileSprite.STAIRS_UP
+  [TileType.STAIRS_DOWN]: 103, // TileSprite.STAIRS_DOWN
+  [TileType.WATER]: 144, // TileSprite.WATER_DEEP
+  [TileType.GRASS]: 4, // TileSprite.FLOOR_GRASS
+};
+
+/**
  * Create a new tile of the specified type
  * @param type - The tile type to create
  * @param color - Optional custom color (uses palette color if not provided)
@@ -140,7 +155,7 @@ export function createTile(type: TileType, color?: LJS.Color): Tile {
     type,
     walkable: props.walkable,
     transparent: props.transparent,
-    spriteIndex: type,
+    spriteIndex: TILE_SPRITE_MAP[type] ?? type,
     color: color || getColor(props.baseColor),
   };
 }

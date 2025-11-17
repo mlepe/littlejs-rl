@@ -378,45 +378,32 @@ export default class Game {
   render(): void {
     if (!this.initialized) return;
 
-    // Check player view mode
-    const viewModeComp = this.ecs.getComponent<ViewModeComponent>(
-      this.playerId,
-      'viewMode'
-    );
-    const currentViewMode = viewModeComp?.mode || ViewMode.LOCATION;
+    // TileLayer and TileCollisionLayer are automatically rendered by LittleJS
+    // in this phase (renderOrder 0 and 1)
 
-    if (currentViewMode === ViewMode.WORLD_MAP) {
-      // World map view - TileLayer auto-renders, player renders via renderSystem
-      // Render all entities (including player on world map)
-      renderSystem(this.ecs);
-    } else if (currentViewMode === ViewMode.EXAMINE) {
-      // Examine mode view
-      // Render location (TileLayer auto-renders)
-      // Render all entities
-      renderSystem(this.ecs);
-
-      // Render examine cursor and info panel (in renderPost)
-    } else {
-      // Render location view
-      // TileLayer and TileCollisionLayer are automatically rendered by LittleJS
-      // Render collision overlay if enabled (runtime toggle)
-      if (this.showCollisionOverlay) {
-        const location = this.world.getCurrentLocation();
-        if (location) {
-          location.renderDebug(); // Shows collision overlay
-        }
+    // Render collision overlay if enabled (runtime toggle)
+    if (this.showCollisionOverlay) {
+      const location = this.world.getCurrentLocation();
+      if (location) {
+        location.renderDebug(); // Shows collision overlay
       }
-
-      // Render all entities
-      renderSystem(this.ecs);
     }
+
+    // NOTE: Entity rendering moved to renderPost() to ensure
+    // entities render AFTER tile layers (which render between render and renderPost)
   }
 
   /**
    * Post-render logic (overlay rendering)
+   *
+   * Entities and UI are rendered here to ensure they appear ABOVE tile layers.
+   * LittleJS render pipeline: render() → TileLayers → renderPost()
    */
   renderPost(): void {
     if (!this.initialized) return;
+
+    // Render all entities (AFTER tile layers, so they appear on top)
+    renderSystem(this.ecs);
 
     // Check player view mode for examine rendering
     const viewModeComp = this.ecs.getComponent<ViewModeComponent>(

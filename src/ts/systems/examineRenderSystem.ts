@@ -13,6 +13,7 @@
 import * as LJS from 'littlejsengine';
 
 import { ExamineData } from './examineSystem';
+import Global from '../global';
 
 /**
  * Examine Render System - Renders the examine cursor and information panel
@@ -41,6 +42,7 @@ export function examineRenderSystem(
   cursorY: number,
   examineData: ExamineData | null
 ): void {
+  // Drawn in renderPost() phase, so automatically appears above everything
   // Draw cursor highlight (yellow square)
   const cursorPos = LJS.vec2(cursorX + 0.5, cursorY + 0.5);
   const cursorSize = LJS.vec2(1, 1);
