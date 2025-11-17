@@ -93,6 +93,16 @@ export function viewModeTransitionSystem(ecs: ECS): void {
       // Redraw world map to show discovered tiles
       worldMap.redraw();
 
+      // CRITICAL: Destroy location layers and activate world map layer
+      const location = game.getCurrentLocation();
+      if (location) {
+        location.getTileLayer().destroy();
+        location.getCollisionLayer().destroy();
+      }
+
+      // Recreate world map layer (it may have been destroyed on previous transition)
+      worldMap.recreateTileLayer();
+
       // Update camera for world map view
       LJS.setCameraPos(
         LJS.vec2(
@@ -167,6 +177,12 @@ export function viewModeTransitionSystem(ecs: ECS): void {
         // Update position
         pos.x = spawnX;
         pos.y = spawnY;
+
+        // CRITICAL: Destroy world map layer and recreate location layers
+        worldMap.getTileLayer().destroy();
+
+        // Recreate location layers (they were destroyed when entering world map)
+        location.recreateLayers();
 
         // Update camera for location view
         LJS.setCameraPos(LJS.vec2(spawnX, spawnY));

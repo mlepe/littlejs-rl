@@ -16,6 +16,7 @@ import { BiomeType, LocationType, getBiomePalette } from './locationType';
 
 import { TileSprite } from './tileConfig';
 import World from './world';
+import Global from './global';
 
 /**
  * World Map Tile - Represents a location on the world map
@@ -256,10 +257,7 @@ export default class WorldMap {
    * @param cursorX - Current cursor/player X position
    * @param cursorY - Current cursor/player Y position
    */
-  render(cursorX: number, cursorY: number): void {
-    // Render the tile layer (automatically renders behind entities)
-    this.tileLayer.render();
-
+  renderCursor(cursorX: number, cursorY: number): void {
     // Highlight cursor position with yellow semi-transparent overlay
     const offsetX = -this.world.width;
     const offsetY = -this.world.height;
@@ -272,10 +270,45 @@ export default class WorldMap {
   }
 
   /**
+   * Render the world map (DEPRECATED - use getTileLayer() instead)
+   * TileLayer renders automatically, call renderCursor() for overlay
+   * @param cursorX - Current cursor/player X position
+   * @param cursorY - Current cursor/player Y position
+   * @deprecated Use getTileLayer() to get layer reference and renderCursor() for cursor overlay
+   */
+  /*render(cursorX: number, cursorY: number): void {
+    // TileLayer renders automatically
+    this.renderCursor(cursorX, cursorY);
+  }*/
+
+  /**
    * Redraw the tile layer
    * Call this after updating tiles to make changes visible
    */
   redraw(): void {
+    this.tileLayer.redraw();
+  }
+
+  /**
+   * Recreate the tile layer (needed after destroy())
+   * Call this when switching back to world map view
+   */
+  recreateTileLayer(): void {
+    const layerPos = LJS.vec2(0, 0);
+    const layerSize = LJS.vec2(this.world.width, this.world.height);
+    const tileInfo = new LJS.TileInfo(LJS.vec2(0, 0), Global.vTilesize);
+
+    // Create new tile layer
+    (this as any).tileLayer = new LJS.TileLayer(layerPos, layerSize, tileInfo);
+
+    // Restore all tile data
+    for (let y = 0; y < this.world.height; y++) {
+      for (let x = 0; x < this.world.width; x++) {
+        this.updateTileLayer(x, y);
+      }
+    }
+
+    // Redraw to make visible
     this.tileLayer.redraw();
   }
 
