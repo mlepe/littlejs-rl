@@ -60,37 +60,36 @@ function drawRectOutlineScreen(
 
 /**
  * Inventory UI Layout Constants
+ * Using screen-relative percentages for responsive layout
  */
 const UI_CONFIG = {
-  // Screen layout
-  SCREEN_WIDTH: 800,
-  SCREEN_HEIGHT: 600,
+  // Screen layout percentages
   PANEL_PADDING: 20,
 
-  // Inventory panel (left side)
-  INVENTORY_X: 50,
-  INVENTORY_Y: 50,
-  INVENTORY_WIDTH: 350,
-  INVENTORY_HEIGHT: 500,
+  // Inventory panel (left side) - percentages of screen size
+  INVENTORY_X_PERCENT: 0.05,
+  INVENTORY_Y_PERCENT: 0.08,
+  INVENTORY_WIDTH_PERCENT: 0.4,
+  INVENTORY_HEIGHT_PERCENT: 0.75,
   INVENTORY_TITLE_HEIGHT: 30,
   ITEM_SLOT_SIZE: 40,
   ITEM_SLOT_SPACING: 5,
   ITEMS_PER_ROW: 7,
   VISIBLE_ROWS: 10,
 
-  // Equipment panel (right side)
-  EQUIPMENT_X: 450,
-  EQUIPMENT_Y: 50,
-  EQUIPMENT_WIDTH: 300,
-  EQUIPMENT_HEIGHT: 500,
+  // Equipment panel (right side) - percentages
+  EQUIPMENT_X_PERCENT: 0.52,
+  EQUIPMENT_Y_PERCENT: 0.08,
+  EQUIPMENT_WIDTH_PERCENT: 0.35,
+  EQUIPMENT_HEIGHT_PERCENT: 0.75,
   EQUIPMENT_SLOT_SIZE: 50,
   EQUIPMENT_SLOT_SPACING: 10,
 
-  // Details panel (bottom)
-  DETAILS_X: 50,
-  DETAILS_Y: 560,
-  DETAILS_WIDTH: 700,
-  DETAILS_HEIGHT: 150,
+  // Details panel (bottom) - percentages
+  DETAILS_X_PERCENT: 0.05,
+  DETAILS_Y_PERCENT: 0.85,
+  DETAILS_WIDTH_PERCENT: 0.82,
+  DETAILS_HEIGHT_PERCENT: 0.12,
 
   // Colors
   BG_COLOR: new LJS.Color(0.1, 0.1, 0.1, 0.9),
@@ -110,25 +109,67 @@ const UI_CONFIG = {
 
 /**
  * Equipment slot layout positions
- * Maps equipment slot names to UI positions
+ * Maps equipment slot names to UI positions (as percentages of equipment panel)
  */
 const EQUIPMENT_SLOT_LAYOUT: Record<
   string,
-  { x: number; y: number; label: string }
+  { xPercent: number; yPercent: number; label: string }
 > = {
-  head: { x: 125, y: 50, label: 'Head' },
-  face: { x: 125, y: 110, label: 'Face' },
-  neck: { x: 125, y: 170, label: 'Neck' },
-  body: { x: 125, y: 230, label: 'Body' },
-  back: { x: 50, y: 230, label: 'Back' },
-  belt: { x: 125, y: 290, label: 'Belt' },
-  legs: { x: 125, y: 350, label: 'Legs' },
-  feet: { x: 125, y: 410, label: 'Feet' },
-  mainHand: { x: 50, y: 350, label: 'Main' },
-  offHand: { x: 200, y: 350, label: 'Off' },
-  ringLeft: { x: 50, y: 410, label: 'Ring L' },
-  ringRight: { x: 200, y: 410, label: 'Ring R' },
+  head: { xPercent: 0.42, yPercent: 0.08, label: 'Head' },
+  face: { xPercent: 0.42, yPercent: 0.18, label: 'Face' },
+  neck: { xPercent: 0.42, yPercent: 0.28, label: 'Neck' },
+  body: { xPercent: 0.42, yPercent: 0.42, label: 'Body' },
+  back: { xPercent: 0.12, yPercent: 0.42, label: 'Back' },
+  belt: { xPercent: 0.42, yPercent: 0.56, label: 'Belt' },
+  legs: { xPercent: 0.42, yPercent: 0.68, label: 'Legs' },
+  feet: { xPercent: 0.42, yPercent: 0.8, label: 'Feet' },
+  mainHand: { xPercent: 0.12, yPercent: 0.68, label: 'Main' },
+  offHand: { xPercent: 0.72, yPercent: 0.68, label: 'Off' },
+  ringLeft: { xPercent: 0.12, yPercent: 0.8, label: 'Ring L' },
+  ringRight: { xPercent: 0.72, yPercent: 0.8, label: 'Ring R' },
 };
+
+/**
+ * Get inventory panel bounds in screen coordinates
+ */
+function getInventoryBounds() {
+  const sw = LJS.mainCanvas.width;
+  const sh = LJS.mainCanvas.height;
+  return {
+    x: sw * UI_CONFIG.INVENTORY_X_PERCENT,
+    y: sh * UI_CONFIG.INVENTORY_Y_PERCENT,
+    width: sw * UI_CONFIG.INVENTORY_WIDTH_PERCENT,
+    height: sh * UI_CONFIG.INVENTORY_HEIGHT_PERCENT,
+  };
+}
+
+/**
+ * Get equipment panel bounds in screen coordinates
+ */
+function getEquipmentBounds() {
+  const sw = LJS.mainCanvas.width;
+  const sh = LJS.mainCanvas.height;
+  return {
+    x: sw * UI_CONFIG.EQUIPMENT_X_PERCENT,
+    y: sh * UI_CONFIG.EQUIPMENT_Y_PERCENT,
+    width: sw * UI_CONFIG.EQUIPMENT_WIDTH_PERCENT,
+    height: sh * UI_CONFIG.EQUIPMENT_HEIGHT_PERCENT,
+  };
+}
+
+/**
+ * Get details panel bounds in screen coordinates
+ */
+function getDetailsBounds() {
+  const sw = LJS.mainCanvas.width;
+  const sh = LJS.mainCanvas.height;
+  return {
+    x: sw * UI_CONFIG.DETAILS_X_PERCENT,
+    y: sh * UI_CONFIG.DETAILS_Y_PERCENT,
+    width: sw * UI_CONFIG.DETAILS_WIDTH_PERCENT,
+    height: sh * UI_CONFIG.DETAILS_HEIGHT_PERCENT,
+  };
+}
 
 /**
  * Inventory UI System
@@ -187,12 +228,7 @@ function handleInventoryInput(
   const mouseReleased = LJS.mouseWasPressed(0);
 
   // Check if mouse is over inventory panel
-  const invBounds = {
-    x: UI_CONFIG.INVENTORY_X,
-    y: UI_CONFIG.INVENTORY_Y,
-    w: UI_CONFIG.INVENTORY_WIDTH,
-    h: UI_CONFIG.INVENTORY_HEIGHT,
-  };
+  const invBounds = getInventoryBounds();
 
   const isOverInventory = isPointInRect(mousePos.x, mousePos.y, invBounds);
 
@@ -371,12 +407,7 @@ function handleItemDrop(
   }
 
   // Check if dropping back to inventory
-  const invBounds = {
-    x: UI_CONFIG.INVENTORY_X,
-    y: UI_CONFIG.INVENTORY_Y,
-    w: UI_CONFIG.INVENTORY_WIDTH,
-    h: UI_CONFIG.INVENTORY_HEIGHT,
-  };
+  const invBounds = getInventoryBounds();
 
   if (isPointInRect(mousePos.x, mousePos.y, invBounds)) {
     // If coming from equipment, unequip it
@@ -439,43 +470,35 @@ function renderInventoryPanel(
   inventory: InventoryComponent,
   inventoryUI: InventoryUIComponent
 ): void {
-  const x = UI_CONFIG.INVENTORY_X;
-  const y = UI_CONFIG.INVENTORY_Y;
-  const w = UI_CONFIG.INVENTORY_WIDTH;
-  const h = UI_CONFIG.INVENTORY_HEIGHT;
+  const bounds = getInventoryBounds();
+  const x = bounds.x;
+  const y = bounds.y;
+  const w = bounds.width;
+  const h = bounds.height;
 
   // Draw panel background
-  LJS.drawRect(
-    LJS.vec2(x + w / 2, y + h / 2),
-    LJS.vec2(w, h),
-    UI_CONFIG.BG_COLOR
-  );
-  drawRectOutline(
-    LJS.vec2(x + w / 2, y + h / 2),
-    LJS.vec2(w, h),
-    2,
-    UI_CONFIG.BORDER_COLOR
-  );
+  drawRectScreen(x, y, w, h, UI_CONFIG.BG_COLOR);
+  drawRectOutlineScreen(x, y, w, h, UI_CONFIG.BORDER_COLOR, 2);
 
   // Draw title
-  LJS.drawText(
+  LJS.drawTextScreen(
     'Inventory',
     LJS.vec2(x + w / 2, y + 15),
     UI_CONFIG.TITLE_FONT_SIZE,
     UI_CONFIG.TITLE_COLOR,
-    0,
+    undefined,
     undefined,
     'center'
   );
 
   // Draw capacity info
   const capacityText = `Weight: ${inventory.currentWeight.toFixed(1)} / ${100}`;
-  LJS.drawText(
+  LJS.drawTextScreen(
     capacityText,
-    LJS.vec2(x + w - 50, y + 15),
+    LJS.vec2(x + w - 10, y + 15),
     UI_CONFIG.SMALL_FONT_SIZE,
     UI_CONFIG.TEXT_COLOR,
-    0,
+    undefined,
     undefined,
     'right'
   );
@@ -518,39 +541,37 @@ function renderInventoryPanel(
       slotColor = UI_CONFIG.HOVER_COLOR;
     }
 
-    LJS.drawRect(
-      LJS.vec2(slotX + slotSize / 2, slotY + slotSize / 2),
-      LJS.vec2(slotSize, slotSize),
-      slotColor
-    );
-    drawRectOutline(
-      LJS.vec2(slotX + slotSize / 2, slotY + slotSize / 2),
-      LJS.vec2(slotSize, slotSize),
-      1,
-      UI_CONFIG.BORDER_COLOR
+    drawRectScreen(slotX, slotY, slotSize, slotSize, slotColor);
+    drawRectOutlineScreen(
+      slotX,
+      slotY,
+      slotSize,
+      slotSize,
+      UI_CONFIG.BORDER_COLOR,
+      1
     );
 
     // Draw item name (abbreviated)
     const itemName =
       item.name.length > 8 ? item.name.substring(0, 7) + '...' : item.name;
-    LJS.drawText(
+    LJS.drawTextScreen(
       itemName,
       LJS.vec2(slotX + slotSize / 2, slotY + slotSize / 2),
       UI_CONFIG.SMALL_FONT_SIZE,
       UI_CONFIG.TEXT_COLOR,
-      0,
+      undefined,
       undefined,
       'center'
     );
 
     // Draw quantity if stackable
     if (item.stackable && item.quantity > 1) {
-      LJS.drawText(
+      LJS.drawTextScreen(
         `x${item.quantity}`,
         LJS.vec2(slotX + slotSize - 5, slotY + slotSize - 5),
         UI_CONFIG.SMALL_FONT_SIZE,
         UI_CONFIG.TITLE_COLOR,
-        0,
+        undefined,
         undefined,
         'right'
       );
@@ -566,39 +587,31 @@ function renderEquipmentPanel(
   equipment: EquipmentComponent,
   inventoryUI: InventoryUIComponent
 ): void {
-  const x = UI_CONFIG.EQUIPMENT_X;
-  const y = UI_CONFIG.EQUIPMENT_Y;
-  const w = UI_CONFIG.EQUIPMENT_WIDTH;
-  const h = UI_CONFIG.EQUIPMENT_HEIGHT;
+  const bounds = getEquipmentBounds();
+  const x = bounds.x;
+  const y = bounds.y;
+  const w = bounds.width;
+  const h = bounds.height;
 
   // Draw panel background
-  LJS.drawRect(
-    LJS.vec2(x + w / 2, y + h / 2),
-    LJS.vec2(w, h),
-    UI_CONFIG.BG_COLOR
-  );
-  drawRectOutline(
-    LJS.vec2(x + w / 2, y + h / 2),
-    LJS.vec2(w, h),
-    2,
-    UI_CONFIG.BORDER_COLOR
-  );
+  drawRectScreen(x, y, w, h, UI_CONFIG.BG_COLOR);
+  drawRectOutlineScreen(x, y, w, h, UI_CONFIG.BORDER_COLOR, 2);
 
   // Draw title
-  LJS.drawText(
+  LJS.drawTextScreen(
     'Equipment',
     LJS.vec2(x + w / 2, y + 15),
     UI_CONFIG.TITLE_FONT_SIZE,
     UI_CONFIG.TITLE_COLOR,
-    0,
+    undefined,
     undefined,
     'center'
   );
 
   // Draw equipment slots
   for (const [slotName, layout] of Object.entries(EQUIPMENT_SLOT_LAYOUT)) {
-    const slotX = x + layout.x;
-    const slotY = y + layout.y;
+    const slotX = x + w * layout.xPercent - UI_CONFIG.EQUIPMENT_SLOT_SIZE / 2;
+    const slotY = y + h * layout.yPercent - UI_CONFIG.EQUIPMENT_SLOT_SIZE / 2;
     const slotSize = UI_CONFIG.EQUIPMENT_SLOT_SIZE;
 
     const itemId = (equipment as any)[slotName];
@@ -607,32 +620,34 @@ function renderEquipmentPanel(
     // Don't render if being dragged
     if (inventoryUI.isDragging && itemId === inventoryUI.dragItemId) {
       // Draw empty slot
-      LJS.drawRect(
-        LJS.vec2(slotX, slotY),
-        LJS.vec2(slotSize, slotSize),
+      drawRectScreen(
+        slotX,
+        slotY,
+        slotSize,
+        slotSize,
         UI_CONFIG.EMPTY_SLOT_COLOR
       );
-      drawRectOutline(
-        LJS.vec2(slotX, slotY),
-        LJS.vec2(slotSize, slotSize),
-        1,
-        UI_CONFIG.BORDER_COLOR
+      drawRectOutlineScreen(
+        slotX,
+        slotY,
+        slotSize,
+        slotSize,
+        UI_CONFIG.BORDER_COLOR,
+        1
       );
     } else {
       // Draw slot
       const slotColor = isHovered
         ? UI_CONFIG.HOVER_COLOR
         : UI_CONFIG.EMPTY_SLOT_COLOR;
-      LJS.drawRect(
-        LJS.vec2(slotX, slotY),
-        LJS.vec2(slotSize, slotSize),
-        slotColor
-      );
-      drawRectOutline(
-        LJS.vec2(slotX, slotY),
-        LJS.vec2(slotSize, slotSize),
-        1,
-        UI_CONFIG.BORDER_COLOR
+      drawRectScreen(slotX, slotY, slotSize, slotSize, slotColor);
+      drawRectOutlineScreen(
+        slotX,
+        slotY,
+        slotSize,
+        slotSize,
+        UI_CONFIG.BORDER_COLOR,
+        1
       );
 
       // Draw item if equipped
@@ -641,12 +656,12 @@ function renderEquipmentPanel(
         if (item) {
           const itemName =
             item.name.length > 6 ? item.name.substring(0, 5) + '.' : item.name;
-          LJS.drawText(
+          LJS.drawTextScreen(
             itemName,
-            LJS.vec2(slotX, slotY),
+            LJS.vec2(slotX + slotSize / 2, slotY + slotSize / 2),
             UI_CONFIG.SMALL_FONT_SIZE,
             UI_CONFIG.TEXT_COLOR,
-            0,
+            undefined,
             undefined,
             'center'
           );
@@ -655,12 +670,12 @@ function renderEquipmentPanel(
     }
 
     // Draw slot label
-    LJS.drawText(
+    LJS.drawTextScreen(
       layout.label,
-      LJS.vec2(slotX, slotY - slotSize / 2 - 10),
+      LJS.vec2(slotX + slotSize / 2, slotY - 10),
       UI_CONFIG.SMALL_FONT_SIZE,
       UI_CONFIG.TEXT_COLOR,
-      0,
+      undefined,
       undefined,
       'center'
     );
@@ -674,42 +689,34 @@ function renderDetailsPanel(ecs: ECS, itemId: number): void {
   const item = ecs.getComponent<ItemComponent>(itemId, 'item');
   if (!item) return;
 
-  const x = UI_CONFIG.DETAILS_X;
-  const y = UI_CONFIG.DETAILS_Y;
-  const w = UI_CONFIG.DETAILS_WIDTH;
-  const h = UI_CONFIG.DETAILS_HEIGHT;
+  const bounds = getDetailsBounds();
+  const x = bounds.x;
+  const y = bounds.y;
+  const w = bounds.width;
+  const h = bounds.height;
 
   // Draw panel background
-  LJS.drawRect(
-    LJS.vec2(x + w / 2, y + h / 2),
-    LJS.vec2(w, h),
-    UI_CONFIG.BG_COLOR
-  );
-  drawRectOutline(
-    LJS.vec2(x + w / 2, y + h / 2),
-    LJS.vec2(w, h),
-    2,
-    UI_CONFIG.BORDER_COLOR
-  );
+  drawRectScreen(x, y, w, h, UI_CONFIG.BG_COLOR);
+  drawRectOutlineScreen(x, y, w, h, UI_CONFIG.BORDER_COLOR, 2);
 
   // Draw item name
-  LJS.drawText(
+  LJS.drawTextScreen(
     item.name,
     LJS.vec2(x + 10, y + 20),
     UI_CONFIG.TEXT_FONT_SIZE,
     UI_CONFIG.TITLE_COLOR,
-    0,
+    undefined,
     undefined,
     'left'
   );
 
   // Draw description
-  LJS.drawText(
+  LJS.drawTextScreen(
     item.description,
     LJS.vec2(x + 10, y + 45),
     UI_CONFIG.SMALL_FONT_SIZE,
     UI_CONFIG.TEXT_COLOR,
-    0,
+    undefined,
     undefined,
     'left'
   );
@@ -724,12 +731,12 @@ function renderDetailsPanel(ecs: ECS, itemId: number): void {
   ];
 
   for (const prop of props) {
-    LJS.drawText(
+    LJS.drawTextScreen(
       prop,
       LJS.vec2(x + 10, propY),
       UI_CONFIG.SMALL_FONT_SIZE,
       UI_CONFIG.TEXT_COLOR,
-      0,
+      undefined,
       undefined,
       'left'
     );
@@ -757,46 +764,44 @@ function renderItemTooltip(
   const y = mousePos.y + offsetY;
 
   // Draw tooltip background
-  LJS.drawRect(
-    LJS.vec2(x + tooltipWidth / 2, y - tooltipHeight / 2),
-    LJS.vec2(tooltipWidth, tooltipHeight),
-    UI_CONFIG.BG_COLOR
-  );
-  drawRectOutline(
-    LJS.vec2(x + tooltipWidth / 2, y - tooltipHeight / 2),
-    LJS.vec2(tooltipWidth, tooltipHeight),
-    2,
-    UI_CONFIG.BORDER_COLOR
+  drawRectScreen(x, y, tooltipWidth, tooltipHeight, UI_CONFIG.BG_COLOR);
+  drawRectOutlineScreen(
+    x,
+    y,
+    tooltipWidth,
+    tooltipHeight,
+    UI_CONFIG.BORDER_COLOR,
+    2
   );
 
   // Draw item name
-  LJS.drawText(
+  LJS.drawTextScreen(
     item.name,
-    LJS.vec2(x + 10, y - 10),
+    LJS.vec2(x + 10, y + 15),
     UI_CONFIG.TEXT_FONT_SIZE,
     UI_CONFIG.TITLE_COLOR,
-    0,
+    undefined,
     undefined,
     'left'
   );
 
   // Draw quick info
-  LJS.drawText(
+  LJS.drawTextScreen(
     `${item.itemType} (${item.weight} lbs)`,
-    LJS.vec2(x + 10, y - 30),
+    LJS.vec2(x + 10, y + 35),
     UI_CONFIG.SMALL_FONT_SIZE,
     UI_CONFIG.TEXT_COLOR,
-    0,
+    undefined,
     undefined,
     'left'
   );
 
-  LJS.drawText(
+  LJS.drawTextScreen(
     `Value: ${item.value}g`,
-    LJS.vec2(x + 10, y - 48),
+    LJS.vec2(x + 10, y + 55),
     UI_CONFIG.SMALL_FONT_SIZE,
     UI_CONFIG.TEXT_COLOR,
-    0,
+    undefined,
     undefined,
     'left'
   );
@@ -816,27 +821,31 @@ function renderDraggedItem(
   const size = 50;
 
   // Draw semi-transparent item
-  LJS.drawRect(
-    LJS.vec2(mousePos.x, mousePos.y),
-    LJS.vec2(size, size),
+  drawRectScreen(
+    mousePos.x - size / 2,
+    mousePos.y - size / 2,
+    size,
+    size,
     UI_CONFIG.DRAG_COLOR
   );
-  drawRectOutline(
-    LJS.vec2(mousePos.x, mousePos.y),
-    LJS.vec2(size, size),
-    2,
-    UI_CONFIG.BORDER_COLOR
+  drawRectOutlineScreen(
+    mousePos.x - size / 2,
+    mousePos.y - size / 2,
+    size,
+    size,
+    UI_CONFIG.BORDER_COLOR,
+    2
   );
 
   // Draw item name
   const itemName =
     item.name.length > 8 ? item.name.substring(0, 7) + '...' : item.name;
-  LJS.drawText(
+  LJS.drawTextScreen(
     itemName,
     LJS.vec2(mousePos.x, mousePos.y),
     UI_CONFIG.SMALL_FONT_SIZE,
     UI_CONFIG.TEXT_COLOR,
-    0,
+    undefined,
     undefined,
     'center'
   );
@@ -847,7 +856,7 @@ function renderDraggedItem(
  */
 function renderInstructions(): void {
   const instructions = [
-    'I/ESC: Close',
+    'I: Close',
     'Mouse: Drag items',
     'Arrows: Navigate',
     'Space: Details',
@@ -855,12 +864,12 @@ function renderInstructions(): void {
 
   let instrY = 20;
   for (const instr of instructions) {
-    LJS.drawText(
+    LJS.drawTextScreen(
       instr,
       LJS.vec2(20, instrY),
       UI_CONFIG.SMALL_FONT_SIZE,
       UI_CONFIG.TEXT_COLOR,
-      0,
+      undefined,
       undefined,
       'left'
     );
@@ -869,57 +878,23 @@ function renderInstructions(): void {
 }
 
 /**
- * Helper: Draw rectangle outline using thin border rects
- */
-function drawRectOutline(
-  pos: LJS.Vector2,
-  size: LJS.Vector2,
-  thickness: number,
-  color: LJS.Color
-): void {
-  const halfW = size.x / 2;
-  const halfH = size.y / 2;
-
-  // Top border
-  LJS.drawRect(
-    LJS.vec2(pos.x, pos.y + halfH),
-    LJS.vec2(size.x, thickness),
-    color
-  );
-
-  // Bottom border
-  LJS.drawRect(
-    LJS.vec2(pos.x, pos.y - halfH),
-    LJS.vec2(size.x, thickness),
-    color
-  );
-
-  // Left border
-  LJS.drawRect(
-    LJS.vec2(pos.x - halfW, pos.y),
-    LJS.vec2(thickness, size.y),
-    color
-  );
-
-  // Right border
-  LJS.drawRect(
-    LJS.vec2(pos.x + halfW, pos.y),
-    LJS.vec2(thickness, size.y),
-    color
-  );
-}
-
-/**
  * Helper: Check if point is inside rectangle
  */
 function isPointInRect(
   x: number,
   y: number,
-  rect: { x: number; y: number; w: number; h: number }
+  rect: {
+    x: number;
+    y: number;
+    w?: number;
+    h?: number;
+    width?: number;
+    height?: number;
+  }
 ): boolean {
-  return (
-    x >= rect.x && x <= rect.x + rect.w && y >= rect.y && y <= rect.y + rect.h
-  );
+  const w = rect.w ?? rect.width ?? 0;
+  const h = rect.h ?? rect.height ?? 0;
+  return x >= rect.x && x <= rect.x + w && y >= rect.y && y <= rect.y + h;
 }
 
 /**
@@ -930,8 +905,10 @@ function getInventoryItemAt(
   mouseY: number,
   scrollOffset: number
 ): number {
-  const x = UI_CONFIG.INVENTORY_X;
-  const startY = UI_CONFIG.INVENTORY_Y + UI_CONFIG.INVENTORY_TITLE_HEIGHT + 10;
+  const bounds = getInventoryBounds();
+  const x = bounds.x;
+  const y = bounds.y;
+  const startY = y + UI_CONFIG.INVENTORY_TITLE_HEIGHT + 10;
   const slotSize = UI_CONFIG.ITEM_SLOT_SIZE;
   const spacing = UI_CONFIG.ITEM_SLOT_SPACING;
   const itemsPerRow = UI_CONFIG.ITEMS_PER_ROW;
@@ -954,19 +931,22 @@ function getEquipmentSlotAt(
   mouseX: number,
   mouseY: number
 ): string | undefined {
-  const x = UI_CONFIG.EQUIPMENT_X;
-  const y = UI_CONFIG.EQUIPMENT_Y;
+  const bounds = getEquipmentBounds();
+  const x = bounds.x;
+  const y = bounds.y;
+  const w = bounds.width;
+  const h = bounds.height;
   const slotSize = UI_CONFIG.EQUIPMENT_SLOT_SIZE;
 
   for (const [slotName, layout] of Object.entries(EQUIPMENT_SLOT_LAYOUT)) {
-    const slotX = x + layout.x;
-    const slotY = y + layout.y;
+    const slotX = x + w * layout.xPercent - slotSize / 2;
+    const slotY = y + h * layout.yPercent - slotSize / 2;
 
     if (
-      mouseX >= slotX - slotSize / 2 &&
-      mouseX <= slotX + slotSize / 2 &&
-      mouseY >= slotY - slotSize / 2 &&
-      mouseY <= slotY + slotSize / 2
+      mouseX >= slotX &&
+      mouseX <= slotX + slotSize &&
+      mouseY >= slotY &&
+      mouseY <= slotY + slotSize
     ) {
       return slotName;
     }
