@@ -103,12 +103,9 @@ export function viewModeTransitionSystem(ecs: ECS): void {
       // Recreate world map layer (it may have been destroyed on previous transition)
       worldMap.recreateTileLayer();
 
-      // Update camera for world map view
+      // Update camera for world map view (centered on current cursor position)
       LJS.setCameraPos(
-        LJS.vec2(
-          -worldMap.getWorld().width + locationComp.worldX * 2 + 1,
-          -worldMap.getWorld().height + locationComp.worldY * 2 + 1
-        )
+        LJS.vec2(locationComp.worldX * 2 + 1, locationComp.worldY * 2 + 1)
       );
 
       if (Game.isDebug) {

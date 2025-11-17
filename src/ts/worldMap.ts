@@ -63,8 +63,8 @@ export default class WorldMap {
     this.tiles = new Map();
 
     // Initialize LittleJS tile layer for world map
-    // Position at negative offset to center the world map
-    const layerPos = LJS.vec2(-this.world.width, -this.world.height);
+    // Position at origin for consistent coordinate system
+    const layerPos = LJS.vec2(0, 0);
     const layerSize = LJS.vec2(this.world.width, this.world.height);
     const tileInfo = new LJS.TileInfo(LJS.vec2(0, 0), LJS.vec2(16, 16));
 
@@ -259,10 +259,8 @@ export default class WorldMap {
    */
   renderCursor(cursorX: number, cursorY: number): void {
     // Highlight cursor position with yellow semi-transparent overlay
-    const offsetX = -this.world.width;
-    const offsetY = -this.world.height;
-    const posX = offsetX + cursorX * this.tileSize;
-    const posY = offsetY + cursorY * this.tileSize;
+    const posX = cursorX * this.tileSize;
+    const posY = cursorY * this.tileSize;
     const pos = LJS.vec2(posX + this.tileSize / 2, posY + this.tileSize / 2);
     const size = LJS.vec2(this.tileSize * 0.9, this.tileSize * 0.9);
 
