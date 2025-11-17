@@ -40,36 +40,58 @@ export function rgba(
 
 /**
  * Base color names used throughout the game
- * These are semantic names that map to actual colors via palettes
+ * Includes both semantic colors (for UI/themes) and basic colors (for entity variety)
  */
 export enum BaseColor {
-  // UI Colors
+  // UI Colors (semantic)
   PRIMARY = 'primary',
   SECONDARY = 'secondary',
   ACCENT = 'accent',
   BACKGROUND = 'background',
   TEXT = 'text',
 
-  // State Colors
+  // State Colors (semantic)
   SUCCESS = 'success',
   WARNING = 'warning',
   DANGER = 'danger',
   INFO = 'info',
 
-  // Entity Colors
+  // Basic Colors (for entity variety, data-driven)
+  RED = 'red',
+  GREEN = 'green',
+  BLUE = 'blue',
+  YELLOW = 'yellow',
+  CYAN = 'cyan',
+  MAGENTA = 'magenta',
+  ORANGE = 'orange',
+  PURPLE = 'purple',
+  PINK = 'pink',
+  BROWN = 'brown',
+  LIME = 'lime',
+  TEAL = 'teal',
+  VIOLET = 'violet',
+  GOLD = 'gold',
+  SILVER = 'silver',
+  GRAY = 'gray',
+  DARK_GRAY = 'dark_gray',
+  LIGHT_GRAY = 'light_gray',
+  WHITE = 'white',
+  BLACK = 'black',
+
+  // Entity Colors (semantic - for general categories)
   PLAYER = 'player',
   ENEMY = 'enemy',
   NPC = 'npc',
   ITEM = 'item',
 
-  // Environment Colors
+  // Environment Colors (semantic)
   FLOOR = 'floor',
   WALL = 'wall',
   WATER = 'water',
   GRASS = 'grass',
   LAVA = 'lava',
 
-  // Special Colors
+  // Special Colors (semantic)
   HIGHLIGHT = 'highlight',
   SHADOW = 'shadow',
   DISABLED = 'disabled',
@@ -102,6 +124,28 @@ const defaultPalette: ColorPalette = {
     [BaseColor.WARNING, rgba(255, 204, 0)], // Yellow
     [BaseColor.DANGER, rgba(255, 51, 51)], // Red
     [BaseColor.INFO, rgba(102, 204, 255)], // Light blue
+
+    // Basic Colors
+    [BaseColor.RED, rgba(220, 50, 50)], // Red
+    [BaseColor.GREEN, rgba(50, 200, 50)], // Green
+    [BaseColor.BLUE, rgba(50, 100, 220)], // Blue
+    [BaseColor.YELLOW, rgba(220, 220, 50)], // Yellow
+    [BaseColor.CYAN, rgba(50, 200, 220)], // Cyan
+    [BaseColor.MAGENTA, rgba(220, 50, 220)], // Magenta
+    [BaseColor.ORANGE, rgba(255, 140, 50)], // Orange
+    [BaseColor.PURPLE, rgba(160, 80, 200)], // Purple
+    [BaseColor.PINK, rgba(255, 150, 200)], // Pink
+    [BaseColor.BROWN, rgba(139, 90, 60)], // Brown
+    [BaseColor.LIME, rgba(150, 255, 50)], // Lime
+    [BaseColor.TEAL, rgba(50, 180, 180)], // Teal
+    [BaseColor.VIOLET, rgba(180, 100, 255)], // Violet
+    [BaseColor.GOLD, rgba(255, 215, 0)], // Gold
+    [BaseColor.SILVER, rgba(192, 192, 192)], // Silver
+    [BaseColor.GRAY, rgba(128, 128, 128)], // Gray
+    [BaseColor.DARK_GRAY, rgba(64, 64, 64)], // Dark gray
+    [BaseColor.LIGHT_GRAY, rgba(192, 192, 192)], // Light gray
+    [BaseColor.WHITE, rgba(255, 255, 255)], // White
+    [BaseColor.BLACK, rgba(0, 0, 0)], // Black
 
     // Entity Colors
     [BaseColor.PLAYER, rgba(255, 255, 0)], // Yellow
@@ -142,6 +186,28 @@ const vibrantPalette: ColorPalette = {
     [BaseColor.DANGER, rgba(255, 0, 51)], // Bright red
     [BaseColor.INFO, rgba(0, 255, 255)], // Cyan
 
+    // Basic Colors (vibrant, saturated)
+    [BaseColor.RED, rgba(255, 0, 60)], // Bright red
+    [BaseColor.GREEN, rgba(0, 255, 100)], // Bright green
+    [BaseColor.BLUE, rgba(0, 120, 255)], // Bright blue
+    [BaseColor.YELLOW, rgba(255, 255, 0)], // Bright yellow
+    [BaseColor.CYAN, rgba(0, 255, 255)], // Bright cyan
+    [BaseColor.MAGENTA, rgba(255, 0, 255)], // Bright magenta
+    [BaseColor.ORANGE, rgba(255, 128, 0)], // Bright orange
+    [BaseColor.PURPLE, rgba(200, 0, 255)], // Bright purple
+    [BaseColor.PINK, rgba(255, 100, 200)], // Bright pink
+    [BaseColor.BROWN, rgba(180, 100, 50)], // Bright brown
+    [BaseColor.LIME, rgba(180, 255, 0)], // Bright lime
+    [BaseColor.TEAL, rgba(0, 220, 200)], // Bright teal
+    [BaseColor.VIOLET, rgba(220, 100, 255)], // Bright violet
+    [BaseColor.GOLD, rgba(255, 220, 0)], // Bright gold
+    [BaseColor.SILVER, rgba(220, 220, 255)], // Bright silver
+    [BaseColor.GRAY, rgba(140, 140, 160)], // Vibrant gray
+    [BaseColor.DARK_GRAY, rgba(80, 80, 100)], // Dark vibrant gray
+    [BaseColor.LIGHT_GRAY, rgba(200, 200, 220)], // Light vibrant gray
+    [BaseColor.WHITE, rgba(255, 255, 255)], // White
+    [BaseColor.BLACK, rgba(20, 20, 40)], // Dark blue-black
+
     // Entity Colors
     [BaseColor.PLAYER, rgba(255, 0, 255)], // Magenta
     [BaseColor.ENEMY, rgba(255, 0, 0)], // Red
@@ -181,6 +247,28 @@ const monochromePalette: ColorPalette = {
     [BaseColor.DANGER, rgba(77, 77, 77)], // Dark gray
     [BaseColor.INFO, rgba(153, 153, 153)], // Medium-light gray
 
+    // Basic Colors (grayscale spectrum)
+    [BaseColor.RED, rgba(100, 100, 100)], // Medium-dark gray
+    [BaseColor.GREEN, rgba(150, 150, 150)], // Medium-light gray
+    [BaseColor.BLUE, rgba(120, 120, 120)], // Medium gray
+    [BaseColor.YELLOW, rgba(200, 200, 200)], // Light gray
+    [BaseColor.CYAN, rgba(170, 170, 170)], // Medium-light gray
+    [BaseColor.MAGENTA, rgba(130, 130, 130)], // Medium gray
+    [BaseColor.ORANGE, rgba(180, 180, 180)], // Light gray
+    [BaseColor.PURPLE, rgba(110, 110, 110)], // Medium-dark gray
+    [BaseColor.PINK, rgba(190, 190, 190)], // Light gray
+    [BaseColor.BROWN, rgba(90, 90, 90)], // Dark gray
+    [BaseColor.LIME, rgba(210, 210, 210)], // Very light gray
+    [BaseColor.TEAL, rgba(140, 140, 140)], // Medium gray
+    [BaseColor.VIOLET, rgba(160, 160, 160)], // Medium-light gray
+    [BaseColor.GOLD, rgba(220, 220, 220)], // Very light gray
+    [BaseColor.SILVER, rgba(192, 192, 192)], // Light gray
+    [BaseColor.GRAY, rgba(128, 128, 128)], // Medium gray
+    [BaseColor.DARK_GRAY, rgba(64, 64, 64)], // Dark gray
+    [BaseColor.LIGHT_GRAY, rgba(192, 192, 192)], // Light gray
+    [BaseColor.WHITE, rgba(255, 255, 255)], // White
+    [BaseColor.BLACK, rgba(0, 0, 0)], // Black
+
     // Entity Colors
     [BaseColor.PLAYER, rgba(255, 255, 255)], // White
     [BaseColor.ENEMY, rgba(51, 51, 51)], // Very dark gray
@@ -219,6 +307,28 @@ const retroPalette: ColorPalette = {
     [BaseColor.WARNING, rgba(255, 255, 85)], // Yellow
     [BaseColor.DANGER, rgba(255, 85, 85)], // Red
     [BaseColor.INFO, rgba(85, 85, 255)], // Blue
+
+    // Basic Colors (CGA-style, limited palette)
+    [BaseColor.RED, rgba(255, 85, 85)], // CGA red
+    [BaseColor.GREEN, rgba(85, 255, 85)], // CGA green
+    [BaseColor.BLUE, rgba(85, 85, 255)], // CGA blue
+    [BaseColor.YELLOW, rgba(255, 255, 85)], // CGA yellow
+    [BaseColor.CYAN, rgba(85, 255, 255)], // CGA cyan
+    [BaseColor.MAGENTA, rgba(255, 85, 255)], // CGA magenta
+    [BaseColor.ORANGE, rgba(255, 171, 85)], // CGA orange
+    [BaseColor.PURPLE, rgba(171, 85, 255)], // CGA purple
+    [BaseColor.PINK, rgba(255, 171, 255)], // CGA pink
+    [BaseColor.BROWN, rgba(171, 85, 0)], // CGA brown
+    [BaseColor.LIME, rgba(171, 255, 85)], // CGA lime
+    [BaseColor.TEAL, rgba(85, 171, 171)], // CGA teal
+    [BaseColor.VIOLET, rgba(171, 85, 171)], // CGA violet
+    [BaseColor.GOLD, rgba(255, 255, 85)], // CGA gold (yellow)
+    [BaseColor.SILVER, rgba(171, 171, 171)], // CGA silver
+    [BaseColor.GRAY, rgba(85, 85, 85)], // CGA gray
+    [BaseColor.DARK_GRAY, rgba(42, 42, 42)], // CGA dark gray
+    [BaseColor.LIGHT_GRAY, rgba(171, 171, 171)], // CGA light gray
+    [BaseColor.WHITE, rgba(255, 255, 255)], // CGA white
+    [BaseColor.BLACK, rgba(0, 0, 0)], // CGA black
 
     // Entity Colors
     [BaseColor.PLAYER, rgba(255, 255, 255)], // White
