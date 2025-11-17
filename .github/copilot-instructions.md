@@ -700,6 +700,9 @@ if (health) {
 21. Relations are automatically initialized via `world.initializeRelations(ecs)` in `Game.init()`
 22. **Always use color palette system** - Use `getColor(BaseColor.*)` for semantic colors, `rgba()` for custom colors
 23. **Never hardcode colors in JSON** - Use BaseColor enum names (lowercase) like `"color": "red"`
+24. **Use template mixing for entities/items** - Define once in templates, reference in multiple entities
+25. **Layer templates strategically** - Use base template + modifiers pattern (max 3-4 per component)
+26. **Template naming convention** - `{descriptor}{ComponentType}` for bases, `{effect}Modifier/Bonus` for modifiers
 
 ### Game Loop with Systems
 
@@ -778,6 +781,125 @@ function combatSystem(ecs: ECS) {
 - Run `npm run serve` to start dev server
 - Run `npm run dev` to build and serve
 
+## Quick Reference: Common Workflows
+
+### Creating a New Entity Type
+
+1. **Define templates** (if reusable):
+
+   ```json
+   // In src/data/base/templates/stats.json
+   {
+     "id": "archerStats",
+     "name": "Archer Stats",
+     "stats": { "dexterity": 16, "perception": 14, ... }
+   }
+   ```
+
+2. **Create entity definition**:
+
+   ```json
+   // In src/data/base/entities/characters.json
+   {
+     "id": "forest_archer",
+     "name": "Forest Archer",
+     "type": "enemy",
+     "templates": {
+       "statsTemplates": ["archerStats", "swiftModifier"],
+       "aiTemplates": ["aggressiveAI"],
+       "renderTemplates": ["archerRender"]
+     }
+   }
+   ```
+
+3. **Spawn in game**:
+   ```typescript
+   const registry = EntityRegistry.getInstance();
+   const archerId = registry.spawn(ecs, 'forest_archer', x, y, worldX, worldY);
+   ```
+
+### Creating a New Item
+
+1. **Define templates** (if reusable):
+
+   ```json
+   // In src/data/base/templates/weapon.json
+   {
+     "id": "elven_weapon",
+     "damage": 12,
+     "damageType": "slashing",
+     "material": "mithril"
+   }
+   ```
+
+2. **Create item definition**:
+
+   ```json
+   // In src/data/base/items/weapons.json
+   {
+     "id": "elven_longbow",
+     "name": "Elven Longbow",
+     "itemBaseTemplates": ["base_weapon"],
+     "weaponTemplates": ["elven_weapon", "bow_weapon"],
+     "sprite": "ITEM_BOW"
+   }
+   ```
+
+3. **Spawn in game**:
+   ```typescript
+   const itemRegistry = ItemRegistry.getInstance();
+   const bowId = itemRegistry.spawn(ecs, 'elven_longbow');
+   ```
+
+### Adding a New Color Palette
+
+1. **Define palette**:
+
+   ```typescript
+   // In src/ts/colorPalette.ts
+   const customPalette: ColorPalette = {
+     name: 'Custom',
+     colors: new Map<BaseColor, LJS.Color>([
+       [BaseColor.PRIMARY, rgba(100, 150, 200)],
+       // ... define all BaseColor entries
+     ]),
+   };
+   ```
+
+2. **Register palette**:
+
+   ```typescript
+   ColorPaletteManager.getInstance().registerPalette('custom', customPalette);
+   ```
+
+3. **Switch palette**:
+   ```typescript
+   setPalette('custom');
+   ```
+
+### Creating a Layered Boss Enemy
+
+```json
+{
+  "id": "ancient_dragon_boss",
+  "name": "Ancient Dragon",
+  "type": "boss",
+  "templates": {
+    "renderTemplates": ["dragonRender"],
+    "statsTemplates": ["dragonStats", "ancientBonus", "bossModifier"],
+    "healthTemplates": ["bossHealth", "healthBoost", "regenBoost"],
+    "aiTemplates": ["aggressiveAI"]
+  },
+  "stats": {
+    "intelligence": 22 // Ancient dragons are especially intelligent
+  }
+}
+```
+
+**Result**: Powerful boss with layered stat boosts, massive HP pool with regen, and enhanced intelligence.
+
+## Testing
+
 ## Data-Driven Content System
 
 The game uses a data-driven architecture where content is defined in JSON files rather than code.
@@ -839,6 +961,139 @@ const orcTemplate = registry.get('orc_warrior');
 **See `DISPOSITION-SYSTEM.md` for entity behavior system.**
 **See `ITEM-SYSTEM.md` for item, inventory, and equipment documentation.**
 **See `ELEMENTAL-SYSTEM.md` for elemental damage, resistances, and status effects.**
+**See `TEMPLATE-MIXING.md` for template-based entity/item composition.**
+
+## Template Mixing System
+
+The template mixing system allows composing entities and items from **multiple reusable templates**, enabling powerful modular design patterns.
+
+### Key Concepts
+
+- **Component Templates**: Reusable configurations for render, stats, AI, health, item properties
+- **Multiple Template Support**: Each component type accepts **arrays** of template IDs
+- **Sequential Merging**: Templates merge left-to-right: `[0] → [1] → ... → [n] → direct values`
+- **Deep Merge**: Later templates/values override earlier ones at property level
+- **Template Types**: Base templates (full configs) + Modifier templates (incremental changes)
+
+### Entity Templates
+
+**Available Template Files** (`src/data/base/templates/`):
+
+- `render.json` - Visual appearance (sprite, color)
+- `stats.json` - Character attributes (strength, intelligence, etc.)
+- `ai.json` - Behavior patterns (aggressive, fleeing, patrol)
+- `health.json` - Durability (max HP, regeneration)
+
+**Template Categories**:
+
+- **Base Templates**: Full configurations (e.g., `bruteStats`, `mageStats`, `agileStats`)
+- **Modifier Templates**: Partial enhancements (e.g., `veteranBonus`, `elderBonus`, `blessedModifier`)
+
+**Example - Layered Entity**:
+
+```json
+{
+  "id": "veteran_orc_warrior",
+  "templates": {
+    "renderTemplates": ["orcWarriorRender"],
+    "statsTemplates": ["bruteStats", "veteranBonus"],
+    "aiTemplates": ["aggressiveAI"],
+    "healthTemplates": ["tankHealth"]
+  },
+  "stats": {
+    "intelligence": 12 // Override specific value
+  }
+}
+```
+
+**Merge result**: `bruteStats` (15 str, 18 tough) + `veteranBonus` (+5 str, +3 tough) + override (12 int) = **20 str, 21 tough, 12 int**
+
+### Item Templates
+
+**Available Template Files** (`src/data/base/templates/`):
+
+- `item_base.json` - Common properties (weight, value, material)
+- `weapon.json` - Weapon stats (damage, type, range)
+- `armor.json` - Armor stats (defense, slot)
+- `consumable.json` - Effects (heal, buff, teleport)
+
+**Example - Layered Item**:
+
+```json
+{
+  "id": "iron_sword",
+  "itemBaseTemplates": ["base_weapon"],
+  "weaponTemplates": ["iron_weapon", "sword_weapon"],
+  "name": "Iron Sword",
+  "sprite": "ITEM_SWORD"
+}
+```
+
+**Merge result**: `base_weapon` (weight, value) + `iron_weapon` (damage: 8, material: iron) + `sword_weapon` (damage: 10) + direct (name, sprite) = **10 damage iron sword**
+
+### Template Resolution
+
+**Code Example**:
+
+```typescript
+// Spawn entity with templates
+const registry = EntityRegistry.getInstance();
+const entityId = registry.spawn(
+  ecs,
+  'veteran_orc_warrior',
+  x,
+  y,
+  worldX,
+  worldY
+);
+// Templates automatically resolved and merged!
+
+// Spawn item with templates
+const itemRegistry = ItemRegistry.getInstance();
+const itemId = itemRegistry.spawn(ecs, 'iron_sword');
+```
+
+**Loading Order**:
+
+1. Component templates load first (before entities/items)
+2. Races and classes load
+3. Entity/item definitions load and resolve template references
+4. Registries cache resolved templates for performance
+
+### Template Best Practices
+
+1. **Use base templates first in array** - They provide full configuration
+2. **Add modifiers for incremental changes** - `["baseStats", "veteranBonus"]`
+3. **Override sparingly** - Only override what's truly unique to entity/item
+4. **Name clearly** - `{descriptor}{ComponentType}` (e.g., `bruteStats`, `veteranBonus`)
+5. **Layer strategically** - Up to 3-4 templates per component is readable
+6. **Document modifiers** - Explain what each modifier adds/changes
+
+### Common Patterns
+
+**Character Progression**:
+
+```json
+"statsTemplates": ["warriorStats", "level10Bonus", "eliteModifier"]
+```
+
+**Boss Variations**:
+
+```json
+"healthTemplates": ["bossHealth", "healthBoost", "regenBoost"]
+```
+
+**Equipment Modifiers**:
+
+```json
+"weaponTemplates": ["steel_weapon", "enchanted_modifier", "fire_damage"]
+```
+
+**Status Effects**:
+
+```json
+"statsTemplates": ["playerStats", "buff_strength", "buff_speed"]
+```
 
 ## Debugging
 
@@ -875,10 +1130,19 @@ const orcTemplate = registry.get('orc_warrior');
 ### Data-Driven Architecture
 
 - Entities, items, stats, and balance configurable via JSON
-- Template-based entity creation
-- Registry system for entity spawning
+- **Template-based composition** with multiple template layering
+- Registry system for entity spawning with automatic template resolution
 - Validation and error handling
-- **See `DATA-SYSTEM.md`, `ITEM-SYSTEM.md`, and `ELEMENTAL-SYSTEM.md` for details**
+- **See `DATA-SYSTEM.md`, `ITEM-SYSTEM.md`, `ELEMENTAL-SYSTEM.md`, and `TEMPLATE-MIXING.md` for details**
+
+### Template Mixing System (v0.9.0+)
+
+- **Multiple templates per component** - Arrays of template IDs merge sequentially
+- **Entity templates** - render, stats, AI, health (9 base + 5 modifier stats templates)
+- **Item templates** - item_base, weapon, armor, consumable (41 templates total)
+- **Layered composition** - Base template + modifiers + direct overrides
+- **Use cases** - Character progression, boss variations, equipment modifiers, status effects
+- **See `TEMPLATE-MIXING.md` and `*-TEMPLATE-MIXING-SUMMARY.md` for comprehensive guides**
 
 ### World System Enhancements
 
