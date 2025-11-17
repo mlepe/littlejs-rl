@@ -14,9 +14,9 @@ import * as LJS from 'littlejsengine';
 
 import { BiomeType, LocationType, getBiomePalette } from './locationType';
 
+import Global from './global';
 import { TileSprite } from './tileConfig';
 import World from './world';
-import Global from './global';
 
 /**
  * World Map Tile - Represents a location on the world map

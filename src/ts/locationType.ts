@@ -12,6 +12,8 @@
 
 import * as LJS from 'littlejsengine';
 
+import { BaseColor, getColor } from './colorPalette';
+
 /**
  * Location types - Different structural types of locations
  */
@@ -79,83 +81,83 @@ export function getBiomePalette(biome: BiomeType): BiomePalette {
   switch (biome) {
     case BiomeType.FOREST:
       return {
-        floor: LJS.rgb(0.3, 0.5, 0.2), // Dark green
-        wall: LJS.rgb(0.4, 0.3, 0.2), // Brown
-        accent: LJS.rgb(0.5, 0.7, 0.3), // Light green
-        water: LJS.rgb(0.2, 0.4, 0.6), // Blue
-        vegetation: LJS.rgb(0.2, 0.6, 0.2), // Bright green
+        floor: getColor(BaseColor.GRASS), // Dark green
+        wall: getColor(BaseColor.BROWN), // Brown
+        accent: getColor(BaseColor.LIME), // Light green
+        water: getColor(BaseColor.WATER), // Blue
+        vegetation: getColor(BaseColor.GREEN), // Bright green
       };
 
     case BiomeType.MOUNTAIN:
       return {
-        floor: LJS.rgb(0.4, 0.4, 0.4), // Gray stone
-        wall: LJS.rgb(0.3, 0.3, 0.35), // Dark gray
-        accent: LJS.rgb(0.5, 0.5, 0.6), // Light gray
-        water: LJS.rgb(0.3, 0.5, 0.7), // Mountain stream blue
+        floor: getColor(BaseColor.GRAY), // Gray stone
+        wall: getColor(BaseColor.DARK_GRAY), // Dark gray
+        accent: getColor(BaseColor.LIGHT_GRAY), // Light gray
+        water: getColor(BaseColor.CYAN), // Mountain stream blue
       };
 
     case BiomeType.SNOWY:
       return {
-        floor: LJS.rgb(0.9, 0.9, 0.95), // White snow
-        wall: LJS.rgb(0.7, 0.8, 0.9), // Light blue ice
-        accent: LJS.rgb(0.8, 0.85, 0.95), // Pale blue
-        water: LJS.rgb(0.5, 0.7, 0.9), // Icy water
+        floor: getColor(BaseColor.WHITE), // White snow
+        wall: getColor(BaseColor.CYAN), // Light blue ice
+        accent: getColor(BaseColor.LIGHT_GRAY), // Pale blue
+        water: getColor(BaseColor.BLUE), // Icy water
       };
 
     case BiomeType.BARREN:
       return {
-        floor: LJS.rgb(0.5, 0.4, 0.3), // Brown dirt
-        wall: LJS.rgb(0.4, 0.35, 0.3), // Dark brown
-        accent: LJS.rgb(0.6, 0.5, 0.4), // Light brown
+        floor: getColor(BaseColor.BROWN), // Brown dirt
+        wall: getColor(BaseColor.DARK_GRAY), // Dark brown
+        accent: getColor(BaseColor.GRAY), // Light brown
       };
 
     case BiomeType.DESERT:
       return {
-        floor: LJS.rgb(0.9, 0.8, 0.5), // Yellow sand
-        wall: LJS.rgb(0.7, 0.6, 0.4), // Sandstone
-        accent: LJS.rgb(0.95, 0.85, 0.6), // Light sand
-        water: LJS.rgb(0.3, 0.6, 0.8), // Oasis water
+        floor: getColor(BaseColor.YELLOW), // Yellow sand
+        wall: getColor(BaseColor.GOLD), // Sandstone
+        accent: getColor(BaseColor.LIGHT_GRAY), // Light sand
+        water: getColor(BaseColor.CYAN), // Oasis water
       };
 
     case BiomeType.BEACH:
       return {
-        floor: LJS.rgb(0.9, 0.85, 0.7), // Light sand
-        wall: LJS.rgb(0.6, 0.5, 0.4), // Rocks
-        accent: LJS.rgb(0.95, 0.9, 0.8), // Pale sand
-        water: LJS.rgb(0.2, 0.5, 0.8), // Ocean blue
+        floor: getColor(BaseColor.GOLD), // Light sand
+        wall: getColor(BaseColor.GRAY), // Rocks
+        accent: getColor(BaseColor.LIGHT_GRAY), // Pale sand
+        water: getColor(BaseColor.BLUE), // Ocean blue
       };
 
     case BiomeType.WATER:
       return {
-        floor: LJS.rgb(0.2, 0.4, 0.7), // Deep water
-        wall: LJS.rgb(0.3, 0.3, 0.4), // Underwater rocks
-        accent: LJS.rgb(0.3, 0.5, 0.8), // Light water
-        water: LJS.rgb(0.2, 0.45, 0.75), // Water
+        floor: getColor(BaseColor.BLUE), // Deep water
+        wall: getColor(BaseColor.DARK_GRAY), // Underwater rocks
+        accent: getColor(BaseColor.CYAN), // Light water
+        water: getColor(BaseColor.WATER), // Water
       };
 
     case BiomeType.VOLCANIC:
       return {
-        floor: LJS.rgb(0.3, 0.2, 0.2), // Dark volcanic rock
-        wall: LJS.rgb(0.2, 0.15, 0.15), // Black obsidian
-        accent: LJS.rgb(0.9, 0.3, 0.1), // Orange lava glow
-        water: LJS.rgb(1.0, 0.4, 0.0), // Lava
+        floor: getColor(BaseColor.DARK_GRAY), // Dark volcanic rock
+        wall: getColor(BaseColor.BLACK), // Black obsidian
+        accent: getColor(BaseColor.ORANGE), // Orange lava glow
+        water: getColor(BaseColor.LAVA), // Lava
       };
 
     case BiomeType.SWAMP:
       return {
-        floor: LJS.rgb(0.3, 0.4, 0.2), // Muddy ground
-        wall: LJS.rgb(0.2, 0.3, 0.2), // Dark vegetation
-        accent: LJS.rgb(0.4, 0.5, 0.3), // Moss
-        water: LJS.rgb(0.2, 0.3, 0.2), // Murky water
-        vegetation: LJS.rgb(0.3, 0.5, 0.2), // Swamp vegetation
+        floor: getColor(BaseColor.BROWN), // Muddy ground
+        wall: getColor(BaseColor.DARK_GRAY), // Dark vegetation
+        accent: getColor(BaseColor.GRASS), // Moss
+        water: getColor(BaseColor.TEAL), // Murky water
+        vegetation: getColor(BaseColor.GREEN), // Swamp vegetation
       };
 
     default:
       // Default to neutral colors
       return {
-        floor: LJS.rgb(0.5, 0.5, 0.5),
-        wall: LJS.rgb(0.3, 0.3, 0.3),
-        accent: LJS.rgb(0.7, 0.7, 0.7),
+        floor: getColor(BaseColor.GRAY),
+        wall: getColor(BaseColor.DARK_GRAY),
+        accent: getColor(BaseColor.LIGHT_GRAY),
       };
   }
 }
