@@ -85,13 +85,19 @@ export default class Location {
     const tileInfo = new LJS.TileInfo(LJS.vec2(0, 0), Global.vTilesize);
 
     // Visual tile layer
-    this.tileLayer = new LJS.TileLayer(layerPos, layerSize, tileInfo);
+    this.tileLayer = new LJS.TileLayer(
+      layerPos,
+      layerSize,
+      tileInfo,
+      Global.RenderOrder.TILE_LAYER_RENDER_ORDER
+    );
 
     // Collision layer (uses TileCollisionLayer for physics)
     this.collisionLayer = new LJS.TileCollisionLayer(
       layerPos,
       layerSize,
-      tileInfo
+      tileInfo,
+      Global.RenderOrder.TILE_COLLISION_LAYER_RENDER_ORDER
     );
     this.collisionLayer.initCollision(layerSize);
   }
@@ -285,13 +291,19 @@ export default class Location {
     const tileInfo = new LJS.TileInfo(LJS.vec2(0, 0), Global.vTilesize);
 
     // Create new tile layer
-    (this as any).tileLayer = new LJS.TileLayer(layerPos, layerSize, tileInfo);
+    (this as any).tileLayer = new LJS.TileLayer(
+      layerPos,
+      layerSize,
+      tileInfo,
+      Global.RenderOrder.TILE_LAYER_RENDER_ORDER
+    );
 
     // Create new collision layer
     (this as any).collisionLayer = new LJS.TileCollisionLayer(
       layerPos,
       layerSize,
-      tileInfo
+      tileInfo,
+      Global.RenderOrder.TILE_COLLISION_LAYER_RENDER_ORDER
     );
     this.collisionLayer.initCollision(layerSize);
 

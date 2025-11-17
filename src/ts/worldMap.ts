@@ -68,11 +68,18 @@ export default class WorldMap {
     const layerSize = LJS.vec2(this.world.width, this.world.height);
     const tileInfo = new LJS.TileInfo(LJS.vec2(0, 0), LJS.vec2(16, 16));
 
-    this.tileLayer = new LJS.TileLayer(layerPos, layerSize, tileInfo);
+    this.tileLayer = new LJS.TileLayer(
+      layerPos,
+      layerSize,
+      tileInfo,
+      Global.RenderOrder.TILE_LAYER_RENDER_ORDER
+    );
 
     // Initialize all tiles as undiscovered
     this.initializeTiles();
-  } /**
+  }
+
+  /**
    * Initialize world map tiles
    * @private
    */
@@ -304,7 +311,12 @@ export default class WorldMap {
     const tileInfo = new LJS.TileInfo(LJS.vec2(0, 0), Global.vTilesize);
 
     // Create new tile layer
-    (this as any).tileLayer = new LJS.TileLayer(layerPos, layerSize, tileInfo);
+    (this as any).tileLayer = new LJS.TileLayer(
+      layerPos,
+      layerSize,
+      tileInfo,
+      Global.RenderOrder.TILE_LAYER_RENDER_ORDER
+    );
 
     // Restore all tile data
     for (let y = 0; y < this.world.height; y++) {

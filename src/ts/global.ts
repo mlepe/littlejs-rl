@@ -24,6 +24,11 @@ export namespace Global {
   export const tileSize = 16;
   /** Tile size as Vector2 for convenience */
   export const vTilesize = LJS.vec2(tileSize);
+
+  export enum RenderOrder {
+    TILE_LAYER_RENDER_ORDER = 0,
+    TILE_COLLISION_LAYER_RENDER_ORDER = 1,
+  }
 }
 
 export default Global;
