@@ -74,14 +74,36 @@ export function viewModeTransitionSystem(ecs: ECS): void {
     if (
       input.locationEnterWorldMap ||
       input.worldMapEnterLocation ||
-      input.toggleExamine
+      input.toggleExamine ||
+      LJS.keyWasPressed('KeyI')
     ) {
       console.log('[ViewMode] Transition request:', {
         currentMode: viewMode.mode,
         locationEnterWorldMap: input.locationEnterWorldMap,
         worldMapEnterLocation: input.worldMapEnterLocation,
         toggleExamine: input.toggleExamine,
+        toggleInventory: LJS.keyWasPressed('KeyI'),
       });
+    }
+
+    // Toggle INVENTORY mode (from LOCATION or back to LOCATION)
+    if (LJS.keyWasPressed('KeyI')) {
+      if (viewMode.mode === ViewMode.LOCATION) {
+        console.log('[ViewMode] TRANSITIONING: LOCATION -> INVENTORY');
+        viewMode.mode = ViewMode.INVENTORY;
+
+        if (Game.isDebug) {
+          console.log('[ViewMode] Entered INVENTORY mode');
+        }
+      } else if (viewMode.mode === ViewMode.INVENTORY) {
+        console.log('[ViewMode] TRANSITIONING: INVENTORY -> LOCATION');
+        viewMode.mode = ViewMode.LOCATION;
+
+        if (Game.isDebug) {
+          console.log('[ViewMode] Exited INVENTORY mode');
+        }
+      }
+      // If in world map or examine, ignore inventory toggle
     }
 
     // Toggle EXAMINE mode (only from LOCATION view)

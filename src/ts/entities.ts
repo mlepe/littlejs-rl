@@ -14,6 +14,8 @@ import * as LJS from 'littlejsengine';
 
 import {
   HealthComponent,
+  InventoryPanel,
+  InventoryUIComponent,
   LocationComponent,
   MovableComponent,
   PositionComponent,
@@ -116,6 +118,20 @@ export function createPlayer(
     worldMapCursorY: worldY,
     examineCursorX: x,
     examineCursorY: y,
+  });
+
+  // Add inventory UI component for inventory screen state
+  ecs.addComponent<InventoryUIComponent>(playerId, 'inventoryUI', {
+    activePanel: InventoryPanel.INVENTORY,
+    selectedItemIndex: 0,
+    scrollOffset: 0,
+    isDragging: false,
+    dragItemId: undefined,
+    dragSourceSlot: undefined,
+    hoverItemId: undefined,
+    hoverEquipSlot: undefined,
+    showDetails: false,
+    detailsItemId: undefined,
   });
 
   // Add empty inventory (capacity calculated from strength in derived stats)

@@ -20,6 +20,8 @@ export enum ViewMode {
   WORLD_MAP = 'world_map',
   /** Examining tiles and entities with a cursor */
   EXAMINE = 'examine',
+  /** Viewing and managing inventory */
+  INVENTORY = 'inventory',
 }
 
 /**

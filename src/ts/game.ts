@@ -29,6 +29,7 @@ import {
   examineSystem,
   identificationSystem,
   inputSystem,
+  inventoryUISystem,
   itemUsageInputSystem,
   locationTransitionSystem,
   pickupSystem,
@@ -424,6 +425,11 @@ export default class Game {
         viewModeComp.examineCursorY,
         examineData
       );
+    }
+
+    // Render inventory UI (if in INVENTORY mode)
+    if (currentViewMode === ViewMode.INVENTORY) {
+      inventoryUISystem(this.ecs, this.playerId);
     }
 
     // Render debug info if enabled (runtime toggle)

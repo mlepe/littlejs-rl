@@ -42,3 +42,4 @@ export * from './viewModeTransitionSystem';
 export * from './examineSystem';
 export * from './examineCursorMovementSystem';
 export * from './examineRenderSystem';
+export * from './inventoryUISystem';

@@ -11,601 +11,976 @@
  */
 
 import * as LJS from 'littlejsengine';
+
 import ECS from '../ecs';
-import { InventoryUIComponent } from '../components/inventoryUI';
-import { InventoryComponent } from '../components/inventory';
-import { EquipmentComponent } from '../components/equipment';
-import { ItemComponent } from '../components/item';
-import { RenderComponent } from '../components/render';
-import { DerivedStats, StatsComponent } from '../components/stats';
+import {
+  EquipmentComponent,
+  InventoryComponent,
+  InventoryPanel,
+  InventoryUIComponent,
+  ItemComponent,
+  ViewMode,
+  ViewModeComponent,
+} from '../components';
+import { EquipmentSlot } from '../components/item';
 
 /**
- * UI Layout Constants
+ * Inventory UI Layout Constants
  */
-const UI = {
-  // Screen positioning
-  PANEL_WIDTH: 400,
-  PANEL_HEIGHT: 500,
-  PADDING: 10,
-  
-  // Inventory grid
-  GRID_COLS: 8,
-  GRID_ROWS: 6,
-  SLOT_SIZE: 40,
-  SLOT_SPACING: 4,
-  
-  // Equipment panel
-  EQUIP_SLOT_SIZE: 50,
-  EQUIP_SPACING: 8,
-  
+const UI_CONFIG = {
+  // Screen layout
+  SCREEN_WIDTH: 800,
+  SCREEN_HEIGHT: 600,
+  PANEL_PADDING: 20,
+
+  // Inventory panel (left side)
+  INVENTORY_X: 50,
+  INVENTORY_Y: 50,
+  INVENTORY_WIDTH: 350,
+  INVENTORY_HEIGHT: 500,
+  INVENTORY_TITLE_HEIGHT: 30,
+  ITEM_SLOT_SIZE: 40,
+  ITEM_SLOT_SPACING: 5,
+  ITEMS_PER_ROW: 7,
+  VISIBLE_ROWS: 10,
+
+  // Equipment panel (right side)
+  EQUIPMENT_X: 450,
+  EQUIPMENT_Y: 50,
+  EQUIPMENT_WIDTH: 300,
+  EQUIPMENT_HEIGHT: 500,
+  EQUIPMENT_SLOT_SIZE: 50,
+  EQUIPMENT_SLOT_SPACING: 10,
+
+  // Details panel (bottom)
+  DETAILS_X: 50,
+  DETAILS_Y: 560,
+  DETAILS_WIDTH: 700,
+  DETAILS_HEIGHT: 150,
+
   // Colors
-  BG_COLOR: new LJS.Color(0.1, 0.1, 0.15, 0.95),
-  SLOT_COLOR: new LJS.Color(0.2, 0.2, 0.25, 1),
-  SLOT_HOVER_COLOR: new LJS.Color(0.3, 0.3, 0.4, 1),
-  SLOT_SELECTED_COLOR: new LJS.Color(0.4, 0.5, 0.6, 1),
-  BORDER_COLOR: new LJS.Color(0.5, 0.5, 0.6, 1),
-  TEXT_COLOR: new LJS.Color(1, 1, 1, 1),
-  TEXT_SHADOW: new LJS.Color(0, 0, 0, 0.8),
-  
-  // Item quality colors
-  QUALITY_COLORS: {
-    normal: new LJS.Color(1, 1, 1, 1),
-    blessed: new LJS.Color(0.3, 0.8, 1, 1),
-    cursed: new LJS.Color(0.8, 0.2, 0.2, 1),
-  },
+  BG_COLOR: new LJS.Color(0.1, 0.1, 0.1, 0.9),
+  BORDER_COLOR: new LJS.Color(0.5, 0.5, 0.5, 1.0),
+  TITLE_COLOR: new LJS.Color(1.0, 1.0, 0.8, 1.0),
+  TEXT_COLOR: new LJS.Color(0.9, 0.9, 0.9, 1.0),
+  SELECTED_COLOR: new LJS.Color(1.0, 1.0, 0.0, 0.5),
+  HOVER_COLOR: new LJS.Color(0.7, 0.7, 0.0, 0.3),
+  DRAG_COLOR: new LJS.Color(0.5, 0.5, 1.0, 0.7),
+  EMPTY_SLOT_COLOR: new LJS.Color(0.2, 0.2, 0.2, 0.5),
+
+  // Font sizes
+  TITLE_FONT_SIZE: 24,
+  TEXT_FONT_SIZE: 16,
+  SMALL_FONT_SIZE: 12,
 };
 
 /**
- * Inventory UI Input System
- * Handles keyboard input for opening/closing inventory
+ * Equipment slot layout positions
+ * Maps equipment slot names to UI positions
  */
-export function inventoryUIInputSystem(ecs: ECS): void {
-  const entities = ecs.query('player', 'inventoryUI');
-  
-  for (const entityId of entities) {
-    const uiState = ecs.getComponent<InventoryUIComponent>(entityId, 'inventoryUI');
-    if (!uiState) continue;
-    
-    // Toggle inventory with 'I' key
-    if (LJS.keyWasPressed('KeyI')) {
-      uiState.isOpen = !uiState.isOpen;
-      
-      // Reset UI state when closing
-      if (!uiState.isOpen) {
-        uiState.hoveredItemId = undefined;
-        uiState.hoveredSlot = undefined;
-        uiState.draggedItemId = undefined;
-        uiState.dragSource = undefined;
-        uiState.dragSourceSlot = undefined;
-      }
-    }
-    
-    // Close inventory with ESC key
-    if (uiState.isOpen && LJS.keyWasPressed('Escape')) {
-      uiState.isOpen = false;
-      uiState.hoveredItemId = undefined;
-      uiState.hoveredSlot = undefined;
-      uiState.draggedItemId = undefined;
-      uiState.dragSource = undefined;
-      uiState.dragSourceSlot = undefined;
-    }
-    
-    // Tab switching (Q/E for inventory/equipment)
-    if (uiState.isOpen) {
-      if (LJS.keyWasPressed('KeyQ')) {
-        uiState.activeTab = 'inventory';
-      }
-      if (LJS.keyWasPressed('KeyE')) {
-        uiState.activeTab = 'equipment';
-      }
-    }
+const EQUIPMENT_SLOT_LAYOUT: Record<
+  string,
+  { x: number; y: number; label: string }
+> = {
+  head: { x: 125, y: 50, label: 'Head' },
+  face: { x: 125, y: 110, label: 'Face' },
+  neck: { x: 125, y: 170, label: 'Neck' },
+  body: { x: 125, y: 230, label: 'Body' },
+  back: { x: 50, y: 230, label: 'Back' },
+  belt: { x: 125, y: 290, label: 'Belt' },
+  legs: { x: 125, y: 350, label: 'Legs' },
+  feet: { x: 125, y: 410, label: 'Feet' },
+  mainHand: { x: 50, y: 350, label: 'Main' },
+  offHand: { x: 200, y: 350, label: 'Off' },
+  ringLeft: { x: 50, y: 410, label: 'Ring L' },
+  ringRight: { x: 200, y: 410, label: 'Ring R' },
+};
+
+/**
+ * Inventory UI System
+ *
+ * Manages the inventory screen UI including:
+ * - Rendering inventory grid and equipment slots
+ * - Mouse interaction (hover, click, drag-drop)
+ * - Keyboard navigation
+ * - Item tooltips and details
+ * - Equipment management
+ *
+ * @param ecs - Entity Component System
+ * @param playerId - Player entity ID
+ */
+export function inventoryUISystem(ecs: ECS, playerId: number): void {
+  // Only run if in inventory view mode
+  const viewMode = ecs.getComponent<ViewModeComponent>(playerId, 'viewMode');
+  if (!viewMode || viewMode.mode !== ViewMode.INVENTORY) {
+    return;
   }
+
+  // Get required components
+  const inventory = ecs.getComponent<InventoryComponent>(playerId, 'inventory');
+  const equipment = ecs.getComponent<EquipmentComponent>(playerId, 'equipment');
+  const inventoryUI = ecs.getComponent<InventoryUIComponent>(
+    playerId,
+    'inventoryUI'
+  );
+
+  if (!inventory || !inventoryUI) {
+    console.warn(
+      '[inventoryUISystem] Player missing inventory or inventoryUI component'
+    );
+    return;
+  }
+
+  // Handle input
+  handleInventoryInput(ecs, playerId, inventory, equipment, inventoryUI);
+
+  // Render UI
+  renderInventoryUI(ecs, inventory, equipment, inventoryUI);
 }
 
 /**
- * Inventory UI Mouse Interaction System
- * Handles mouse hover, click, and drag-drop
+ * Handle keyboard and mouse input for inventory UI
  */
-export function inventoryUIMouseSystem(ecs: ECS): void {
-  const entities = ecs.query('player', 'inventoryUI', 'inventory');
-  
-  for (const entityId of entities) {
-    const uiState = ecs.getComponent<InventoryUIComponent>(entityId, 'inventoryUI');
-    const inventory = ecs.getComponent<InventoryComponent>(entityId, 'inventory');
-    const equipment = ecs.getComponent<EquipmentComponent>(entityId, 'equipment');
-    
-    if (!uiState || !inventory || !uiState.isOpen) continue;
-    
-    const mousePos = LJS.mousePos;
-    const screenCenter = LJS.vec2(LJS.mainCanvasSize.x / 2, LJS.mainCanvasSize.y / 2);
-    
-    // Calculate panel position (centered on screen)
-    const panelX = screenCenter.x - UI.PANEL_WIDTH / 2;
-    const panelY = screenCenter.y - UI.PANEL_HEIGHT / 2;
-    
-    // Check mouse within panel bounds
-    const mouseInPanel = 
-      mousePos.x >= panelX && 
-      mousePos.x <= panelX + UI.PANEL_WIDTH &&
-      mousePos.y >= panelY && 
-      mousePos.y <= panelY + UI.PANEL_HEIGHT;
-    
-    if (!mouseInPanel) {
-      uiState.hoveredItemId = undefined;
-      uiState.hoveredSlot = undefined;
-      return;
+function handleInventoryInput(
+  ecs: ECS,
+  playerId: number,
+  inventory: InventoryComponent,
+  equipment: EquipmentComponent | undefined,
+  inventoryUI: InventoryUIComponent
+): void {
+  const mousePos = LJS.mousePos;
+  const mousePressed = LJS.mouseIsDown(0);
+  const mouseReleased = LJS.mouseWasPressed(0);
+
+  // Check if mouse is over inventory panel
+  const invBounds = {
+    x: UI_CONFIG.INVENTORY_X,
+    y: UI_CONFIG.INVENTORY_Y,
+    w: UI_CONFIG.INVENTORY_WIDTH,
+    h: UI_CONFIG.INVENTORY_HEIGHT,
+  };
+
+  const isOverInventory = isPointInRect(mousePos.x, mousePos.y, invBounds);
+
+  // Handle mouse over inventory items
+  if (isOverInventory && !inventoryUI.isDragging) {
+    const itemIndex = getInventoryItemAt(
+      mousePos.x,
+      mousePos.y,
+      inventoryUI.scrollOffset
+    );
+    if (itemIndex >= 0 && itemIndex < inventory.items.length) {
+      inventoryUI.hoverItemId = inventory.items[itemIndex];
+    } else {
+      inventoryUI.hoverItemId = undefined;
     }
-    
-    // Handle inventory tab interactions
-    if (uiState.activeTab === 'inventory') {
-      handleInventoryGridInteraction(ecs, entityId, uiState, inventory, mousePos, panelX, panelY);
+  }
+
+  // Handle mouse over equipment slots
+  if (equipment) {
+    const eqSlot = getEquipmentSlotAt(mousePos.x, mousePos.y);
+    if (eqSlot && !inventoryUI.isDragging) {
+      inventoryUI.hoverEquipSlot = eqSlot;
+      const itemId = (equipment as any)[eqSlot];
+      if (itemId !== undefined) {
+        inventoryUI.hoverItemId = itemId;
+      }
+    } else if (!isOverInventory) {
+      inventoryUI.hoverEquipSlot = undefined;
+      if (!inventoryUI.isDragging) {
+        inventoryUI.hoverItemId = undefined;
+      }
     }
-    
-    // Handle equipment tab interactions
-    if (uiState.activeTab === 'equipment' && equipment) {
-      handleEquipmentSlotInteraction(ecs, entityId, uiState, equipment, mousePos, panelX, panelY);
+  }
+
+  // Handle drag start (mouse pressed on item)
+  if (mousePressed && !inventoryUI.isDragging) {
+    // Check if clicking on inventory item
+    if (isOverInventory) {
+      const itemIndex = getInventoryItemAt(
+        mousePos.x,
+        mousePos.y,
+        inventoryUI.scrollOffset
+      );
+      if (itemIndex >= 0 && itemIndex < inventory.items.length) {
+        inventoryUI.isDragging = true;
+        inventoryUI.dragItemId = inventory.items[itemIndex];
+        inventoryUI.dragSourceSlot = undefined; // From inventory
+      }
     }
-    
-    // Handle drag-drop
-    if (LJS.mouseIsDown(0)) {
-      // Start drag
-      if (!uiState.draggedItemId && uiState.hoveredItemId) {
-        uiState.draggedItemId = uiState.hoveredItemId;
-        uiState.dragSource = uiState.activeTab;
-        if (uiState.hoveredSlot) {
-          uiState.dragSourceSlot = uiState.hoveredSlot;
+
+    // Check if clicking on equipment slot
+    if (equipment) {
+      const eqSlot = getEquipmentSlotAt(mousePos.x, mousePos.y);
+      if (eqSlot) {
+        const itemId = (equipment as any)[eqSlot];
+        if (itemId !== undefined) {
+          inventoryUI.isDragging = true;
+          inventoryUI.dragItemId = itemId;
+          inventoryUI.dragSourceSlot = eqSlot;
         }
       }
-    } else if (uiState.draggedItemId) {
-      // End drag - handle drop
-      handleItemDrop(ecs, entityId, uiState, inventory, equipment);
-      
-      // Clear drag state
-      uiState.draggedItemId = undefined;
-      uiState.dragSource = undefined;
-      uiState.dragSourceSlot = undefined;
     }
   }
-}
 
-/**
- * Handle mouse interaction with inventory grid
- */
-function handleInventoryGridInteraction(
-  ecs: ECS,
-  entityId: number,
-  uiState: InventoryUIComponent,
-  inventory: InventoryComponent,
-  mousePos: LJS.Vector2,
-  panelX: number,
-  panelY: number
-): void {
-  // Calculate grid area
-  const gridStartX = panelX + UI.PADDING;
-  const gridStartY = panelY + UI.PADDING + 30; // Leave space for tabs
-  
-  const relX = mousePos.x - gridStartX;
-  const relY = mousePos.y - gridStartY;
-  
-  // Calculate which slot is hovered
-  const col = Math.floor(relX / (UI.SLOT_SIZE + UI.SLOT_SPACING));
-  const row = Math.floor(relY / (UI.SLOT_SIZE + UI.SLOT_SPACING));
-  
-  // Check if within grid bounds
-  if (col >= 0 && col < UI.GRID_COLS && row >= 0 && row < UI.GRID_ROWS) {
-    const slotIndex = row * UI.GRID_COLS + col;
-    
-    // Check if slot has item
-    if (slotIndex < inventory.items.length) {
-      uiState.hoveredItemId = inventory.items[slotIndex];
-    } else {
-      uiState.hoveredItemId = undefined;
-    }
-  } else {
-    uiState.hoveredItemId = undefined;
+  // Handle drag release (drop item)
+  if (mouseReleased && inventoryUI.isDragging) {
+    handleItemDrop(ecs, playerId, inventory, equipment, inventoryUI, mousePos);
+    inventoryUI.isDragging = false;
+    inventoryUI.dragItemId = undefined;
+    inventoryUI.dragSourceSlot = undefined;
   }
-  
-  uiState.hoveredSlot = undefined;
-}
 
-/**
- * Handle mouse interaction with equipment slots
- */
-function handleEquipmentSlotInteraction(
-  ecs: ECS,
-  entityId: number,
-  uiState: InventoryUIComponent,
-  equipment: EquipmentComponent,
-  mousePos: LJS.Vector2,
-  panelX: number,
-  panelY: number
-): void {
-  // Equipment slot layout
-  const slots: Array<{name: keyof EquipmentComponent, x: number, y: number}> = [
-    { name: 'head', x: 200, y: 50 },
-    { name: 'neck', x: 200, y: 110 },
-    { name: 'body', x: 200, y: 170 },
-    { name: 'mainHand', x: 120, y: 170 },
-    { name: 'offHand', x: 280, y: 170 },
-    { name: 'legs', x: 200, y: 230 },
-    { name: 'feet', x: 200, y: 290 },
-    { name: 'ringLeft', x: 120, y: 230 },
-    { name: 'ringRight', x: 280, y: 230 },
-  ];
-  
-  uiState.hoveredItemId = undefined;
-  uiState.hoveredSlot = undefined;
-  
-  for (const slot of slots) {
-    const slotX = panelX + slot.x;
-    const slotY = panelY + slot.y;
-    
-    // Check if mouse is over this slot
+  // Handle keyboard navigation
+  if (LJS.keyWasPressed('ArrowUp')) {
+    if (inventoryUI.selectedItemIndex > 0) {
+      inventoryUI.selectedItemIndex--;
+      updateScrollForSelection(inventoryUI);
+    }
+  }
+
+  if (LJS.keyWasPressed('ArrowDown')) {
+    if (inventoryUI.selectedItemIndex < inventory.items.length - 1) {
+      inventoryUI.selectedItemIndex++;
+      updateScrollForSelection(inventoryUI);
+    }
+  }
+
+  // Toggle details panel
+  if (LJS.keyWasPressed('Space') || LJS.keyWasPressed('Enter')) {
     if (
-      mousePos.x >= slotX &&
-      mousePos.x <= slotX + UI.EQUIP_SLOT_SIZE &&
-      mousePos.y >= slotY &&
-      mousePos.y <= slotY + UI.EQUIP_SLOT_SIZE
+      inventoryUI.selectedItemIndex >= 0 &&
+      inventoryUI.selectedItemIndex < inventory.items.length
     ) {
-      uiState.hoveredSlot = slot.name;
-      const itemId = equipment[slot.name];
-      if (itemId !== undefined) {
-        uiState.hoveredItemId = itemId;
-      }
-      break;
+      inventoryUI.showDetails = !inventoryUI.showDetails;
+      inventoryUI.detailsItemId =
+        inventory.items[inventoryUI.selectedItemIndex];
+    }
+  }
+
+  // Close inventory (I key or Escape)
+  if (LJS.keyWasPressed('KeyI') || LJS.keyWasPressed('Escape')) {
+    const viewMode = ecs.getComponent<ViewModeComponent>(playerId, 'viewMode');
+    if (viewMode) {
+      viewMode.mode = ViewMode.LOCATION;
     }
   }
 }
 
 /**
- * Handle item drop (equip/unequip/move)
+ * Handle item drop logic
  */
 function handleItemDrop(
   ecs: ECS,
-  entityId: number,
-  uiState: InventoryUIComponent,
+  playerId: number,
   inventory: InventoryComponent,
-  equipment: EquipmentComponent | undefined
+  equipment: EquipmentComponent | undefined,
+  inventoryUI: InventoryUIComponent,
+  mousePos: LJS.Vector2
 ): void {
-  if (!uiState.draggedItemId) return;
-  
-  const draggedItem = ecs.getComponent<ItemComponent>(uiState.draggedItemId, 'item');
-  if (!draggedItem) return;
-  
-  // Dropping on equipment slot
-  if (uiState.activeTab === 'equipment' && uiState.hoveredSlot && equipment) {
-    equipItem(ecs, entityId, uiState.draggedItemId, uiState.hoveredSlot as keyof EquipmentComponent, equipment, inventory);
-  }
-  
-  // Dropping on inventory (unequip)
-  if (uiState.activeTab === 'inventory' && uiState.dragSource === 'equipment' && uiState.dragSourceSlot && equipment) {
-    unequipItem(ecs, entityId, uiState.dragSourceSlot as keyof EquipmentComponent, equipment, inventory);
-  }
-}
+  if (!inventoryUI.dragItemId) return;
 
-/**
- * Equip an item from inventory
- */
-function equipItem(
-  ecs: ECS,
-  entityId: number,
-  itemId: number,
-  slotName: keyof EquipmentComponent,
-  equipment: EquipmentComponent,
-  inventory: InventoryComponent
-): void {
-  const item = ecs.getComponent<ItemComponent>(itemId, 'item');
-  if (!item) return;
-  
-  // Check if item can be equipped in this slot
-  if (item.equipSlot !== slotName) {
-    console.log(`Cannot equip ${item.name} in ${slotName} slot`);
-    return;
-  }
-  
-  // Unequip existing item if present
-  const existingItemId = equipment[slotName];
-  if (existingItemId !== undefined) {
-    unequipItem(ecs, entityId, slotName, equipment, inventory);
-  }
-  
-  // Equip new item
-  equipment[slotName] = itemId;
-  item.equipped = true;
-  
-  // Remove from inventory
-  const index = inventory.items.indexOf(itemId);
-  if (index !== -1) {
-    inventory.items.splice(index, 1);
-  }
-  
-  console.log(`Equipped ${item.name} in ${slotName}`);
-}
+  const dragItemId = inventoryUI.dragItemId;
+  const dragItem = ecs.getComponent<ItemComponent>(dragItemId, 'item');
+  if (!dragItem) return;
 
-/**
- * Unequip an item to inventory
- */
-function unequipItem(
-  ecs: ECS,
-  entityId: number,
-  slotName: keyof EquipmentComponent,
-  equipment: EquipmentComponent,
-  inventory: InventoryComponent
-): void {
-  const itemId = equipment[slotName];
-  if (itemId === undefined) return;
-  
-  const item = ecs.getComponent<ItemComponent>(itemId, 'item');
-  if (!item) return;
-  
-  // Check for cursed items
-  if (item.blessState === 'cursed') {
-    console.log(`Cannot unequip cursed item: ${item.name}`);
-    return;
-  }
-  
-  // Unequip
-  equipment[slotName] = undefined;
-  item.equipped = false;
-  
-  // Add to inventory
-  inventory.items.push(itemId);
-  
-  console.log(`Unequipped ${item.name} from ${slotName}`);
-}
+  // Check if dropping on equipment slot
+  if (equipment) {
+    const targetSlot = getEquipmentSlotAt(mousePos.x, mousePos.y);
+    if (targetSlot) {
+      // Validate slot compatibility
+      if (canEquipToSlot(dragItem, targetSlot)) {
+        // Unequip from source if coming from equipment
+        if (inventoryUI.dragSourceSlot) {
+          (equipment as any)[inventoryUI.dragSourceSlot] = undefined;
+          // Add back to inventory
+          if (!inventory.items.includes(dragItemId)) {
+            inventory.items.push(dragItemId);
+          }
+        }
 
-/**
- * Inventory UI Render System
- * Renders the inventory/equipment UI panel
- */
-export function inventoryUIRenderSystem(ecs: ECS): void {
-  const entities = ecs.query('player', 'inventoryUI', 'inventory');
-  
-  for (const entityId of entities) {
-    const uiState = ecs.getComponent<InventoryUIComponent>(entityId, 'inventoryUI');
-    const inventory = ecs.getComponent<InventoryComponent>(entityId, 'inventory');
-    const equipment = ecs.getComponent<EquipmentComponent>(entityId, 'equipment');
-    const stats = ecs.getComponent<StatsComponent>(entityId, 'stats');
-    
-    if (!uiState || !inventory || !uiState.isOpen) continue;
-    
-    // Switch to overlay camera for UI rendering
-    LJS.setBlendMode(true);
-    
-    const screenCenter = LJS.vec2(LJS.mainCanvasSize.x / 2, LJS.mainCanvasSize.y / 2);
-    const panelPos = LJS.vec2(screenCenter.x, screenCenter.y);
-    const panelSize = LJS.vec2(UI.PANEL_WIDTH, UI.PANEL_HEIGHT);
-    
-    // Draw background panel
-    LJS.drawRect(panelPos, panelSize, UI.BG_COLOR);
-    LJS.drawRect(panelPos, panelSize.add(LJS.vec2(2, 2)), UI.BORDER_COLOR, 0, false);
-    
-    // Draw tabs
-    renderTabs(uiState, panelPos, panelSize);
-    
-    // Render active tab content
-    if (uiState.activeTab === 'inventory') {
-      renderInventoryGrid(ecs, inventory, uiState, panelPos, stats);
-    } else if (uiState.activeTab === 'equipment' && equipment) {
-      renderEquipmentSlots(ecs, equipment, uiState, panelPos);
+        // Handle existing item in target slot
+        const existingItemId = (equipment as any)[targetSlot];
+        if (existingItemId !== undefined) {
+          // Move existing item to inventory
+          if (!inventory.items.includes(existingItemId)) {
+            inventory.items.push(existingItemId);
+          }
+          const existingItem = ecs.getComponent<ItemComponent>(
+            existingItemId,
+            'item'
+          );
+          if (existingItem) {
+            existingItem.equipped = false;
+          }
+        }
+
+        // Equip item to target slot
+        (equipment as any)[targetSlot] = dragItemId;
+        dragItem.equipped = true;
+        dragItem.equipSlot = targetSlot as EquipmentSlot;
+
+        // Remove from inventory if it's there
+        const invIndex = inventory.items.indexOf(dragItemId);
+        if (invIndex >= 0) {
+          inventory.items.splice(invIndex, 1);
+        }
+
+        console.log(`[inventoryUI] Equipped ${dragItem.name} to ${targetSlot}`);
+      } else {
+        console.log(
+          `[inventoryUI] Cannot equip ${dragItem.name} to ${targetSlot} slot`
+        );
+      }
+      return;
     }
-    
-    // Render dragged item (follows mouse)
-    if (uiState.draggedItemId) {
-      renderDraggedItem(ecs, uiState.draggedItemId);
+  }
+
+  // Check if dropping back to inventory
+  const invBounds = {
+    x: UI_CONFIG.INVENTORY_X,
+    y: UI_CONFIG.INVENTORY_Y,
+    w: UI_CONFIG.INVENTORY_WIDTH,
+    h: UI_CONFIG.INVENTORY_HEIGHT,
+  };
+
+  if (isPointInRect(mousePos.x, mousePos.y, invBounds)) {
+    // If coming from equipment, unequip it
+    if (inventoryUI.dragSourceSlot && equipment) {
+      (equipment as any)[inventoryUI.dragSourceSlot] = undefined;
+      dragItem.equipped = false;
+      dragItem.equipSlot = undefined;
+
+      // Add to inventory if not already there
+      if (!inventory.items.includes(dragItemId)) {
+        inventory.items.push(dragItemId);
+      }
+
+      console.log(`[inventoryUI] Unequipped ${dragItem.name}`);
     }
-    
-    // Render tooltip
-    if (uiState.hoveredItemId && !uiState.draggedItemId) {
-      renderItemTooltip(ecs, uiState.hoveredItemId);
-    }
-    
-    LJS.setBlendMode(false);
   }
 }
 
 /**
- * Render tab buttons
+ * Render the complete inventory UI
  */
-function renderTabs(
-  uiState: InventoryUIComponent,
-  panelPos: LJS.Vector2,
-  panelSize: LJS.Vector2
-): void {
-  const tabY = panelPos.y - panelSize.y / 2 + 15;
-  const tab1X = panelPos.x - panelSize.x / 4;
-  const tab2X = panelPos.x + panelSize.x / 4;
-  
-  // Inventory tab
-  const invColor = uiState.activeTab === 'inventory' ? UI.SLOT_SELECTED_COLOR : UI.SLOT_COLOR;
-  LJS.drawRect(LJS.vec2(tab1X, tabY), LJS.vec2(100, 20), invColor);
-  LJS.drawText('Inventory (Q)', LJS.vec2(tab1X, tabY), 12, UI.TEXT_COLOR);
-  
-  // Equipment tab
-  const equipColor = uiState.activeTab === 'equipment' ? UI.SLOT_SELECTED_COLOR : UI.SLOT_COLOR;
-  LJS.drawRect(LJS.vec2(tab2X, tabY), LJS.vec2(100, 20), equipColor);
-  LJS.drawText('Equipment (E)', LJS.vec2(tab2X, tabY), 12, UI.TEXT_COLOR);
-}
-
-/**
- * Render inventory grid
- */
-function renderInventoryGrid(
+function renderInventoryUI(
   ecs: ECS,
   inventory: InventoryComponent,
-  uiState: InventoryUIComponent,
-  panelPos: LJS.Vector2,
-  stats: StatsComponent | undefined
+  equipment: EquipmentComponent | undefined,
+  inventoryUI: InventoryUIComponent
 ): void {
-  const startX = panelPos.x - UI.PANEL_WIDTH / 2 + UI.PADDING;
-  const startY = panelPos.y - UI.PANEL_HEIGHT / 2 + UI.PADDING + 30;
-  
-  // Draw weight info
-  const derivedStats = stats?.derived;
-  const maxWeight = derivedStats?.carryCapacity || 100;
-  const weightText = `Weight: ${inventory.currentWeight.toFixed(1)} / ${maxWeight}`;
-  LJS.drawText(weightText, LJS.vec2(panelPos.x, startY - 10), 12, UI.TEXT_COLOR);
-  
-  // Draw inventory slots
-  for (let row = 0; row < UI.GRID_ROWS; row++) {
-    for (let col = 0; col < UI.GRID_COLS; col++) {
-      const slotIndex = row * UI.GRID_COLS + col;
-      const x = startX + col * (UI.SLOT_SIZE + UI.SLOT_SPACING) + UI.SLOT_SIZE / 2;
-      const y = startY + row * (UI.SLOT_SIZE + UI.SLOT_SPACING) + UI.SLOT_SIZE / 2;
-      const slotPos = LJS.vec2(x, y);
-      const slotSize = LJS.vec2(UI.SLOT_SIZE, UI.SLOT_SIZE);
-      
-      // Determine slot color (hover effect)
-      let slotColor = UI.SLOT_COLOR;
-      if (slotIndex < inventory.items.length) {
-        const itemId = inventory.items[slotIndex];
-        if (itemId === uiState.hoveredItemId && itemId !== uiState.draggedItemId) {
-          slotColor = UI.SLOT_HOVER_COLOR;
-        }
-      }
-      
-      // Draw slot background
-      LJS.drawRect(slotPos, slotSize, slotColor);
-      
-      // Draw item if present
-      if (slotIndex < inventory.items.length) {
-        const itemId = inventory.items[slotIndex];
-        if (itemId !== uiState.draggedItemId) {
-          renderItemIcon(ecs, itemId, slotPos);
-        }
-      }
-    }
+  // Render inventory panel
+  renderInventoryPanel(ecs, inventory, inventoryUI);
+
+  // Render equipment panel
+  if (equipment) {
+    renderEquipmentPanel(ecs, equipment, inventoryUI);
   }
+
+  // Render details panel
+  if (inventoryUI.showDetails && inventoryUI.detailsItemId) {
+    renderDetailsPanel(ecs, inventoryUI.detailsItemId);
+  }
+
+  // Render tooltip
+  if (inventoryUI.hoverItemId && !inventoryUI.isDragging) {
+    renderItemTooltip(ecs, inventoryUI.hoverItemId, LJS.mousePos);
+  }
+
+  // Render dragged item (follows mouse)
+  if (inventoryUI.isDragging && inventoryUI.dragItemId) {
+    renderDraggedItem(ecs, inventoryUI.dragItemId, LJS.mousePos);
+  }
+
+  // Render instructions
+  renderInstructions();
 }
 
 /**
- * Render equipment slots
+ * Render inventory panel (backpack items)
  */
-function renderEquipmentSlots(
+function renderInventoryPanel(
   ecs: ECS,
-  equipment: EquipmentComponent,
-  uiState: InventoryUIComponent,
-  panelPos: LJS.Vector2
+  inventory: InventoryComponent,
+  inventoryUI: InventoryUIComponent
 ): void {
-  const slots: Array<{name: keyof EquipmentComponent, label: string, x: number, y: number}> = [
-    { name: 'head', label: 'Head', x: 200, y: 50 },
-    { name: 'neck', label: 'Neck', x: 200, y: 110 },
-    { name: 'body', label: 'Body', x: 200, y: 170 },
-    { name: 'mainHand', label: 'Main', x: 120, y: 170 },
-    { name: 'offHand', label: 'Off', x: 280, y: 170 },
-    { name: 'legs', label: 'Legs', x: 200, y: 230 },
-    { name: 'feet', label: 'Feet', x: 200, y: 290 },
-    { name: 'ringLeft', label: 'Ring L', x: 120, y: 230 },
-    { name: 'ringRight', label: 'Ring R', x: 280, y: 230 },
-  ];
-  
-  const baseX = panelPos.x - UI.PANEL_WIDTH / 2;
-  const baseY = panelPos.y - UI.PANEL_HEIGHT / 2;
-  
-  for (const slot of slots) {
-    const slotPos = LJS.vec2(
-      baseX + slot.x + UI.EQUIP_SLOT_SIZE / 2,
-      baseY + slot.y + UI.EQUIP_SLOT_SIZE / 2
-    );
-    const slotSize = LJS.vec2(UI.EQUIP_SLOT_SIZE, UI.EQUIP_SLOT_SIZE);
-    
-    // Determine slot color
-    let slotColor = UI.SLOT_COLOR;
-    if (slot.name === uiState.hoveredSlot) {
-      slotColor = UI.SLOT_HOVER_COLOR;
+  const x = UI_CONFIG.INVENTORY_X;
+  const y = UI_CONFIG.INVENTORY_Y;
+  const w = UI_CONFIG.INVENTORY_WIDTH;
+  const h = UI_CONFIG.INVENTORY_HEIGHT;
+
+  // Draw panel background
+  LJS.drawRect(
+    LJS.vec2(x + w / 2, y + h / 2),
+    LJS.vec2(w, h),
+    UI_CONFIG.BG_COLOR
+  );
+  drawRectOutline(
+    LJS.vec2(x + w / 2, y + h / 2),
+    LJS.vec2(w, h),
+    2,
+    UI_CONFIG.BORDER_COLOR
+  );
+
+  // Draw title
+  LJS.drawText(
+    'Inventory',
+    LJS.vec2(x + w / 2, y + 15),
+    UI_CONFIG.TITLE_FONT_SIZE,
+    UI_CONFIG.TITLE_COLOR,
+    0,
+    undefined,
+    'center'
+  );
+
+  // Draw capacity info
+  const capacityText = `Weight: ${inventory.currentWeight.toFixed(1)} / ${100}`;
+  LJS.drawText(
+    capacityText,
+    LJS.vec2(x + w - 50, y + 15),
+    UI_CONFIG.SMALL_FONT_SIZE,
+    UI_CONFIG.TEXT_COLOR,
+    0,
+    undefined,
+    'right'
+  );
+
+  // Draw item slots
+  const startY = y + UI_CONFIG.INVENTORY_TITLE_HEIGHT + 10;
+  const slotSize = UI_CONFIG.ITEM_SLOT_SIZE;
+  const spacing = UI_CONFIG.ITEM_SLOT_SPACING;
+  const itemsPerRow = UI_CONFIG.ITEMS_PER_ROW;
+
+  // Calculate visible range based on scroll
+  const startIndex = inventoryUI.scrollOffset * itemsPerRow;
+  const endIndex = Math.min(
+    startIndex + UI_CONFIG.VISIBLE_ROWS * itemsPerRow,
+    inventory.items.length
+  );
+
+  for (let i = startIndex; i < endIndex; i++) {
+    const itemId = inventory.items[i];
+    const item = ecs.getComponent<ItemComponent>(itemId, 'item');
+    if (!item) continue;
+
+    const localIndex = i - startIndex;
+    const row = Math.floor(localIndex / itemsPerRow);
+    const col = localIndex % itemsPerRow;
+
+    const slotX = x + 10 + col * (slotSize + spacing);
+    const slotY = startY + row * (slotSize + spacing);
+
+    // Don't render if being dragged
+    if (inventoryUI.isDragging && itemId === inventoryUI.dragItemId) {
+      continue;
     }
-    
+
     // Draw slot background
-    LJS.drawRect(slotPos, slotSize, slotColor);
-    
-    // Draw slot label
-    LJS.drawText(slot.label, slotPos.subtract(LJS.vec2(0, 30)), 10, UI.TEXT_COLOR);
-    
-    // Draw equipped item
-    const itemId = equipment[slot.name];
-    if (itemId !== undefined && itemId !== uiState.draggedItemId) {
-      renderItemIcon(ecs, itemId, slotPos);
+    let slotColor = UI_CONFIG.EMPTY_SLOT_COLOR;
+    if (i === inventoryUI.selectedItemIndex) {
+      slotColor = UI_CONFIG.SELECTED_COLOR;
+    } else if (itemId === inventoryUI.hoverItemId) {
+      slotColor = UI_CONFIG.HOVER_COLOR;
+    }
+
+    LJS.drawRect(
+      LJS.vec2(slotX + slotSize / 2, slotY + slotSize / 2),
+      LJS.vec2(slotSize, slotSize),
+      slotColor
+    );
+    drawRectOutline(
+      LJS.vec2(slotX + slotSize / 2, slotY + slotSize / 2),
+      LJS.vec2(slotSize, slotSize),
+      1,
+      UI_CONFIG.BORDER_COLOR
+    );
+
+    // Draw item name (abbreviated)
+    const itemName =
+      item.name.length > 8 ? item.name.substring(0, 7) + '...' : item.name;
+    LJS.drawText(
+      itemName,
+      LJS.vec2(slotX + slotSize / 2, slotY + slotSize / 2),
+      UI_CONFIG.SMALL_FONT_SIZE,
+      UI_CONFIG.TEXT_COLOR,
+      0,
+      undefined,
+      'center'
+    );
+
+    // Draw quantity if stackable
+    if (item.stackable && item.quantity > 1) {
+      LJS.drawText(
+        `x${item.quantity}`,
+        LJS.vec2(slotX + slotSize - 5, slotY + slotSize - 5),
+        UI_CONFIG.SMALL_FONT_SIZE,
+        UI_CONFIG.TITLE_COLOR,
+        0,
+        undefined,
+        'right'
+      );
     }
   }
 }
 
 /**
- * Render item icon in slot
+ * Render equipment panel (equipped items)
  */
-function renderItemIcon(
+function renderEquipmentPanel(
   ecs: ECS,
-  itemId: number,
-  position: LJS.Vector2
+  equipment: EquipmentComponent,
+  inventoryUI: InventoryUIComponent
 ): void {
+  const x = UI_CONFIG.EQUIPMENT_X;
+  const y = UI_CONFIG.EQUIPMENT_Y;
+  const w = UI_CONFIG.EQUIPMENT_WIDTH;
+  const h = UI_CONFIG.EQUIPMENT_HEIGHT;
+
+  // Draw panel background
+  LJS.drawRect(
+    LJS.vec2(x + w / 2, y + h / 2),
+    LJS.vec2(w, h),
+    UI_CONFIG.BG_COLOR
+  );
+  drawRectOutline(
+    LJS.vec2(x + w / 2, y + h / 2),
+    LJS.vec2(w, h),
+    2,
+    UI_CONFIG.BORDER_COLOR
+  );
+
+  // Draw title
+  LJS.drawText(
+    'Equipment',
+    LJS.vec2(x + w / 2, y + 15),
+    UI_CONFIG.TITLE_FONT_SIZE,
+    UI_CONFIG.TITLE_COLOR,
+    0,
+    undefined,
+    'center'
+  );
+
+  // Draw equipment slots
+  for (const [slotName, layout] of Object.entries(EQUIPMENT_SLOT_LAYOUT)) {
+    const slotX = x + layout.x;
+    const slotY = y + layout.y;
+    const slotSize = UI_CONFIG.EQUIPMENT_SLOT_SIZE;
+
+    const itemId = (equipment as any)[slotName];
+    const isHovered = slotName === inventoryUI.hoverEquipSlot;
+
+    // Don't render if being dragged
+    if (inventoryUI.isDragging && itemId === inventoryUI.dragItemId) {
+      // Draw empty slot
+      LJS.drawRect(
+        LJS.vec2(slotX, slotY),
+        LJS.vec2(slotSize, slotSize),
+        UI_CONFIG.EMPTY_SLOT_COLOR
+      );
+      drawRectOutline(
+        LJS.vec2(slotX, slotY),
+        LJS.vec2(slotSize, slotSize),
+        1,
+        UI_CONFIG.BORDER_COLOR
+      );
+    } else {
+      // Draw slot
+      const slotColor = isHovered
+        ? UI_CONFIG.HOVER_COLOR
+        : UI_CONFIG.EMPTY_SLOT_COLOR;
+      LJS.drawRect(
+        LJS.vec2(slotX, slotY),
+        LJS.vec2(slotSize, slotSize),
+        slotColor
+      );
+      drawRectOutline(
+        LJS.vec2(slotX, slotY),
+        LJS.vec2(slotSize, slotSize),
+        1,
+        UI_CONFIG.BORDER_COLOR
+      );
+
+      // Draw item if equipped
+      if (itemId !== undefined) {
+        const item = ecs.getComponent<ItemComponent>(itemId, 'item');
+        if (item) {
+          const itemName =
+            item.name.length > 6 ? item.name.substring(0, 5) + '.' : item.name;
+          LJS.drawText(
+            itemName,
+            LJS.vec2(slotX, slotY),
+            UI_CONFIG.SMALL_FONT_SIZE,
+            UI_CONFIG.TEXT_COLOR,
+            0,
+            undefined,
+            'center'
+          );
+        }
+      }
+    }
+
+    // Draw slot label
+    LJS.drawText(
+      layout.label,
+      LJS.vec2(slotX, slotY - slotSize / 2 - 10),
+      UI_CONFIG.SMALL_FONT_SIZE,
+      UI_CONFIG.TEXT_COLOR,
+      0,
+      undefined,
+      'center'
+    );
+  }
+}
+
+/**
+ * Render item details panel
+ */
+function renderDetailsPanel(ecs: ECS, itemId: number): void {
   const item = ecs.getComponent<ItemComponent>(itemId, 'item');
-  const render = ecs.getComponent<RenderComponent>(itemId, 'render');
-  
   if (!item) return;
-  
-  // Draw item sprite if available
-  if (render?.tileInfo) {
-    const size = LJS.vec2(32, 32);
-    LJS.drawTile(position, size, render.tileInfo, render.color);
-  }
-  
-  // Draw item quantity for stackable items
-  if (item.stackable && item.quantity > 1) {
-    const qtyText = `${item.quantity}`;
-    LJS.drawText(qtyText, position.add(LJS.vec2(12, -12)), 10, UI.TEXT_COLOR);
-  }
-  
-  // Draw quality/bless indicator
-  if (item.blessState === 'blessed') {
-    LJS.drawRect(position, LJS.vec2(36, 36), UI.QUALITY_COLORS.blessed, 0, false);
-  } else if (item.blessState === 'cursed') {
-    LJS.drawRect(position, LJS.vec2(36, 36), UI.QUALITY_COLORS.cursed, 0, false);
+
+  const x = UI_CONFIG.DETAILS_X;
+  const y = UI_CONFIG.DETAILS_Y;
+  const w = UI_CONFIG.DETAILS_WIDTH;
+  const h = UI_CONFIG.DETAILS_HEIGHT;
+
+  // Draw panel background
+  LJS.drawRect(
+    LJS.vec2(x + w / 2, y + h / 2),
+    LJS.vec2(w, h),
+    UI_CONFIG.BG_COLOR
+  );
+  drawRectOutline(
+    LJS.vec2(x + w / 2, y + h / 2),
+    LJS.vec2(w, h),
+    2,
+    UI_CONFIG.BORDER_COLOR
+  );
+
+  // Draw item name
+  LJS.drawText(
+    item.name,
+    LJS.vec2(x + 10, y + 20),
+    UI_CONFIG.TEXT_FONT_SIZE,
+    UI_CONFIG.TITLE_COLOR,
+    0,
+    undefined,
+    'left'
+  );
+
+  // Draw description
+  LJS.drawText(
+    item.description,
+    LJS.vec2(x + 10, y + 45),
+    UI_CONFIG.SMALL_FONT_SIZE,
+    UI_CONFIG.TEXT_COLOR,
+    0,
+    undefined,
+    'left'
+  );
+
+  // Draw properties
+  let propY = y + 70;
+  const props = [
+    `Type: ${item.itemType}`,
+    `Weight: ${item.weight}`,
+    `Value: ${item.value}`,
+    `Material: ${item.material}`,
+  ];
+
+  for (const prop of props) {
+    LJS.drawText(
+      prop,
+      LJS.vec2(x + 10, propY),
+      UI_CONFIG.SMALL_FONT_SIZE,
+      UI_CONFIG.TEXT_COLOR,
+      0,
+      undefined,
+      'left'
+    );
+    propY += 18;
   }
 }
 
 /**
- * Render dragged item following mouse
- */
-function renderDraggedItem(
-  ecs: ECS,
-  itemId: number
-): void {
-  const mousePos = LJS.mousePos;
-  renderItemIcon(ecs, itemId, mousePos);
-}
-
-/**
- * Render item tooltip
+ * Render tooltip for hovered item
  */
 function renderItemTooltip(
   ecs: ECS,
-  itemId: number
+  itemId: number,
+  mousePos: LJS.Vector2
 ): void {
   const item = ecs.getComponent<ItemComponent>(itemId, 'item');
   if (!item) return;
-  
-  const mousePos = LJS.mousePos;
-  const tooltipPos = mousePos.add(LJS.vec2(20, 20));
-  const tooltipSize = LJS.vec2(200, 120);
-  
+
+  const tooltipWidth = 200;
+  const tooltipHeight = 80;
+  const offsetX = 15;
+  const offsetY = -15;
+
+  const x = mousePos.x + offsetX;
+  const y = mousePos.y + offsetY;
+
   // Draw tooltip background
-  LJS.drawRect(tooltipPos, tooltipSize, UI.BG_COLOR);
-  LJS.drawRect(tooltipPos, tooltipSize.add(LJS.vec2(2, 2)), UI.BORDER_COLOR, 0, false);
-  
+  LJS.drawRect(
+    LJS.vec2(x + tooltipWidth / 2, y - tooltipHeight / 2),
+    LJS.vec2(tooltipWidth, tooltipHeight),
+    UI_CONFIG.BG_COLOR
+  );
+  drawRectOutline(
+    LJS.vec2(x + tooltipWidth / 2, y - tooltipHeight / 2),
+    LJS.vec2(tooltipWidth, tooltipHeight),
+    2,
+    UI_CONFIG.BORDER_COLOR
+  );
+
   // Draw item name
-  let nameColor = UI.TEXT_COLOR;
-  if (item.blessState === 'blessed') nameColor = UI.QUALITY_COLORS.blessed;
-  if (item.blessState === 'cursed') nameColor = UI.QUALITY_COLORS.cursed;
-  
-  const textY = tooltipPos.y + tooltipSize.y / 2 - 10;
-  LJS.drawText(item.name, LJS.vec2(tooltipPos.x, textY), 12, nameColor);
-  
-  // Draw item details
-  LJS.drawText(item.description, LJS.vec2(tooltipPos.x, textY - 15), 10, UI.TEXT_COLOR);
-  LJS.drawText(`Weight: ${item.weight}`, LJS.vec2(tooltipPos.x, textY - 30), 10, UI.TEXT_COLOR);
-  LJS.drawText(`Value: ${item.value}`, LJS.vec2(tooltipPos.x, textY - 45), 10, UI.TEXT_COLOR);
-  
-  // Draw identification status
-  if (item.identified === 'unidentified') {
-    LJS.drawText('Unidentified', LJS.vec2(tooltipPos.x, textY - 60), 10, new LJS.Color(1, 0.5, 0, 1));
+  LJS.drawText(
+    item.name,
+    LJS.vec2(x + 10, y - 10),
+    UI_CONFIG.TEXT_FONT_SIZE,
+    UI_CONFIG.TITLE_COLOR,
+    0,
+    undefined,
+    'left'
+  );
+
+  // Draw quick info
+  LJS.drawText(
+    `${item.itemType} (${item.weight} lbs)`,
+    LJS.vec2(x + 10, y - 30),
+    UI_CONFIG.SMALL_FONT_SIZE,
+    UI_CONFIG.TEXT_COLOR,
+    0,
+    undefined,
+    'left'
+  );
+
+  LJS.drawText(
+    `Value: ${item.value}g`,
+    LJS.vec2(x + 10, y - 48),
+    UI_CONFIG.SMALL_FONT_SIZE,
+    UI_CONFIG.TEXT_COLOR,
+    0,
+    undefined,
+    'left'
+  );
+}
+
+/**
+ * Render item being dragged (follows mouse)
+ */
+function renderDraggedItem(
+  ecs: ECS,
+  itemId: number,
+  mousePos: LJS.Vector2
+): void {
+  const item = ecs.getComponent<ItemComponent>(itemId, 'item');
+  if (!item) return;
+
+  const size = 50;
+
+  // Draw semi-transparent item
+  LJS.drawRect(
+    LJS.vec2(mousePos.x, mousePos.y),
+    LJS.vec2(size, size),
+    UI_CONFIG.DRAG_COLOR
+  );
+  drawRectOutline(
+    LJS.vec2(mousePos.x, mousePos.y),
+    LJS.vec2(size, size),
+    2,
+    UI_CONFIG.BORDER_COLOR
+  );
+
+  // Draw item name
+  const itemName =
+    item.name.length > 8 ? item.name.substring(0, 7) + '...' : item.name;
+  LJS.drawText(
+    itemName,
+    LJS.vec2(mousePos.x, mousePos.y),
+    UI_CONFIG.SMALL_FONT_SIZE,
+    UI_CONFIG.TEXT_COLOR,
+    0,
+    undefined,
+    'center'
+  );
+}
+
+/**
+ * Render UI instructions
+ */
+function renderInstructions(): void {
+  const instructions = [
+    'I/ESC: Close',
+    'Mouse: Drag items',
+    'Arrows: Navigate',
+    'Space: Details',
+  ];
+
+  let instrY = 20;
+  for (const instr of instructions) {
+    LJS.drawText(
+      instr,
+      LJS.vec2(20, instrY),
+      UI_CONFIG.SMALL_FONT_SIZE,
+      UI_CONFIG.TEXT_COLOR,
+      0,
+      undefined,
+      'left'
+    );
+    instrY += 16;
+  }
+}
+
+/**
+ * Helper: Draw rectangle outline using thin border rects
+ */
+function drawRectOutline(
+  pos: LJS.Vector2,
+  size: LJS.Vector2,
+  thickness: number,
+  color: LJS.Color
+): void {
+  const halfW = size.x / 2;
+  const halfH = size.y / 2;
+
+  // Top border
+  LJS.drawRect(
+    LJS.vec2(pos.x, pos.y + halfH),
+    LJS.vec2(size.x, thickness),
+    color
+  );
+
+  // Bottom border
+  LJS.drawRect(
+    LJS.vec2(pos.x, pos.y - halfH),
+    LJS.vec2(size.x, thickness),
+    color
+  );
+
+  // Left border
+  LJS.drawRect(
+    LJS.vec2(pos.x - halfW, pos.y),
+    LJS.vec2(thickness, size.y),
+    color
+  );
+
+  // Right border
+  LJS.drawRect(
+    LJS.vec2(pos.x + halfW, pos.y),
+    LJS.vec2(thickness, size.y),
+    color
+  );
+}
+
+/**
+ * Helper: Check if point is inside rectangle
+ */
+function isPointInRect(
+  x: number,
+  y: number,
+  rect: { x: number; y: number; w: number; h: number }
+): boolean {
+  return (
+    x >= rect.x && x <= rect.x + rect.w && y >= rect.y && y <= rect.y + rect.h
+  );
+}
+
+/**
+ * Helper: Get inventory item index at mouse position
+ */
+function getInventoryItemAt(
+  mouseX: number,
+  mouseY: number,
+  scrollOffset: number
+): number {
+  const x = UI_CONFIG.INVENTORY_X;
+  const startY = UI_CONFIG.INVENTORY_Y + UI_CONFIG.INVENTORY_TITLE_HEIGHT + 10;
+  const slotSize = UI_CONFIG.ITEM_SLOT_SIZE;
+  const spacing = UI_CONFIG.ITEM_SLOT_SPACING;
+  const itemsPerRow = UI_CONFIG.ITEMS_PER_ROW;
+
+  // Calculate which slot is clicked
+  const col = Math.floor((mouseX - x - 10) / (slotSize + spacing));
+  const row = Math.floor((mouseY - startY) / (slotSize + spacing));
+
+  if (col < 0 || col >= itemsPerRow || row < 0) {
+    return -1;
+  }
+
+  return scrollOffset * itemsPerRow + row * itemsPerRow + col;
+}
+
+/**
+ * Helper: Get equipment slot at mouse position
+ */
+function getEquipmentSlotAt(
+  mouseX: number,
+  mouseY: number
+): string | undefined {
+  const x = UI_CONFIG.EQUIPMENT_X;
+  const y = UI_CONFIG.EQUIPMENT_Y;
+  const slotSize = UI_CONFIG.EQUIPMENT_SLOT_SIZE;
+
+  for (const [slotName, layout] of Object.entries(EQUIPMENT_SLOT_LAYOUT)) {
+    const slotX = x + layout.x;
+    const slotY = y + layout.y;
+
+    if (
+      mouseX >= slotX - slotSize / 2 &&
+      mouseX <= slotX + slotSize / 2 &&
+      mouseY >= slotY - slotSize / 2 &&
+      mouseY <= slotY + slotSize / 2
+    ) {
+      return slotName;
+    }
+  }
+
+  return undefined;
+}
+
+/**
+ * Helper: Check if item can be equipped to slot
+ */
+function canEquipToSlot(item: ItemComponent, slot: string): boolean {
+  if (
+    !item.equipSlot &&
+    item.itemType !== 'weapon' &&
+    item.itemType !== 'armor'
+  ) {
+    return false;
+  }
+
+  // Simple validation - in real game, check item's equipSlot property
+  if (item.itemType === 'weapon') {
+    return slot === 'mainHand' || slot === 'offHand';
+  }
+
+  if (item.itemType === 'armor') {
+    // Armor can go in most slots - validate based on item's equipSlot
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Helper: Update scroll to keep selection visible
+ */
+function updateScrollForSelection(inventoryUI: InventoryUIComponent): void {
+  const selectedRow = Math.floor(
+    inventoryUI.selectedItemIndex / UI_CONFIG.ITEMS_PER_ROW
+  );
+
+  // Scroll up if selection is above visible area
+  if (selectedRow < inventoryUI.scrollOffset) {
+    inventoryUI.scrollOffset = selectedRow;
+  }
+
+  // Scroll down if selection is below visible area
+  if (selectedRow >= inventoryUI.scrollOffset + UI_CONFIG.VISIBLE_ROWS) {
+    inventoryUI.scrollOffset = selectedRow - UI_CONFIG.VISIBLE_ROWS + 1;
   }
 }

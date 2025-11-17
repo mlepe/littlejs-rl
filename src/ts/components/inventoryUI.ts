@@ -1,62 +1,101 @@
 /*
  * File: inventoryUI.ts
  * Project: littlejs-rl
- * File Created: Monday, 30th December 2025 11:00:00 pm
+ * File Created: Monday, 30th December 2025 10:30:00 pm
  * Author: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
- * Last Modified: Monday, 30th December 2025 11:00:00 pm
+ * Last Modified: Monday, 30th December 2025 10:30:00 pm
  * Modified By: Matthieu LEPERLIER (m.leperlier42@gmail.com>)
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
 /**
- * Inventory UI state component
+ * UI Panel Types for inventory screen
+ */
+export enum InventoryPanel {
+  /** Main inventory grid (backpack items) */
+  INVENTORY = 'inventory',
+  /** Equipment slots (equipped items) */
+  EQUIPMENT = 'equipment',
+  /** Item details and description */
+  DETAILS = 'details',
+}
+
+/**
+ * Inventory UI Component - Tracks UI state for inventory screen
  *
- * Manages the state of the inventory UI screen:
- * - Whether inventory is open or closed
- * - Currently hovered item/slot
- * - Dragging state for drag-drop
- * - Selected tab (inventory vs equipment)
+ * This component manages:
+ * - Which panel is currently focused
+ * - Selected item for inspection/use
+ * - Scroll position in inventory list
+ * - Drag-drop state for item movement
+ * - Hover state for tooltips
+ *
+ * @example
+ * ```typescript
+ * const inventoryUI: InventoryUIComponent = {
+ *   activePanel: InventoryPanel.INVENTORY,
+ *   selectedItemIndex: 0,
+ *   scrollOffset: 0,
+ *   isDragging: false,
+ *   dragItemId: undefined,
+ *   dragSourceSlot: undefined,
+ *   hoverItemId: undefined,
+ *   hoverEquipSlot: undefined,
+ * };
+ * ```
  */
 export interface InventoryUIComponent {
   /**
-   * Whether inventory UI is currently visible
+   * Currently active panel (determines which section has focus)
    */
-  isOpen: boolean;
+  activePanel: InventoryPanel;
 
   /**
-   * Currently hovered item entity ID (for tooltip)
+   * Selected item index in inventory list (for keyboard navigation)
+   * -1 means no selection
    */
-  hoveredItemId?: number;
+  selectedItemIndex: number;
 
   /**
-   * Currently hovered equipment slot name (for tooltip)
+   * Scroll offset for inventory list (when items exceed visible area)
    */
-  hoveredSlot?: string;
+  scrollOffset: number;
 
   /**
-   * Item being dragged (entity ID)
+   * Whether an item is currently being dragged
    */
-  draggedItemId?: number;
+  isDragging: boolean;
 
   /**
-   * Source of dragged item ('inventory' or 'equipment')
+   * Entity ID of item being dragged (undefined if not dragging)
    */
-  dragSource?: 'inventory' | 'equipment';
+  dragItemId?: number;
 
   /**
    * Source equipment slot if dragging from equipment
+   * (e.g., 'mainHand', 'head', undefined if from inventory)
    */
   dragSourceSlot?: string;
 
   /**
-   * Current tab selection ('inventory' or 'equipment')
+   * Item currently being hovered by mouse (for tooltip)
    */
-  activeTab: 'inventory' | 'equipment';
+  hoverItemId?: number;
 
   /**
-   * Scroll offset for inventory grid (if items exceed visible area)
+   * Equipment slot currently being hovered
    */
-  scrollOffset: number;
+  hoverEquipSlot?: string;
+
+  /**
+   * Whether to show item details panel
+   */
+  showDetails: boolean;
+
+  /**
+   * Item ID for details panel (undefined if no item selected)
+   */
+  detailsItemId?: number;
 }
