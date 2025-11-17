@@ -150,6 +150,26 @@
     },
 
     // ============================================================================
+    // EDITOR/WORKSPACE OPTIMIZATION TASKS
+    // ============================================================================
+    {
+      // Provides a detailed implementation plan for a specified featureture
+      "label": "Copilot: Is this extension redundant with you?",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "--reuse-window",
+        "chat",
+        "Is the extension ${input:extensionName} (${input:extensionIdentifier}) redundant with you?"
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+
+    // ============================================================================
     // ECS CREATION TASKS
     // ============================================================================
 
@@ -413,6 +433,16 @@
       "id": "featureDescription",
       "type": "promptString",
       "description": "Describe the feature you want to add implement."
+    },
+    {
+      "id": "extensionName",
+      "type": "promptString",
+      "description": "Name of the extension."
+    },
+    {
+      "id": "extensionIdentifier",
+      "type": "promptString",
+      "description": "Identifier of the extension."
     }
   ]
 }
