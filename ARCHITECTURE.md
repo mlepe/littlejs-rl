@@ -22,7 +22,10 @@ const playerId = ecs.createEntity();
 
 // Add components (data only)
 ecs.addComponent<PositionComponent>(playerId, 'position', { x: 10, y: 20 });
-ecs.addComponent<HealthComponent>(playerId, 'health', { current: 100, max: 100 });
+ecs.addComponent<HealthComponent>(playerId, 'health', {
+  current: 100,
+  max: 100,
+});
 
 // Query entities with specific components
 const entities = ecs.query('position', 'health');
@@ -113,16 +116,40 @@ src/
 
 ### Character Components
 
-- **StatsComponent**: `{ strength, defense, speed }` - Combat and movement stats
+- **StatsComponent**: `{ strength, defense, speed, ... }` - Combat and movement stats
 - **PlayerComponent**: `{ isPlayer: true }` - Tag for player entities
-- **InputComponent**: `{ moveX, moveY, action }` - Input state
+- **InputComponent**: `{ moveX, moveY, action, ... }` - Input state
+- **ClassComponent**: Character class data (warrior, mage, rogue, etc.)
+- **RaceComponent**: Character race data (human, elf, orc, etc.)
+
+### Item Components
+
+- **ItemComponent**: Item properties (name, type, description, state, material, value)
+- **InventoryComponent**: Items array, carry weight tracking
+- **InventoryUIComponent**: UI state for inventory display
+- **EquipmentComponent**: Equipment slot and equipped status
+- **IdentificationComponent**: Identification level (unidentified/partial/full)
+- **ConsumableComponent**: Uses and effects for consumable items
+- **ChargesComponent**: Charges for rods/wands
+- **LootTableComponent**: Loot generation data
+
+### Combat Components
+
+- **ElementalDamageComponent**: Elemental damage types and amounts
+- **ElementalResistanceComponent**: Resistances to element types
+- **StatusEffectComponent**: Active status effects (burn, freeze, poison, etc.)
+- **StatModifierComponent**: Temporary stat modifications
 
 ### AI Components
 
 - **AIComponent**: `{ type, detectionRange, state, target? }` - AI behavior
   - Types: `passive`, `aggressive`, `patrol`, `fleeing`
   - States: `idle`, `pursuing`, `attacking`, `fleeing`
+
+### World Components
+
 - **LocationComponent**: `{ worldX, worldY }` - Which location entity is in
+- **ViewModeComponent**: UI view mode state (normal, inventory, examine, world_map)
 - **RelationComponent**: `{ relations: Map<entityId, RelationData> }` - Relationships with other entities
 
 ## System Reference
@@ -131,15 +158,54 @@ src/
 
 - **renderSystem(ecs)**: Renders all entities with position + render components
 - **movementSystem(ecs, dx, dy)**: Generic movement (rarely used, mainly for testing)
+- **cameraSystem(ecs)**: Updates camera position to follow player with zoom support
 
 ### Player Systems
 
 - **inputSystem(ecs)**: Captures keyboard input → InputComponent
 - **playerMovementSystem(ecs)**: Moves player based on InputComponent
+- **pickupSystem(ecs)**: Handles item pickup when player walks over items
 
 ### AI Systems
 
 - **aiSystem(ecs, playerId)**: Processes AI behaviors for NPCs/enemies
+
+### Combat Systems
+
+- **collisionSystem(ecs)**: Prevents entity overlaps and handles collision detection
+- **collisionDamageSystem(ecs)**: Applies damage when entities collide
+- **combatSystem(ecs)**: Handles melee attacks and combat interactions
+- **deathSystem(ecs)**: Handles entity death and loot drops
+
+### Stat & Effect Systems
+
+- **derivedStatsSystem(ecs)**: Calculates derived stats from base stats
+- **statModifierSystem(ecs)**: Applies temporary stat modifications
+- **statusEffectSystem(ecs)**: Updates status effects (burn, freeze, poison, etc.)
+- **elementalDamageSystem(ecs)**: Handles elemental damage calculations
+- **raceSystem(ecs)**: Applies racial bonuses to stats
+- **classSystem(ecs)**: Applies class bonuses to stats
+
+### Item & Inventory Systems
+
+- **inventorySystem(ecs)**: Manages inventory operations (add, remove, drop)
+- **inventoryUISystem(ecs, playerId)**: Renders inventory UI
+- **equipmentSystem(ecs)**: Handles equipment and unequipment of items
+- **identificationSystem(ecs)**: Auto-identifies items based on intelligence
+- **itemUsageSystem(ecs)**: Handles using consumable items
+- **itemUsageInputSystem(ecs)**: Captures 'U' key press for using items
+- **itemGenerationSystem**: Generates items from data templates
+- **lootSystem(ecs)**: Handles loot drops and item placement
+- **chargesSystem(ecs)**: Passive charge regeneration for rods/wands
+
+### World & View Systems
+
+- **locationTransitionSystem(ecs)**: Handles location transitions at edges
+- **worldMapMovementSystem(ecs)**: Handles world map cursor navigation
+- **viewModeTransitionSystem(ecs)**: Switches between view modes (location, inventory, examine, world_map)
+- **examineSystem(ecs, x, y)**: Gathers information about entities/tiles at cursor
+- **examineCursorMovementSystem(ecs)**: Handles examine mode cursor movement
+- **examineRenderSystem(x, y, data)**: Renders examine mode UI overlays
 
 ### Spatial Systems
 
@@ -160,25 +226,70 @@ The main game loop follows this order:
 
 ```typescript
 function gameUpdate() {
-  // 1. Capture input
+  // Always process input (captures key states)
   inputSystem(ecs);
-  
-  // 2. Process player movement
-  playerMovementSystem(ecs);
-  
-  // 3. Process AI
-  aiSystem(ecs, playerId);
-  
-  // 4. Update camera
-  updateCamera();
+  itemUsageInputSystem(ecs);
+
+  // Handle view mode transitions (immediate response)
+  viewModeTransitionSystem(ecs);
+
+  // Camera system (immediate response)
+  cameraSystem(ecs);
+
+  // Turn-based actions (throttled by turnDelay)
+  if (shouldProcessTurn) {
+    const viewMode = getViewMode(ecs, playerId);
+
+    if (viewMode === ViewMode.WORLD_MAP) {
+      worldMapMovementSystem(ecs);
+    } else if (viewMode === ViewMode.EXAMINE) {
+      examineCursorMovementSystem(ecs);
+    } else {
+      // Location mode (normal gameplay)
+      pickupSystem(ecs);
+      playerMovementSystem(ecs);
+      locationTransitionSystem(ecs);
+
+      // Item systems
+      chargesSystem(ecs);
+      identificationSystem(ecs);
+
+      // Combat
+      collisionDamageSystem(ecs);
+
+      // AI and death
+      aiSystem(ecs, playerId);
+      deathSystem(ecs);
+    }
+  }
 }
 
 function gameRender() {
-  // 1. Render location tiles
-  location.render();
-  
-  // 2. Render all entities
+  // Collision overlay (if enabled)
+  if (showCollisionOverlay) {
+    location.renderDebug();
+  }
+  // Note: TileLayers render automatically between render() and renderPost()
+}
+
+function gameRenderPost() {
+  // 1. Render all entities (AFTER tile layers)
   renderSystem(ecs);
+
+  // 2. Render mode-specific UI
+  if (viewMode === ViewMode.EXAMINE) {
+    const examineData = examineSystem(ecs, cursorX, cursorY);
+    examineRenderSystem(cursorX, cursorY, examineData);
+  }
+
+  if (viewMode === ViewMode.INVENTORY) {
+    inventoryUISystem(ecs, playerId);
+  }
+
+  // 3. Debug info (if enabled)
+  if (showDebugText) {
+    renderDebugInfo();
+  }
 }
 ```
 
@@ -276,11 +387,11 @@ if (playerPos && playerLoc) {
   // Update location component
   playerLoc.worldX = newWorldX;
   playerLoc.worldY = newWorldY;
-  
+
   // Reset position in new location
   playerPos.x = spawnX;
   playerPos.y = spawnY;
-  
+
   // Update world
   world.setCurrentLocation(newWorldX, newWorldY);
 }
@@ -308,6 +419,7 @@ GAME_DEBUG=true
 ```
 
 This displays:
+
 - FPS counter
 - Current location name
 - Player position

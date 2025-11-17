@@ -404,17 +404,64 @@ ColorPaletteManager.getInstance().registerPalette('custom', customPalette);
 
 - `renderSystem(ecs)` - Renders all entities with position and render components
 - `movementSystem(ecs, dx, dy)` - Moves entities with position and movable components
+- `cameraSystem(ecs)` - Updates camera position to follow player with zoom support
 
 **Player Systems:**
 
 - `inputSystem(ecs)` - Captures keyboard input for player entities
 - `playerMovementSystem(ecs)` - Moves player based on input and stats
+- `pickupSystem(ecs)` - Handles item pickup when player walks over items
 
 **AI Systems:**
 
 - `aiSystem(ecs, playerEntityId)` - Handles AI behaviors (aggressive, passive, fleeing, patrol)
 - `relationSystem(ecs, entityId, targetEntityId, scoreDelta)` - Updates relationship scores between entities
 - `getRelationScore(ecs, entityId, targetEntityId)` - Helper to query relationship scores
+
+**Combat Systems:**
+
+- `collisionSystem(ecs)` - Prevents entity overlaps and handles collision detection
+- `collisionDamageSystem(ecs)` - Applies damage when entities collide
+- `combatSystem(ecs)` - Handles melee attacks and combat interactions
+- `deathSystem(ecs)` - Handles entity death and loot drops
+
+**Stat & Effect Systems:**
+
+- `derivedStatsSystem(ecs)` - Calculates derived stats from base stats
+- `statModifierSystem(ecs)` - Applies temporary stat modifications
+- `statusEffectSystem(ecs)` - Updates status effects (burn, freeze, poison, etc.)
+- `elementalDamageSystem(ecs)` - Handles elemental damage calculations
+- `raceSystem(ecs)` - Applies racial bonuses to stats
+- `classSystem(ecs)` - Applies class bonuses to stats
+
+**Item & Inventory Systems:**
+
+- `inventorySystem` - Manages inventory operations (add, remove, drop)
+- `inventoryUISystem(ecs, playerId)` - Renders inventory UI
+- `equipmentSystem(ecs)` - Handles equipment and unequipment of items
+- `identificationSystem(ecs)` - Auto-identifies items based on intelligence
+- `itemUsageSystem(ecs)` - Handles using consumable items
+- `itemUsageInputSystem(ecs)` - Captures 'U' key press for using items
+- `itemGenerationSystem` - Generates items from data templates
+- `lootSystem` - Handles loot drops and item placement
+- `chargesSystem(ecs)` - Passive charge regeneration for rods/wands
+
+**World & View Systems:**
+
+- `locationTransitionSystem(ecs)` - Handles location transitions at edges
+- `worldMapMovementSystem(ecs)` - Handles world map cursor navigation
+- `viewModeTransitionSystem(ecs)` - Switches between view modes (location, inventory, examine, world_map)
+- `examineSystem(ecs, x, y)` - Gathers information about entities/tiles at cursor
+- `examineCursorMovementSystem(ecs)` - Handles examine mode cursor movement
+- `examineRenderSystem(x, y, data)` - Renders examine mode UI overlays
+
+**Spatial Systems:**
+
+- `getEntitiesAt(ecs, x, y, worldX?, worldY?)` - Get entities at position
+- `getEntitiesInRadius(ecs, x, y, radius, worldX?, worldY?)` - Get nearby entities
+- `getEntitiesInLocation(ecs, worldX, worldY)` - Get all entities in location
+- `isPositionOccupied(ecs, x, y, worldX?, worldY?)` - Check if position has entity
+- `getNearestEntity(ecs, x, y, maxDist?, worldX?, worldY?)` - Find nearest entity
 
 ### Available Entity Types
 
@@ -707,26 +754,58 @@ if (health) {
 ### Game Loop with Systems
 
 ```typescript
-import {
-  inputSystem,
-  playerMovementSystem,
-  aiSystem,
-  relationSystem,
-  renderSystem,
-} from './ts/systems';
-
 // In your game update loop
 function update() {
-  inputSystem(ecs); // Handle player input
-  playerMovementSystem(ecs); // Move player based on input
-  aiSystem(ecs, playerId); // AI behaviors for NPCs/enemies
-  // collisionSystem(ecs);        // Handle collisions
-  // combatSystem(ecs);           // Handle combat
-  // relationSystem is called on-demand when events affect relationships
+  // Always process input (captures key states)
+  inputSystem(ecs);
+  itemUsageInputSystem(ecs);
+
+  // Handle view mode transitions (immediate response)
+  viewModeTransitionSystem(ecs);
+
+  // Camera system (immediate response)
+  cameraSystem(ecs);
+
+  // Turn-based actions (throttled by turnDelay)
+  if (shouldProcessTurn) {
+    const viewMode = getViewMode(ecs, playerId);
+
+    if (viewMode === ViewMode.WORLD_MAP) {
+      worldMapMovementSystem(ecs);
+    } else if (viewMode === ViewMode.EXAMINE) {
+      examineCursorMovementSystem(ecs);
+    } else {
+      // Location mode (normal gameplay)
+      pickupSystem(ecs);
+      playerMovementSystem(ecs);
+      locationTransitionSystem(ecs);
+
+      // Item systems
+      chargesSystem(ecs);
+      identificationSystem(ecs);
+
+      // Combat
+      collisionDamageSystem(ecs);
+
+      // AI and death
+      aiSystem(ecs, playerId);
+      deathSystem(ecs);
+    }
+  }
 }
 
-function render() {
-  renderSystem(ecs); // Render all entities
+function renderPost() {
+  renderSystem(ecs); // Render all entities (AFTER tile layers)
+
+  // Mode-specific UI
+  if (viewMode === ViewMode.EXAMINE) {
+    const examineData = examineSystem(ecs, cursorX, cursorY);
+    examineRenderSystem(cursorX, cursorY, examineData);
+  }
+
+  if (viewMode === ViewMode.INVENTORY) {
+    inventoryUISystem(ecs, playerId);
+  }
 }
 ```
 
