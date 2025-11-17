@@ -51,6 +51,23 @@ export function renderSystem(ecs: ECS): void {
       // so they automatically appear above tiles
       const position = LJS.vec2(pos.x + 0.5, pos.y + 0.5);
 
+      // Draw outline if specified (for enemies, special entities)
+      if (render.outlineColor && render.outlineWidth) {
+        const outlineWidth = render.outlineWidth;
+        const outlineSize = render.size.add(
+          LJS.vec2(outlineWidth * 2, outlineWidth * 2)
+        );
+
+        // Draw outline rectangle behind sprite
+        LJS.drawRect(
+          position,
+          outlineSize,
+          render.outlineColor,
+          render.angle || 0
+        );
+      }
+
+      // Draw main sprite on top
       LJS.drawTile(
         position,
         render.size,

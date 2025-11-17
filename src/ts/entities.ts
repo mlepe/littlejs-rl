@@ -235,8 +235,10 @@ export function createEnemy(
       LJS.vec2(16, 16),
       0
     ),
-    color: new LJS.Color(1, 0, 0), // Red
+    color: new LJS.Color(1, 1, 1), // White (preserves sprite colors)
     size: new LJS.Vector2(1, 1),
+    outlineColor: new LJS.Color(1, 0, 0, 1), // Red outline for enemies
+    outlineWidth: 0.1, // Thin red border
   });
 
   ecs.addComponent<MovableComponent>(enemyId, 'movable', { speed: 1 });
@@ -468,6 +470,8 @@ export function createBoss(
     ),
     color: new LJS.Color(0.5, 0, 0.5), // Purple
     size: new LJS.Vector2(2, 2), // Larger size
+    outlineColor: new LJS.Color(1, 0, 0, 1), // Red outline for bosses
+    outlineWidth: 0.15, // Thicker border for bosses
   });
 
   ecs.addComponent<MovableComponent>(bossId, 'movable', { speed: 1 });

@@ -30,4 +30,8 @@ export interface RenderComponent {
   mirror?: boolean;
   /** Additive color for effects (optional) */
   additiveColor?: LJS.Color;
+  /** Outline color for highlighting (optional) */
+  outlineColor?: LJS.Color;
+  /** Outline width in tiles (optional) */
+  outlineWidth?: number;
 }

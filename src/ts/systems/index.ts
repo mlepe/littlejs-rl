@@ -19,6 +19,7 @@ export * from './locationTransitionSystem';
 export * from './cameraSystem';
 export * from './spatialSystem';
 export * from './relationSystem';
+export * from './collisionSystem';
 export * from './statModifierSystem';
 export * from './derivedStatsSystem';
 export * from './elementalDamageSystem';

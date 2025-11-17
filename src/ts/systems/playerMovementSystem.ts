@@ -19,6 +19,7 @@ import {
 
 import ECS from '../ecs';
 import Game from '../game';
+import { collisionSystem } from './collisionSystem';
 
 /**
  * Player Movement System - Moves player entities based on input
@@ -57,7 +58,13 @@ export function playerMovementSystem(ecs: ECS): void {
       const newX = Math.floor(pos.x + input.moveX);
       const newY = Math.floor(pos.y + input.moveY);
 
-      // Get current location to check collision
+      // Check entity-entity collision first
+      if (!collisionSystem(ecs, entityId, newX, newY)) {
+        // Blocked by another entity, don't move
+        continue;
+      }
+
+      // Get current location to check terrain collision
       const game = Game.getInstance();
       const location = game.getCurrentLocation();
 

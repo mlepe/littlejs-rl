@@ -18,6 +18,7 @@ import {
 } from '../components';
 
 import ECS from '../ecs';
+import { collisionSystem } from './collisionSystem';
 import { getRelationScore } from './relationSystem';
 
 /**
@@ -99,8 +100,14 @@ export function aiSystem(ecs: ECS, playerEntityId: number): void {
         ai.state = 'fleeing';
         const dx = -Math.sign(playerPos.x - pos.x) * stats.derived.speed;
         const dy = -Math.sign(playerPos.y - pos.y) * stats.derived.speed;
-        pos.x += dx;
-        pos.y += dy;
+        const newX = pos.x + dx;
+        const newY = pos.y + dy;
+
+        // Check collision before moving
+        if (collisionSystem(ecs, entityId, newX, newY)) {
+          pos.x = newX;
+          pos.y = newY;
+        }
       }
     } else if (shouldAttack && distance <= ai.detectionRange) {
       // Hostile behavior - pursue and attack
@@ -111,8 +118,14 @@ export function aiSystem(ecs: ECS, playerEntityId: number): void {
         // Move towards player
         const dx = Math.sign(playerPos.x - pos.x) * stats.derived.speed;
         const dy = Math.sign(playerPos.y - pos.y) * stats.derived.speed;
-        pos.x += dx;
-        pos.y += dy;
+        const newX = pos.x + dx;
+        const newY = pos.y + dy;
+
+        // Check collision before moving
+        if (collisionSystem(ecs, entityId, newX, newY)) {
+          pos.x = newX;
+          pos.y = newY;
+        }
       } else {
         // Attack if in range
         ai.state = 'attacking';
@@ -122,15 +135,31 @@ export function aiSystem(ecs: ECS, playerEntityId: number): void {
       // Patrol behavior (simple wandering for now)
       ai.state = 'patrolling';
       if (Math.random() < 0.05) {
-        pos.x += Math.floor(Math.random() * 3 - 1) * stats.derived.speed;
-        pos.y += Math.floor(Math.random() * 3 - 1) * stats.derived.speed;
+        const newX =
+          pos.x + Math.floor(Math.random() * 3 - 1) * stats.derived.speed;
+        const newY =
+          pos.y + Math.floor(Math.random() * 3 - 1) * stats.derived.speed;
+
+        // Check collision before moving
+        if (collisionSystem(ecs, entityId, newX, newY)) {
+          pos.x = newX;
+          pos.y = newY;
+        }
       }
     } else if (ai.disposition === 'peaceful' || ai.disposition === 'neutral') {
       // Peaceful wandering
       ai.state = 'idle';
       if (Math.random() < 0.05) {
-        pos.x += Math.floor(Math.random() * 3 - 1) * stats.derived.speed * 0.5;
-        pos.y += Math.floor(Math.random() * 3 - 1) * stats.derived.speed * 0.5;
+        const newX =
+          pos.x + Math.floor(Math.random() * 3 - 1) * stats.derived.speed * 0.5;
+        const newY =
+          pos.y + Math.floor(Math.random() * 3 - 1) * stats.derived.speed * 0.5;
+
+        // Check collision before moving
+        if (collisionSystem(ecs, entityId, newX, newY)) {
+          pos.x = newX;
+          pos.y = newY;
+        }
       }
     } else {
       // Default idle state
