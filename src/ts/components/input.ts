@@ -36,4 +36,6 @@ export interface InputComponent {
   locationEnterWorldMap: boolean;
   /** Enter location from world map */
   worldMapEnterLocation: boolean;
+  /** Toggle examine mode (L key) */
+  toggleExamine: boolean;
 }

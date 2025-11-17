@@ -18,6 +18,8 @@ export enum ViewMode {
   LOCATION = 'location',
   /** Viewing the world map (location grid) */
   WORLD_MAP = 'world_map',
+  /** Examining tiles and entities with a cursor */
+  EXAMINE = 'examine',
 }
 
 /**
@@ -30,4 +32,8 @@ export interface ViewModeComponent {
   worldMapCursorX: number;
   /** World map cursor position (Y) when in world map view */
   worldMapCursorY: number;
+  /** Examine cursor position (X) when in examine view */
+  examineCursorX: number;
+  /** Examine cursor position (Y) when in examine view */
+  examineCursorY: number;
 }

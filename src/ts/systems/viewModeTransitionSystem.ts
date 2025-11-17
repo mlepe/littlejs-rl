@@ -24,11 +24,12 @@ import Game from '../game';
 import { ViewMode } from '../components/viewMode';
 
 /**
- * View Mode Transition System - Handles switching between location and world map views
+ * View Mode Transition System - Handles switching between views
  *
  * Processes input to transition between:
  * - LOCATION view (exploring a specific location)
  * - WORLD_MAP view (viewing the world grid)
+ * - EXAMINE view (cursor-based tile/entity inspection)
  *
  * Should be called after input system in the update loop.
  *
@@ -70,12 +71,43 @@ export function viewModeTransitionSystem(ecs: ECS): void {
     const worldMap = game.getWorldMap();
 
     // Debug: Log current state
-    if (input.locationEnterWorldMap || input.worldMapEnterLocation) {
+    if (
+      input.locationEnterWorldMap ||
+      input.worldMapEnterLocation ||
+      input.toggleExamine
+    ) {
       console.log('[ViewMode] Transition request:', {
         currentMode: viewMode.mode,
         locationEnterWorldMap: input.locationEnterWorldMap,
         worldMapEnterLocation: input.worldMapEnterLocation,
+        toggleExamine: input.toggleExamine,
       });
+    }
+
+    // Toggle EXAMINE mode (only from LOCATION view)
+    if (input.toggleExamine) {
+      if (viewMode.mode === ViewMode.LOCATION) {
+        console.log('[ViewMode] TRANSITIONING: LOCATION -> EXAMINE');
+        viewMode.mode = ViewMode.EXAMINE;
+
+        // Initialize examine cursor at player position
+        viewMode.examineCursorX = Math.floor(pos.x);
+        viewMode.examineCursorY = Math.floor(pos.y);
+
+        if (Game.isDebug) {
+          console.log(
+            `[ViewMode] Entered EXAMINE at (${viewMode.examineCursorX}, ${viewMode.examineCursorY})`
+          );
+        }
+      } else if (viewMode.mode === ViewMode.EXAMINE) {
+        console.log('[ViewMode] TRANSITIONING: EXAMINE -> LOCATION');
+        viewMode.mode = ViewMode.LOCATION;
+
+        if (Game.isDebug) {
+          console.log('[ViewMode] Exited EXAMINE mode');
+        }
+      }
+      // If in world map, ignore examine toggle
     }
 
     // Transition from LOCATION to WORLD_MAP

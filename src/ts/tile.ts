@@ -171,3 +171,23 @@ export function isTileTransparent(type: TileType): boolean {
 export function getTileCollisionValue(type: TileType): number {
   return getTileProperties(type).collisionValue;
 }
+
+/**
+ * Get a human-readable name for a tile type
+ * @param type - The tile type
+ * @returns Readable name for display
+ */
+export function getTileName(type: TileType): string {
+  const names: Record<TileType, string> = {
+    [TileType.VOID]: 'Empty Space',
+    [TileType.FLOOR]: 'Stone Floor',
+    [TileType.WALL]: 'Stone Wall',
+    [TileType.DOOR_OPEN]: 'Open Door',
+    [TileType.DOOR_CLOSED]: 'Closed Door',
+    [TileType.STAIRS_UP]: 'Stairs Up',
+    [TileType.STAIRS_DOWN]: 'Stairs Down',
+    [TileType.WATER]: 'Water',
+    [TileType.GRASS]: 'Grass',
+  };
+  return names[type] || 'Unknown';
+}

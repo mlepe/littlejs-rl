@@ -24,6 +24,9 @@ import {
   chargesSystem,
   collisionDamageSystem,
   deathSystem,
+  examineCursorMovementSystem,
+  examineRenderSystem,
+  examineSystem,
   identificationSystem,
   inputSystem,
   itemUsageInputSystem,
@@ -339,6 +342,9 @@ export default class Game {
       if (currentViewMode === ViewMode.WORLD_MAP) {
         // World map movement (cursor navigation)
         worldMapMovementSystem(this.ecs);
+      } else if (currentViewMode === ViewMode.EXAMINE) {
+        // Examine mode (cursor-based inspection)
+        examineCursorMovementSystem(this.ecs);
       } else {
         // Location movement and exploration
         pickupSystem(this.ecs); // Handle item pickup
@@ -383,6 +389,13 @@ export default class Game {
       // World map view - TileLayer auto-renders, player renders via renderSystem
       // Render all entities (including player on world map)
       renderSystem(this.ecs);
+    } else if (currentViewMode === ViewMode.EXAMINE) {
+      // Examine mode view
+      // Render location (TileLayer auto-renders)
+      // Render all entities
+      renderSystem(this.ecs);
+
+      // Render examine cursor and info panel (in renderPost)
     } else {
       // Render location view
       // TileLayer and TileCollisionLayer are automatically rendered by LittleJS
@@ -404,6 +417,27 @@ export default class Game {
    */
   renderPost(): void {
     if (!this.initialized) return;
+
+    // Check player view mode for examine rendering
+    const viewModeComp = this.ecs.getComponent<ViewModeComponent>(
+      this.playerId,
+      'viewMode'
+    );
+    const currentViewMode = viewModeComp?.mode || ViewMode.LOCATION;
+
+    // Render examine mode UI overlays
+    if (currentViewMode === ViewMode.EXAMINE && viewModeComp) {
+      const examineData = examineSystem(
+        this.ecs,
+        viewModeComp.examineCursorX,
+        viewModeComp.examineCursorY
+      );
+      examineRenderSystem(
+        viewModeComp.examineCursorX,
+        viewModeComp.examineCursorY,
+        examineData
+      );
+    }
 
     // Render debug info if enabled (runtime toggle)
     if (this.showDebugText) {

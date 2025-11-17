@@ -20,7 +20,6 @@ import {
   RenderComponent,
   ViewModeComponent,
 } from './components';
-import { ViewMode } from './components/viewMode';
 import {
   SPRITE_BOSS,
   SPRITE_ENEMY,
@@ -36,6 +35,7 @@ import ECS from './ecs';
 import { InputComponent } from './components/input';
 import { PlayerComponent } from './components/player';
 import { StatsComponent } from './components/stats';
+import { ViewMode } from './components/viewMode';
 import { addLootTable } from './systems/lootSystem';
 import { calculateDerivedStats } from './systems/derivedStatsSystem';
 
@@ -106,6 +106,7 @@ export function createPlayer(
     debugToggleText: false,
     locationEnterWorldMap: false,
     worldMapEnterLocation: false,
+    toggleExamine: false,
   });
 
   // Add view mode component (starts in LOCATION view)
@@ -113,6 +114,8 @@ export function createPlayer(
     mode: ViewMode.LOCATION,
     worldMapCursorX: worldX,
     worldMapCursorY: worldY,
+    examineCursorX: x,
+    examineCursorY: y,
   });
 
   // Add empty inventory (capacity calculated from strength in derived stats)
