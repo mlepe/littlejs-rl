@@ -282,6 +282,13 @@ export default class WorldMap {
   }*/
 
   /**
+   * Get the tile layer (for direct engine control)
+   */
+  getTileLayer(): LJS.TileLayer {
+    return this.tileLayer;
+  }
+
+  /**
    * Redraw the tile layer
    * Call this after updating tiles to make changes visible
    */

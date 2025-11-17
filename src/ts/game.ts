@@ -317,6 +317,9 @@ export default class Game {
     // Handle debug toggles from player input
     this.handleDebugToggles();
 
+    // Handle view mode transitions (must be outside turn-based block to respond immediately)
+    viewModeTransitionSystem(this.ecs);
+
     // Process turn-based actions only when timer allows
     if (shouldProcessTurn) {
       // Reset turn timer
@@ -328,9 +331,6 @@ export default class Game {
         'viewMode'
       );
       const currentViewMode = viewModeComp?.mode || ViewMode.LOCATION;
-
-      // Handle view mode transitions
-      viewModeTransitionSystem(this.ecs);
 
       // Route to appropriate systems based on view mode
       if (currentViewMode === ViewMode.WORLD_MAP) {
@@ -378,9 +378,10 @@ export default class Game {
     const currentViewMode = viewModeComp?.mode || ViewMode.LOCATION;
 
     if (currentViewMode === ViewMode.WORLD_MAP) {
-      // Render world map
+      // Render world map cursor overlay
+      // Note: TileLayer auto-renders, we just render the cursor overlay
       if (viewModeComp) {
-        this.worldMap.render(
+        this.worldMap.renderCursor(
           viewModeComp.worldMapCursorX,
           viewModeComp.worldMapCursorY
         );
@@ -453,13 +454,14 @@ export default class Game {
       this.playerId,
       'position'
     );
-    const viewMode = this.ecs.getComponent<{ mode: number }>(
+    const viewMode = this.ecs.getComponent<ViewModeComponent>(
       this.playerId,
       'viewMode'
     );
 
-    // Determine current view mode (0 = LOCATION, 1 = WORLD_MAP)
-    const viewModeText = viewMode?.mode === 1 ? 'WORLD_MAP' : 'LOCATION';
+    // Determine current view mode
+    const viewModeText =
+      viewMode?.mode === ViewMode.WORLD_MAP ? 'WORLD_MAP' : 'LOCATION';
 
     const debugInfo = [
       `Game v${Game.version}`,

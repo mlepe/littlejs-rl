@@ -262,6 +262,54 @@ export default class Location {
   }
 
   /**
+   * Get the tile layer (for direct engine control)
+   */
+  getTileLayer(): LJS.TileLayer {
+    return this.tileLayer;
+  }
+
+  /**
+   * Get the collision layer (for direct engine control)
+   */
+  getCollisionLayer(): LJS.TileCollisionLayer {
+    return this.collisionLayer;
+  }
+
+  /**
+   * Recreate the tile layers (needed after destroy())
+   * Call this when switching back to location view
+   */
+  recreateLayers(): void {
+    const layerPos = LJS.vec2(0, 0);
+    const layerSize = LJS.vec2(this.width, this.height);
+    const tileInfo = new LJS.TileInfo(LJS.vec2(0, 0), Global.vTilesize);
+
+    // Create new tile layer
+    (this as any).tileLayer = new LJS.TileLayer(layerPos, layerSize, tileInfo);
+
+    // Create new collision layer
+    (this as any).collisionLayer = new LJS.TileCollisionLayer(
+      layerPos,
+      layerSize,
+      tileInfo
+    );
+    this.collisionLayer.initCollision(layerSize);
+
+    // Restore all tile data
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const tile = this.getTile(x, y);
+        if (tile) {
+          this.setTile(x, y, tile);
+        }
+      }
+    }
+
+    // Redraw to make visible
+    this.tileLayer.redraw();
+  }
+
+  /**
    * Get the center position of the location
    * Useful for spawning entities or centering camera
    * @returns Vector2 position at the center
