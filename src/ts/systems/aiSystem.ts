@@ -19,6 +19,7 @@ import {
 
 import ECS from '../ecs';
 import { collisionSystem } from './collisionSystem';
+import { combatSystem } from './combatSystem';
 import { getRelationScore } from './relationSystem';
 
 /**
@@ -121,15 +122,37 @@ export function aiSystem(ecs: ECS, playerEntityId: number): void {
         const newX = pos.x + dx;
         const newY = pos.y + dy;
 
-        // Check collision before moving
-        if (collisionSystem(ecs, entityId, newX, newY)) {
+        // Check if target tile is occupied - if so, attack
+        if (!collisionSystem(ecs, entityId, newX, newY)) {
+          // Target occupied (likely the player) - perform melee attack
+          const attackResult = combatSystem(ecs, entityId, newX, newY);
+
+          if (attackResult && attackResult.hit) {
+            ai.state = 'attacking';
+            if (attackResult.killed) {
+              console.log('AI killed target!');
+            }
+          }
+        } else {
+          // Path is clear - move toward target
           pos.x = newX;
           pos.y = newY;
         }
       } else {
-        // Attack if in range
+        // Already adjacent - attack
         ai.state = 'attacking';
-        // Combat system will handle damage
+        const attackResult = combatSystem(
+          ecs,
+          entityId,
+          playerPos.x,
+          playerPos.y
+        );
+
+        if (attackResult && attackResult.hit) {
+          if (attackResult.killed) {
+            console.log('AI killed player!');
+          }
+        }
       }
     } else if (ai.disposition === 'patrol') {
       // Patrol behavior (simple wandering for now)

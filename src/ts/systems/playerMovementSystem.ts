@@ -20,6 +20,7 @@ import {
 import ECS from '../ecs';
 import Game from '../game';
 import { collisionSystem } from './collisionSystem';
+import { combatSystem } from './combatSystem';
 
 /**
  * Player Movement System - Moves player entities based on input
@@ -58,13 +59,23 @@ export function playerMovementSystem(ecs: ECS): void {
       const newX = Math.floor(pos.x + input.moveX);
       const newY = Math.floor(pos.y + input.moveY);
 
-      // Check entity-entity collision first
+      // Check if target tile has an entity - if so, attack instead of moving
       if (!collisionSystem(ecs, entityId, newX, newY)) {
-        // Blocked by another entity, don't move
+        // Tile is occupied - perform melee attack
+        const attackResult = combatSystem(ecs, entityId, newX, newY);
+
+        if (attackResult && attackResult.hit) {
+          console.log(`Player attacks for ${attackResult.damage} damage!`);
+          if (attackResult.killed) {
+            console.log('Enemy defeated!');
+          }
+        }
+
+        // Don't move - stay in current position after attacking
         continue;
       }
 
-      // Get current location to check terrain collision
+      // No entity blocking - check terrain collision
       const game = Game.getInstance();
       const location = game.getCurrentLocation();
 

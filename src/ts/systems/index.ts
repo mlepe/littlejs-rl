@@ -20,6 +20,7 @@ export * from './cameraSystem';
 export * from './spatialSystem';
 export * from './relationSystem';
 export * from './collisionSystem';
+export * from './combatSystem';
 export * from './statModifierSystem';
 export * from './derivedStatsSystem';
 export * from './elementalDamageSystem';
