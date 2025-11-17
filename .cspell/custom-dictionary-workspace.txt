@@ -35,6 +35,9 @@ Tileset
 toggleable
 uncursing
 undeath
+unequip
+unequipment
+Unequips
 usables
 Warhammer
 Worldmap
