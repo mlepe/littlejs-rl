@@ -83,17 +83,15 @@ export function viewModeTransitionSystem(ecs: ECS): void {
       console.log('[ViewMode] TRANSITIONING: LOCATION -> WORLD_MAP');
       viewMode.mode = ViewMode.WORLD_MAP;
 
-      // Set cursor to current world position
+      // Set player position to world coordinates
+      pos.x = locationComp.worldX;
+      pos.y = locationComp.worldY;
+
+      // Update cursor tracking
       viewMode.worldMapCursorX = locationComp.worldX;
       viewMode.worldMapCursorY = locationComp.worldY;
 
-      // Discover surrounding tiles
-      worldMap.discoverRadius(locationComp.worldX, locationComp.worldY, 2);
-
-      // Redraw world map to show discovered tiles
-      worldMap.redraw();
-
-      // CRITICAL: Destroy location layers and activate world map layer
+      // CRITICAL: Destroy location layers first
       const location = game.getCurrentLocation();
       if (location) {
         location.getTileLayer().destroy();
@@ -103,14 +101,31 @@ export function viewModeTransitionSystem(ecs: ECS): void {
       // Recreate world map layer (it may have been destroyed on previous transition)
       worldMap.recreateTileLayer();
 
-      // Update camera for world map view (centered on current cursor position)
-      LJS.setCameraPos(
-        LJS.vec2(locationComp.worldX * 2 + 1, locationComp.worldY * 2 + 1)
-      );
+      // NOW discover entire world map for visibility (after layer is created)
+      const world = worldMap.getWorld();
+      for (let y = 0; y < world.height; y++) {
+        for (let x = 0; x < world.width; x++) {
+          worldMap.discoverTile(x, y);
+        }
+      }
+
+      // Mark current location as visited
+      worldMap.visitTile(locationComp.worldX, locationComp.worldY);
+
+      // Set camera to show entire world map
+      const worldSize = worldMap.getWorld();
+      const centerX = worldSize.width / 2;
+      const centerY = worldSize.height / 2;
+      LJS.setCameraPos(LJS.vec2(centerX, centerY));
+
+      // Zoom out to show full map (scale based on world size)
+      const maxDimension = Math.max(worldSize.width, worldSize.height);
+      const zoomScale = Math.max(0.5, 20 / maxDimension); // Min zoom 0.5, adjust for screen
+      LJS.setCameraScale(zoomScale);
 
       if (Game.isDebug) {
         console.log(
-          `[ViewMode] Entered WORLD_MAP at (${locationComp.worldX}, ${locationComp.worldY})`
+          `[ViewMode] Entered WORLD_MAP at (${locationComp.worldX}, ${locationComp.worldY}), camera scale: ${zoomScale}`
         );
       }
     }
@@ -183,6 +198,9 @@ export function viewModeTransitionSystem(ecs: ECS): void {
 
         // Update camera for location view
         LJS.setCameraPos(LJS.vec2(spawnX, spawnY));
+
+        // Reset camera zoom for location view
+        LJS.setCameraScale(1.0);
       }
 
       // Switch to location view

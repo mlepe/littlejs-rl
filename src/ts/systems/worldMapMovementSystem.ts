@@ -12,7 +12,11 @@
 
 import * as LJS from 'littlejsengine';
 
-import { InputComponent, ViewModeComponent } from '../components';
+import {
+  InputComponent,
+  PositionComponent,
+  ViewModeComponent,
+} from '../components';
 
 import ECS from '../ecs';
 import Game from '../game';
@@ -43,38 +47,37 @@ import { ViewMode } from '../components/viewMode';
  * ```
  */
 export function worldMapMovementSystem(ecs: ECS): void {
-  const entities = ecs.query('viewMode', 'input');
+  const entities = ecs.query('viewMode', 'input', 'position');
 
   for (const entityId of entities) {
     const viewMode = ecs.getComponent<ViewModeComponent>(entityId, 'viewMode');
     const input = ecs.getComponent<InputComponent>(entityId, 'input');
+    const pos = ecs.getComponent<PositionComponent>(entityId, 'position');
 
-    if (!viewMode || !input) continue;
+    if (!viewMode || !input || !pos) continue;
     if (viewMode.mode !== ViewMode.WORLD_MAP) continue;
 
-    // Apply movement to world map cursor
+    // Apply movement to player position on world map
     if (input.moveX !== 0 || input.moveY !== 0) {
       const game = Game.getInstance();
       const worldMap = game.getWorldMap();
 
-      const newX = Math.floor(viewMode.worldMapCursorX + input.moveX);
-      const newY = Math.floor(viewMode.worldMapCursorY + input.moveY);
+      const newX = Math.floor(pos.x + input.moveX);
+      const newY = Math.floor(pos.y + input.moveY);
 
       // Check if movement is valid
       if (worldMap.canMoveTo(newX, newY)) {
+        pos.x = newX;
+        pos.y = newY;
+
+        // Update world map cursor tracking
         viewMode.worldMapCursorX = newX;
         viewMode.worldMapCursorY = newY;
 
-        // Update camera to follow cursor
-        LJS.setCameraPos(
-          LJS.vec2(
-            -worldMap.getWorld().width + newX * 2 + 1,
-            -worldMap.getWorld().height + newY * 2 + 1
-          )
-        );
+        // Camera remains static showing full map
 
         if (Game.isDebug) {
-          console.log(`[WorldMap] Cursor moved to (${newX}, ${newY})`);
+          console.log(`[WorldMap] Player moved to (${newX}, ${newY})`);
         }
       }
     }

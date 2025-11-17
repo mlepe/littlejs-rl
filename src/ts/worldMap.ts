@@ -56,7 +56,7 @@ export default class WorldMap {
   private readonly world: World;
   private readonly tiles: Map<string, WorldMapTile>;
   private readonly tileLayer: LJS.TileLayer;
-  private readonly tileSize: number = 2; // Each world map tile is 2x2 units
+  private readonly tileSize: number = 1; // Each world map tile is 1x1 units (same as locations)
 
   constructor(world: World) {
     this.world = world;
@@ -210,8 +210,8 @@ export default class WorldMap {
     // Determine tile color based on discovery state
     let color: LJS.Color;
     if (!tile.discovered) {
-      // Undiscovered tiles are very dark
-      color = new LJS.Color(0.1, 0.1, 0.1, 1);
+      // Undiscovered tiles are dark gray (still visible)
+      color = new LJS.Color(0.3, 0.3, 0.3, 1);
     } else if (tile.visited) {
       // Visited tiles show full color
       color = new LJS.Color(1, 1, 1, 1);
@@ -260,19 +260,9 @@ export default class WorldMap {
   }
 
   /**
-   * Render the world map
-   * @param cursorX - Current cursor/player X position
-   * @param cursorY - Current cursor/player Y position
+   * No cursor rendering - player entity renders via renderSystem
+   * World map tiles are 1x1, player moves directly on the map
    */
-  renderCursor(cursorX: number, cursorY: number): void {
-    // Highlight cursor position with yellow semi-transparent overlay
-    const posX = cursorX * this.tileSize;
-    const posY = cursorY * this.tileSize;
-    const pos = LJS.vec2(posX + this.tileSize / 2, posY + this.tileSize / 2);
-    const size = LJS.vec2(this.tileSize * 0.9, this.tileSize * 0.9);
-
-    LJS.drawRect(pos, size, new LJS.Color(1, 1, 0, 0.3));
-  }
 
   /**
    * Render the world map (DEPRECATED - use getTileLayer() instead)

@@ -378,14 +378,9 @@ export default class Game {
     const currentViewMode = viewModeComp?.mode || ViewMode.LOCATION;
 
     if (currentViewMode === ViewMode.WORLD_MAP) {
-      // Render world map cursor overlay
-      // Note: TileLayer auto-renders, we just render the cursor overlay
-      if (viewModeComp) {
-        this.worldMap.renderCursor(
-          viewModeComp.worldMapCursorX,
-          viewModeComp.worldMapCursorY
-        );
-      }
+      // World map view - TileLayer auto-renders, player renders via renderSystem
+      // Render all entities (including player on world map)
+      renderSystem(this.ecs);
     } else {
       // Render location view
       // TileLayer and TileCollisionLayer are automatically rendered by LittleJS
