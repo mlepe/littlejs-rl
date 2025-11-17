@@ -20,17 +20,19 @@
     "[javascript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.tabSize": 2,
-      "javascript.suggest.enabled": true,
-      "javascript.suggest.completeJSDocs": true,
-      "javascript.suggest.jsdoc.generateReturns": true,
     },
+    "javascript.suggest.enabled": true,
+    "javascript.suggest.completeJSDocs": true,
+    "javascript.suggest.jsdoc.generateReturns": true,
     "[typescript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.tabSize": 2,
-      "typescript.suggest.enabled": true,
-      "typescript.suggest.completeJSDocs": true,
-      "typescript.suggest.jsdoc.generateReturns": true,
     },
+    "typescript.suggest.enabled": true,
+    "typescript.suggest.completeJSDocs": true,
+    "typescript.suggest.jsdoc.generateReturns": true,
+    "typescript.updateImportsOnPaste.enabled": false,   
+
 
     // File associations
     "files.associations": {
