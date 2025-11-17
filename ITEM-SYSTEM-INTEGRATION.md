@@ -120,6 +120,60 @@ Refactored `spawnTestItems()` in Game class to use data system.
 **Before (91 lines):** Manual ItemComponent creation with hardcoded values  
 **After (42 lines):** Data-driven approach with clean loop
 
+### 7. Template-Mixing System Integration (v0.11.1)
+
+Added template-mixing support for items, allowing items to be composed from multiple reusable templates.
+
+**Key Features:**
+
+- 4 template types: ItemBaseTemplate, WeaponTemplate, ArmorTemplate, ConsumableTemplate
+- Sequential merge: `Template[0] → Template[1] → ... → Template[n] → Direct Properties`
+- Automatic template loading via DataLoader
+- Type-safe with proper enum casting
+
+**Template Files:**
+
+- `src/data/base/templates/item_base.json` - 9 base templates (weights, values, types)
+- `src/data/base/templates/weapon.json` - 10 weapon templates (materials, weapon types)
+- `src/data/base/templates/armor.json` - 12 armor templates (materials, slots)
+- `src/data/base/templates/consumable.json` - 9 effect templates (heals, buffs, damage)
+
+**Example Template-Mixed Item:**
+
+```json
+{
+  "id": "iron_sword",
+  "itemBaseTemplates": ["base_weapon"],
+  "weaponTemplates": ["iron_weapon", "sword_weapon"],
+  "name": "Iron Sword",
+  "sprite": "ITEM_SWORD"
+}
+```
+
+**Merge Sequence:**
+
+1. `base_weapon` → weight: 3.0, value: 100, itemType: "weapon"
+2. `iron_weapon` → damage: 8, material: "iron"
+3. `sword_weapon` → damage: 10 (overrides 8)
+4. Direct properties → name: "Iron Sword", sprite: "ITEM_SWORD"
+
+**Result:** Iron sword with 10 damage, made of iron, weighs 3.0 lbs, worth 100 gold
+
+**Benefits:**
+
+- **Reusability** - Define once, use in many items
+- **Maintainability** - Change template = update all items
+- **Flexibility** - Mix and match for variations
+- **Consistency** - Shared templates ensure uniformity
+- **Modding** - Custom templates without code changes
+
+**See Also:**
+
+- `ITEM-TEMPLATE-MIXING-SUMMARY.md` - Complete implementation details
+- `TEMPLATE-MIXING.md` - General template system design
+- `src/ts/examples/templateMixedItemsExample.ts` - Usage examples
+- `src/ts/examples/testTemplateMixedItems.ts` - Automated tests
+
 ## Game Loop Order
 
 ```typescript
@@ -185,19 +239,31 @@ Contains component data:
 
 ## System Statistics
 
-**Files Created:**
+**Files Created (v0.7.0):**
 
-- `src/ts/data/itemRegistry.ts` (267 lines)
+- `src/ts/data/itemRegistry.ts` (267 lines → 580 lines in v0.11.1)
 - `src/ts/systems/collisionDamageSystem.ts` (219 lines)
+
+**Files Created (v0.11.1 Template-Mixing):**
+
+- `src/data/base/templates/item_base.json` (9 templates)
+- `src/data/base/templates/weapon.json` (10 templates)
+- `src/data/base/templates/armor.json` (12 templates)
+- `src/data/base/templates/consumable.json` (9 templates)
+- `src/data/base/items/template_mixed_items.json` (12 example items)
+- `src/ts/examples/templateMixedItemsExample.ts` (comprehensive examples)
+- `src/ts/examples/testTemplateMixedItems.ts` (automated tests)
+- `ITEM-TEMPLATE-MIXING-SUMMARY.md` (complete documentation)
 
 **Files Modified:**
 
-- `src/ts/data/dataLoader.ts` - Added ItemRegistry loading
+- `src/ts/data/dataLoader.ts` - Added ItemRegistry loading, template loading
 - `src/ts/data/index.ts` - Exported ItemRegistry
 - `src/ts/systems/itemGenerationSystem.ts` - Enhanced generateItem()
 - `src/ts/game.ts` - Integrated 3 systems, refactored spawnTestItems
+- `src/ts/types/dataSchemas.ts` - Added item template interfaces (v0.11.1)
 
-**Build Size:** 848 KiB bundle (compiled successfully)
+**Build Size:** 983 KiB bundle (compiled successfully)
 
 ## Testing Checklist
 
@@ -283,11 +349,13 @@ Contains component data:
 ## Version History
 
 **v0.6.0** - Full inventory system (pickup, drop, containers, loot)  
-**v0.7.0** - Item data loading and system integration (this release)  
-**v0.8.0** - Item usage input and inventory UI (planned)
+**v0.7.0** - Item data loading and system integration  
+**v0.8.0** - Item usage input and inventory UI (planned)  
+**v0.11.1** - Template-mixing system integration (this update)
 
 ---
 
-**Date:** November 16, 2025  
+**Date Created:** November 16, 2025  
+**Last Updated:** December 30, 2025 (v0.11.1 - Template-Mixing)  
 **Author:** Matthieu LEPERLIER  
-**Status:** Integration Complete, Ready for Testing
+**Status:** Integration Complete, Template System Validated

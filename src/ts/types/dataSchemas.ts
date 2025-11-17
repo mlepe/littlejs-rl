@@ -92,6 +92,62 @@ export interface HealthTemplate {
 }
 
 /**
+ * Item base template for common item properties
+ */
+export interface ItemBaseTemplate {
+  id: string;
+  name?: string;
+  description?: string;
+  weight?: number;
+  value?: number;
+  itemType?: string;
+  material?: string;
+  stackable?: boolean;
+  maxStackSize?: number;
+}
+
+/**
+ * Weapon template for weapon-specific properties
+ */
+export interface WeaponTemplate {
+  id: string;
+  name?: string;
+  description?: string;
+  damage?: number;
+  damageType?: string; // physical, fire, ice, etc.
+  range?: number;
+  twoHanded?: boolean;
+}
+
+/**
+ * Armor template for armor-specific properties
+ */
+export interface ArmorTemplate {
+  id: string;
+  name?: string;
+  description?: string;
+  defense?: number;
+  slot?: string; // head, body, hands, feet, etc.
+}
+
+/**
+ * Consumable template for consumable effects
+ */
+export interface ConsumableTemplate {
+  id: string;
+  name?: string;
+  description?: string;
+  effect?: string;
+  power?: number;
+  duration?: number;
+  targeting?: string; // 'self', 'target', 'area', etc.
+  requiresTarget?: boolean;
+  targetRange?: number;
+  areaOfEffect?: number;
+  consumeOnUse?: boolean;
+}
+
+/**
  * Component template references for template-mixing
  * Allows entities to be composed from multiple templates per component type
  * Templates are merged in array order: [0] → [1] → ... → [n] → direct entity values
@@ -101,6 +157,18 @@ export interface ComponentTemplateRefs {
   statsTemplates?: string[]; // Array of StatsTemplate IDs
   aiTemplates?: string[]; // Array of AITemplate IDs
   healthTemplates?: string[]; // Array of HealthTemplate IDs
+}
+
+/**
+ * Item template references for template-mixing
+ * Allows items to be composed from multiple reusable templates
+ */
+export interface ItemTemplateRefs {
+  itemBaseTemplates?: string[]; // Array of ItemBaseTemplate IDs
+  weaponTemplates?: string[]; // Array of WeaponTemplate IDs
+  armorTemplates?: string[]; // Array of ArmorTemplate IDs
+  consumableTemplates?: string[]; // Array of ConsumableTemplate IDs
+  renderTemplates?: string[]; // Array of RenderTemplate IDs (for item sprites)
 }
 
 /**
@@ -275,6 +343,48 @@ export interface ItemTemplate {
   type: 'weapon' | 'armor' | 'consumable' | 'misc';
   rarity?: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
+  // Template mixing support - reference reusable templates
+  itemBaseTemplates?: string[]; // Array of base item template IDs
+  weaponTemplates?: string[]; // Array of weapon template IDs
+  armorTemplates?: string[]; // Array of armor template IDs
+  consumableTemplates?: string[]; // Array of consumable template IDs
+  renderTemplates?: string[]; // Array of render template IDs
+
+  // Direct properties (override template values)
+  // Weight and value
+  weight?: number;
+  value?: number;
+  itemType?: string;
+  material?: string;
+  stackable?: boolean;
+  maxStack?: number;
+
+  // Weapon properties
+  damage?: number;
+  damageType?: string;
+  range?: number;
+  twoHanded?: boolean;
+
+  // Armor properties
+  defense?: number;
+  slot?: string;
+
+  // Consumable properties
+  effect?: string;
+  power?: number;
+  duration?: number;
+  targeting?: string;
+
+  // Item state properties
+  identified?: string; // 'identified', 'unidentified'
+  blessState?: string; // 'blessed', 'normal', 'cursed'
+  quantity?: number;
+  quality?: number;
+  equipSlot?: string; // Equipment slot when equipped
+  equipped?: boolean;
+  canBreak?: boolean;
+  broken?: boolean;
+
   // Effects when equipped/used
   effects?: {
     health?: number;
@@ -297,10 +407,6 @@ export interface ItemTemplate {
       percent?: number; // Percentage resistance 0-1
     };
   };
-
-  // Stack settings
-  stackable?: boolean;
-  maxStack?: number;
 
   // Visual
   sprite?: string;

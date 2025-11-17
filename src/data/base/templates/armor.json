@@ -1,0 +1,64 @@
+{
+  "templates": [
+    {
+      "id": "basic_armor",
+      "defense": 2,
+      "slot": "body"
+    },
+    {
+      "id": "iron_armor",
+      "defense": 5,
+      "material": "iron"
+    },
+    {
+      "id": "steel_armor",
+      "defense": 8,
+      "material": "steel"
+    },
+    {
+      "id": "mithril_armor",
+      "defense": 12,
+      "material": "mithril"
+    },
+    {
+      "id": "leather_armor",
+      "defense": 3,
+      "material": "leather"
+    },
+    {
+      "id": "cloth_armor",
+      "defense": 1,
+      "material": "cloth"
+    },
+    {
+      "id": "helmet_armor",
+      "slot": "head",
+      "defense": 3
+    },
+    {
+      "id": "chest_armor",
+      "slot": "body",
+      "defense": 5
+    },
+    {
+      "id": "legs_armor",
+      "slot": "legs",
+      "defense": 4
+    },
+    {
+      "id": "boots_armor",
+      "slot": "feet",
+      "defense": 2
+    },
+    {
+      "id": "gloves_armor",
+      "slot": "hands",
+      "defense": 2
+    },
+    {
+      "id": "shield_armor",
+      "slot": "offhand",
+      "defense": 4
+    }
+  ]
+}

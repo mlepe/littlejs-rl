@@ -1,0 +1,120 @@
+{
+  "items": [
+    {
+      "id": "iron_sword",
+      "name": "Iron Sword",
+      "description": "A sturdy iron blade, well-balanced for combat.",
+      "itemBaseTemplates": ["base_weapon"],
+      "weaponTemplates": ["iron_weapon", "sword_weapon"],
+      "sprite": "ITEM_SWORD",
+      "equipSlot": "mainhand"
+    },
+    {
+      "id": "steel_battleaxe",
+      "name": "Steel Battleaxe",
+      "description": "A heavy steel axe that requires two hands to wield effectively.",
+      "itemBaseTemplates": ["base_weapon", "base_heavy_armor"],
+      "weaponTemplates": ["steel_weapon", "axe_weapon"],
+      "sprite": "ITEM_AXE",
+      "equipSlot": "mainhand",
+      "weight": 8.0
+    },
+    {
+      "id": "mithril_dagger",
+      "name": "Mithril Dagger",
+      "description": "A lightweight dagger forged from rare mithril ore.",
+      "itemBaseTemplates": ["base_weapon", "base_light_armor"],
+      "weaponTemplates": ["mithril_weapon", "dagger_weapon"],
+      "sprite": "ITEM_DAGGER",
+      "equipSlot": "mainhand",
+      "value": 500
+    },
+    {
+      "id": "healing_potion_minor",
+      "name": "Minor Healing Potion",
+      "description": "A small vial of red liquid that restores a modest amount of health.",
+      "itemBaseTemplates": ["base_potion"],
+      "consumableTemplates": ["heal_effect"],
+      "sprite": "ITEM_POTION_RED",
+      "power": 15
+    },
+    {
+      "id": "healing_potion_major",
+      "name": "Major Healing Potion",
+      "description": "A large vial of crimson elixir that restores significant health.",
+      "itemBaseTemplates": ["base_potion"],
+      "consumableTemplates": ["strong_heal_effect"],
+      "sprite": "ITEM_POTION_RED",
+      "value": 75,
+      "power": 50
+    },
+    {
+      "id": "scroll_of_fireball",
+      "name": "Scroll of Fireball",
+      "description": "An ancient scroll inscribed with explosive fire magic.",
+      "itemBaseTemplates": ["base_scroll"],
+      "consumableTemplates": ["area_damage_effect"],
+      "sprite": "ITEM_SCROLL",
+      "power": 25
+    },
+    {
+      "id": "iron_chainmail",
+      "name": "Iron Chainmail",
+      "description": "Interlocking iron rings provide solid protection.",
+      "itemBaseTemplates": ["base_armor"],
+      "armorTemplates": ["iron_armor", "chest_armor"],
+      "sprite": "ITEM_ARMOR_BODY",
+      "equipSlot": "body"
+    },
+    {
+      "id": "steel_helmet",
+      "name": "Steel Helmet",
+      "description": "A well-crafted steel helm that protects the head.",
+      "itemBaseTemplates": ["base_light_armor"],
+      "armorTemplates": ["steel_armor", "helmet_armor"],
+      "sprite": "ITEM_ARMOR_HEAD",
+      "equipSlot": "head",
+      "weight": 3.0
+    },
+    {
+      "id": "leather_boots",
+      "name": "Leather Boots",
+      "description": "Comfortable leather footwear for adventuring.",
+      "itemBaseTemplates": ["base_light_armor"],
+      "armorTemplates": ["leather_armor", "boots_armor"],
+      "sprite": "ITEM_ARMOR_FEET",
+      "equipSlot": "feet",
+      "value": 40
+    },
+    {
+      "id": "mithril_shield",
+      "name": "Mithril Shield",
+      "description": "An incredibly light yet strong shield made from mithril.",
+      "itemBaseTemplates": ["base_armor"],
+      "armorTemplates": ["mithril_armor", "shield_armor"],
+      "sprite": "ITEM_SHIELD",
+      "equipSlot": "offhand",
+      "weight": 2.0,
+      "value": 800
+    },
+    {
+      "id": "longbow",
+      "name": "Longbow",
+      "description": "A tall bow capable of shooting arrows at great distance.",
+      "itemBaseTemplates": ["base_weapon"],
+      "weaponTemplates": ["basic_ranged", "bow_weapon"],
+      "sprite": "ITEM_BOW",
+      "equipSlot": "mainhand",
+      "range": 20
+    },
+    {
+      "id": "potion_of_strength",
+      "name": "Potion of Strength",
+      "description": "Drinking this red potion temporarily enhances your physical power.",
+      "itemBaseTemplates": ["base_potion"],
+      "consumableTemplates": ["buff_strength"],
+      "sprite": "ITEM_POTION_RED",
+      "value": 60
+    }
+  ]
+}

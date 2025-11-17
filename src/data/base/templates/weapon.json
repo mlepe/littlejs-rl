@@ -1,0 +1,64 @@
+{
+  "templates": [
+    {
+      "id": "basic_melee",
+      "damage": 5,
+      "damageType": "physical",
+      "range": 1,
+      "twoHanded": false
+    },
+    {
+      "id": "basic_ranged",
+      "damage": 4,
+      "damageType": "physical",
+      "range": 10,
+      "twoHanded": true
+    },
+    {
+      "id": "iron_weapon",
+      "damage": 8,
+      "material": "iron"
+    },
+    {
+      "id": "steel_weapon",
+      "damage": 12,
+      "material": "steel"
+    },
+    {
+      "id": "mithril_weapon",
+      "damage": 16,
+      "material": "mithril"
+    },
+    {
+      "id": "sword_weapon",
+      "damageType": "slashing",
+      "range": 1,
+      "twoHanded": false
+    },
+    {
+      "id": "axe_weapon",
+      "damageType": "slashing",
+      "range": 1,
+      "twoHanded": true
+    },
+    {
+      "id": "mace_weapon",
+      "damageType": "crushing",
+      "range": 1,
+      "twoHanded": false
+    },
+    {
+      "id": "bow_weapon",
+      "damageType": "piercing",
+      "range": 15,
+      "twoHanded": true
+    },
+    {
+      "id": "dagger_weapon",
+      "damageType": "piercing",
+      "range": 1,
+      "twoHanded": false,
+      "damage": 3
+    }
+  ]
+}

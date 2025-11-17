@@ -1,0 +1,67 @@
+{
+  "templates": [
+    {
+      "id": "heal_effect",
+      "effect": "heal",
+      "power": 25,
+      "duration": 0,
+      "targeting": "self"
+    },
+    {
+      "id": "strong_heal_effect",
+      "effect": "heal",
+      "power": 50,
+      "duration": 0,
+      "targeting": "self"
+    },
+    {
+      "id": "damage_effect",
+      "effect": "damage",
+      "power": 20,
+      "duration": 0,
+      "targeting": "target"
+    },
+    {
+      "id": "buff_strength",
+      "effect": "buff_strength",
+      "power": 5,
+      "duration": 10,
+      "targeting": "self"
+    },
+    {
+      "id": "buff_defense",
+      "effect": "buff_defense",
+      "power": 5,
+      "duration": 10,
+      "targeting": "self"
+    },
+    {
+      "id": "buff_speed",
+      "effect": "buff_speed",
+      "power": 1,
+      "duration": 10,
+      "targeting": "self"
+    },
+    {
+      "id": "cure_effect",
+      "effect": "cure",
+      "power": 1,
+      "duration": 0,
+      "targeting": "self"
+    },
+    {
+      "id": "teleport_effect",
+      "effect": "teleport",
+      "power": 1,
+      "duration": 0,
+      "targeting": "self"
+    },
+    {
+      "id": "area_damage_effect",
+      "effect": "damage",
+      "power": 15,
+      "duration": 0,
+      "targeting": "area"
+    }
+  ]
+}

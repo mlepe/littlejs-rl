@@ -1,0 +1,67 @@
+{
+  "templates": [
+    {
+      "id": "base_item",
+      "weight": 1.0,
+      "value": 1,
+      "itemType": "misc",
+      "stackable": false
+    },
+    {
+      "id": "base_potion",
+      "weight": 0.5,
+      "value": 25,
+      "itemType": "consumable",
+      "stackable": true
+    },
+    {
+      "id": "base_scroll",
+      "weight": 0.1,
+      "value": 50,
+      "itemType": "consumable",
+      "stackable": true
+    },
+    {
+      "id": "base_food",
+      "weight": 0.3,
+      "value": 5,
+      "itemType": "consumable",
+      "stackable": true
+    },
+    {
+      "id": "base_weapon",
+      "weight": 3.0,
+      "value": 100,
+      "itemType": "weapon",
+      "stackable": false
+    },
+    {
+      "id": "base_armor",
+      "weight": 5.0,
+      "value": 150,
+      "itemType": "armor",
+      "stackable": false
+    },
+    {
+      "id": "base_light_armor",
+      "weight": 2.0,
+      "value": 80,
+      "itemType": "armor",
+      "stackable": false
+    },
+    {
+      "id": "base_heavy_armor",
+      "weight": 10.0,
+      "value": 300,
+      "itemType": "armor",
+      "stackable": false
+    },
+    {
+      "id": "base_jewelry",
+      "weight": 0.1,
+      "value": 200,
+      "itemType": "armor",
+      "stackable": false
+    }
+  ]
+}

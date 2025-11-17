@@ -139,6 +139,12 @@ export class DataLoader {
         'src/data/base/items/base_items.json',
         'src/data/base/items/item_properties.json'
       );
+      await ItemRegistry.getInstance().loadTemplates(
+        'src/data/base/templates/item_base.json',
+        'src/data/base/templates/weapon.json',
+        'src/data/base/templates/armor.json',
+        'src/data/base/templates/consumable.json'
+      );
     } catch (error) {
       logError(error as Error, 'Loading items');
       // Items are critical - rethrow
