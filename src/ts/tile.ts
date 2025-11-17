@@ -12,6 +12,8 @@
 
 import * as LJS from 'littlejsengine';
 
+import { BaseColor, getColor } from './colorPalette';
+
 /**
  * Tile types available in the game
  */
@@ -54,8 +56,8 @@ export interface TileProperties {
   readonly transparent: boolean;
   /** Collision value for LittleJS physics (0 = no collision, 1 = solid) */
   readonly collisionValue: number;
-  /** Default color for this tile type */
-  readonly color: LJS.Color;
+  /** Base color identifier for this tile type */
+  readonly baseColor: BaseColor;
 }
 
 // Tile type properties lookup
@@ -64,55 +66,55 @@ const TILE_PROPERTIES: Record<TileType, TileProperties> = {
     walkable: false,
     transparent: true,
     collisionValue: 0,
-    color: LJS.CLEAR_BLACK,
+    baseColor: BaseColor.BLACK,
   },
   [TileType.FLOOR]: {
     walkable: true,
     transparent: true,
     collisionValue: 0,
-    color: LJS.GRAY,
+    baseColor: BaseColor.FLOOR,
   },
   [TileType.WALL]: {
     walkable: false,
     transparent: false,
     collisionValue: 1,
-    color: LJS.WHITE,
+    baseColor: BaseColor.WALL,
   },
   [TileType.DOOR_OPEN]: {
     walkable: true,
     transparent: true,
     collisionValue: 0,
-    color: LJS.WHITE,
+    baseColor: BaseColor.BROWN,
   },
   [TileType.DOOR_CLOSED]: {
     walkable: false,
     transparent: false,
     collisionValue: 1,
-    color: LJS.WHITE,
+    baseColor: BaseColor.BROWN,
   },
   [TileType.STAIRS_UP]: {
     walkable: true,
     transparent: true,
     collisionValue: 0,
-    color: LJS.WHITE,
+    baseColor: BaseColor.LIGHT_GRAY,
   },
   [TileType.STAIRS_DOWN]: {
     walkable: true,
     transparent: true,
     collisionValue: 0,
-    color: LJS.WHITE,
+    baseColor: BaseColor.LIGHT_GRAY,
   },
   [TileType.WATER]: {
     walkable: false,
     transparent: true,
     collisionValue: 0,
-    color: LJS.BLUE,
+    baseColor: BaseColor.WATER,
   },
   [TileType.GRASS]: {
     walkable: true,
     transparent: true,
     collisionValue: 0,
-    color: LJS.GREEN,
+    baseColor: BaseColor.GRASS,
   },
 };
 
@@ -128,7 +130,7 @@ export function getTileProperties(type: TileType): TileProperties {
 /**
  * Create a new tile of the specified type
  * @param type - The tile type to create
- * @param color - Optional custom color (uses default if not provided)
+ * @param color - Optional custom color (uses palette color if not provided)
  * @returns A new Tile object
  */
 export function createTile(type: TileType, color?: LJS.Color): Tile {
@@ -139,7 +141,7 @@ export function createTile(type: TileType, color?: LJS.Color): Tile {
     walkable: props.walkable,
     transparent: props.transparent,
     spriteIndex: type,
-    color: color || props.color,
+    color: color || getColor(props.baseColor),
   };
 }
 
