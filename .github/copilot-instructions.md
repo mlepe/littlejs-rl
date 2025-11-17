@@ -1230,3 +1230,33 @@ const itemId = itemRegistry.spawn(ecs, 'iron_sword');
 - Location transitions and lazy loading
 - Biome system integration ready
 - View modes (normal, inventory, examine)
+
+## Comprehensive Documentation
+
+The project includes extensive documentation organized for easy navigation:
+
+### Core References
+
+- **[DOCUMENTATION-INDEX.md](../DOCUMENTATION-INDEX.md)** - Central hub for all documentation, organized by task and category
+- **[ARCHITECTURE.md](../ARCHITECTURE.md)** - Complete architecture overview with ECS patterns and LittleJS integration
+- **[COMPONENTS-REFERENCE.md](../COMPONENTS-REFERENCE.md)** - All 26+ ECS components with properties, usage, and examples
+- **[SYSTEMS-REFERENCE.md](../SYSTEMS-REFERENCE.md)** - All 40+ ECS systems with signatures, descriptions, and execution order
+- **[VIEW-MODES.md](../VIEW-MODES.md)** - UI view mode system (location, world_map, inventory, examine)
+
+### Quick Access Documentation
+
+**When you need to:**
+
+- **Understand the codebase** → Read [ARCHITECTURE.md](../ARCHITECTURE.md)
+- **Find all components** → Check [COMPONENTS-REFERENCE.md](../COMPONENTS-REFERENCE.md)
+- **Find all systems** → Check [SYSTEMS-REFERENCE.md](../SYSTEMS-REFERENCE.md)
+- **Work with view modes** → Read [VIEW-MODES.md](../VIEW-MODES.md)
+- **Find any documentation** → Start at [DOCUMENTATION-INDEX.md](../DOCUMENTATION-INDEX.md)
+
+### Important Notes
+
+1. **Always consult the documentation** before implementing new features
+2. **Check COMPONENTS-REFERENCE.md** when creating entities to see available components
+3. **Check SYSTEMS-REFERENCE.md** when adding systems to understand execution order
+4. **Use DOCUMENTATION-INDEX.md** to find task-specific guides
+5. **Keep documentation updated** when adding new components or systems
