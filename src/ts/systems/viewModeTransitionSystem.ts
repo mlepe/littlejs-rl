@@ -120,7 +120,8 @@ export function viewModeTransitionSystem(ecs: ECS): void {
 
       // Zoom out to show full map (scale based on world size)
       const maxDimension = Math.max(worldSize.width, worldSize.height);
-      const zoomScale = Math.max(0.5, 20 / maxDimension); // Min zoom 0.5, adjust for screen
+      //const zoomScale = Math.max(0.5, 20 / maxDimension); // Min zoom 0.5, adjust for screen
+      const zoomScale = 25;
       LJS.setCameraScale(zoomScale);
 
       if (Game.isDebug) {

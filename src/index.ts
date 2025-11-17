@@ -17,6 +17,12 @@ import * as LJS from 'littlejsengine';
 import Game from './ts/game';
 import TilesetImg from './assets/img/tileset.png';
 
+LJS.setCanvasMaxSize(LJS.vec2(1920, 1080));
+LJS.setCanvasPixelated(true);
+LJS.setOverlayCanvasPixelated(true);
+LJS.setTilesPixelated(true);
+LJS.setCameraScale(25);
+
 // Get the Game singleton instance
 const game = Game.getInstance();
 

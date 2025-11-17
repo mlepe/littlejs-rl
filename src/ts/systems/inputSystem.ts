@@ -53,7 +53,7 @@ export function inputSystem(ecs: ECS): void {
     USE_ITEM: ['KeyU'],
     LOCATION_ENTER_WORLDMAP: ['BracketLeft', 'NumpadSubtract'], // [ opens world map
     WORLDMAP_ENTER_LOCATION: ['BracketRight', 'NumpadAdd'], // ] enters location
-    ZOOM: ['NumpadMultiply'], // Numpad *
+    ZOOM: ['KeyT'], // Numpad *
     DEBUG_TOGGLE_COLLISION_DISPLAY: ['KeyC'],
     DEBUG_TOGGLE_DEBUG_TEXT: ['KeyX'],
   } as const;

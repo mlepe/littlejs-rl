@@ -95,12 +95,12 @@ export default class Game {
 
   /**
    * Private constructor for singleton pattern
-   * @param worldSize - Size of the world grid (default: 10x10 locations)
-   * @param locationSize - Size of each location (default: 50x50 tiles)
+   * @param worldSize - Size of the world grid (default: 50x30 locations)
+   * @param locationSize - Size of each location (default: 70x40 tiles)
    */
   private constructor(
-    worldSize: LJS.Vector2 = LJS.vec2(10, 10),
-    locationSize: LJS.Vector2 = LJS.vec2(50, 50)
+    worldSize: LJS.Vector2 = LJS.vec2(50, 30),
+    locationSize: LJS.Vector2 = LJS.vec2(70, 40)
   ) {
     this.ecs = new ECS();
     this.world = new World(
@@ -320,6 +320,9 @@ export default class Game {
     // Handle view mode transitions (must be outside turn-based block to respond immediately)
     viewModeTransitionSystem(this.ecs);
 
+    // Handle camera system (outside of turn-based block for immediate response)
+    cameraSystem(this.ecs); // Update camera (follow player + zoom)
+
     // Process turn-based actions only when timer allows
     if (shouldProcessTurn) {
       // Reset turn timer
@@ -341,7 +344,6 @@ export default class Game {
         pickupSystem(this.ecs); // Handle item pickup
         playerMovementSystem(this.ecs); // Move player based on input
         locationTransitionSystem(this.ecs); // Handle location transitions at edges
-        cameraSystem(this.ecs); // Update camera (follow player + zoom)
 
         // Item systems
         chargesSystem(this.ecs); // Passive charge regeneration for rods/wands

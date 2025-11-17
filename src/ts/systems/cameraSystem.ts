@@ -19,10 +19,10 @@ import ECS from '../ecs';
 /**
  * Camera zoom levels configuration
  */
-const ZOOM_MIN = 25.0; // Maximum zoom out (see more of the map)
-const ZOOM_MAX = 75.0; // Maximum zoom in (see less, bigger tiles)
-const ZOOM_DEFAULT = 50.0; // Default zoom level
-const ZOOM_STEP = 25.0; // How much to zoom per input
+const ZOOM_MIN = 10.0; // Maximum zoom out (see more of the map)
+const ZOOM_MAX = 35.0; // Maximum zoom in (see less, bigger tiles)
+const ZOOM_DEFAULT = 25.0; // Default zoom level
+const ZOOM_STEP = 10.0; // How much to zoom per input
 
 /**
  * Current camera zoom level
@@ -63,11 +63,7 @@ export function cameraSystem(ecs: ECS): void {
 
     // Handle zoom input
     if (input.zoom) {
-      if (currentZoom >= ZOOM_MAX) {
-        currentZoom = ZOOM_MIN;
-      } else {
-        currentZoom += ZOOM_STEP;
-      }
+            currentZoom = (currentZoom >= ZOOM_MAX) ? ZOOM_MIN : currentZoom + ZOOM_STEP;       
     }
 
     // Apply zoom to camera
