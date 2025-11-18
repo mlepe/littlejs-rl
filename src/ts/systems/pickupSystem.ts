@@ -78,10 +78,10 @@ export function pickupSystem(ecs: ECS): void {
         if (!item) continue;
 
         // Check if player can carry this item
-        const itemWeight = getItemWeight(item);
-        if (!canAddItem(ecs, playerId, itemWeight)) {
+        if (!canAddItem(ecs, playerId, itemId)) {
+          const itemWeight = getItemWeight(item);
           console.log(
-            `Cannot pick up ${item.name} - inventory full (${itemWeight} weight)`
+            `Cannot pick up ${item.name} - inventory full (weight: ${itemWeight})`
           );
           continue;
         }

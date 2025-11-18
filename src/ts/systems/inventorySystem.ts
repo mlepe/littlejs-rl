@@ -95,10 +95,31 @@ export function canAddItem(
   const stats = ecs.getComponent<StatsComponent>(entityId, 'stats');
   const item = ecs.getComponent<ItemComponent>(itemId, 'item');
 
-  if (!inventory || !stats || !item) return false;
+  if (!inventory || !stats || !item) {
+    console.log('canAddItem: Missing component', {
+      inventory: !!inventory,
+      stats: !!stats,
+      item: !!item,
+    });
+    return false;
+  }
 
-  const newWeight = inventory.currentWeight + getItemWeight(item);
-  return newWeight <= stats.derived.carryCapacity;
+  const itemWeight = getItemWeight(item);
+  const newWeight = inventory.currentWeight + itemWeight;
+  const canAdd = newWeight <= stats.derived.carryCapacity;
+
+  // Debug logging when capacity check fails
+  if (!canAdd) {
+    console.log('Carry capacity exceeded:', {
+      itemWeight,
+      currentWeight: inventory.currentWeight,
+      newWeight,
+      carryCapacity: stats.derived.carryCapacity,
+      strength: stats.base.strength,
+    });
+  }
+
+  return canAdd;
 }
 
 /**
