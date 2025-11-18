@@ -100,14 +100,18 @@ Polls keyboard state using LittleJS's `keyIsDown()` and `keyWasPressed()`. Updat
 
 **Input Mappings:**
 
-- Arrow keys / WASD: Movement
-- M: Toggle world map
-- I: Toggle inventory
-- X: Toggle examine mode
+- Arrow keys / WASD / Numpad: Movement (8 directions)
+- Space/Enter/E: Action
+- G: Pickup
 - U: Use item
-- Z/C: Zoom in/out
-- F1: Toggle collision overlay
-- F2: Toggle debug text
+- [ / ]: World map navigation
+- L: Examine mode
+- I: Inventory
+- T: Zoom
+- C: Toggle collision overlay (debug)
+- X: Toggle debug text (debug)
+
+📋 **See [KEYBINDINGS-REFERENCE.md](./KEYBINDINGS-REFERENCE.md) for complete list with all alternative keys**
 
 **Called:** Every frame in `Game.update()` (before turn-based block)
 

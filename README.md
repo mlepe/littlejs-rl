@@ -28,6 +28,12 @@ The game will be available at `http://localhost:8080`
 
 - **Arrow Keys** or **WASD**: Move player
 - **Space**: Action (interact, attack)
+- **G**: Pickup items
+- **I**: Toggle inventory
+- **L**: Toggle examine mode
+- **[** / **]**: World map navigation
+
+📋 **[Complete Keybindings Reference](./KEYBINDINGS-REFERENCE.md)** - All keyboard controls with alternatives
 
 ## Documentation
 

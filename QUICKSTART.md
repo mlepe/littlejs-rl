@@ -24,7 +24,18 @@ The game will be available at `http://localhost:8080`
 ## Basic Controls
 
 - **Arrow Keys** or **WASD**: Move player
-- **Space**: Action (interact, attack)
+- **Numpad 1-9**: Diagonal movement
+- **Space/Enter/E**: Action (interact, attack)
+- **G**: Pickup items
+- **U**: Use item
+- **I**: Toggle inventory
+- **L**: Toggle examine mode
+- **[** / **]**: World map navigation
+- **T**: Zoom camera
+- **C**: Toggle collision overlay (debug)
+- **X**: Toggle debug text
+
+📋 **[Complete Keybindings Reference](./KEYBINDINGS-REFERENCE.md)** - Full list of all controls with alternatives
 
 ## Creating Your First Entity
 
@@ -57,7 +68,7 @@ const location = world.getCurrentLocation();
 // Generate procedural content
 if (location) {
   location.generate();
-  
+
   // Customize specific tiles
   location.setTile(25, 25, createTile(TileType.STAIRS_DOWN));
 }
@@ -71,10 +82,10 @@ import { inputSystem, playerMovementSystem, aiSystem } from './ts/systems';
 function gameUpdate() {
   // 1. Capture player input
   inputSystem(ecs);
-  
+
   // 2. Move player based on input
   playerMovementSystem(ecs);
-  
+
   // 3. Process AI for NPCs and enemies
   aiSystem(ecs, playerId);
 }
@@ -102,7 +113,9 @@ const pos = ecs.getComponent<PositionComponent>(entityId, 'position');
 const health = ecs.getComponent<HealthComponent>(entityId, 'health');
 
 if (pos && health) {
-  console.log(`Entity at (${pos.x}, ${pos.y}) has ${health.current}/${health.max} HP`);
+  console.log(
+    `Entity at (${pos.x}, ${pos.y}) has ${health.current}/${health.max} HP`
+  );
 }
 
 // Modify component data
@@ -134,33 +147,33 @@ function createCustomEnemy(
   worldY: number
 ): number {
   const entityId = ecs.createEntity();
-  
+
   // Add position
   ecs.addComponent<PositionComponent>(entityId, 'position', { x, y });
-  
+
   // Add location
   ecs.addComponent<LocationComponent>(entityId, 'location', { worldX, worldY });
-  
+
   // Add health
   ecs.addComponent<HealthComponent>(entityId, 'health', {
     current: 75,
     max: 75,
   });
-  
+
   // Add stats
   ecs.addComponent<StatsComponent>(entityId, 'stats', {
     strength: 8,
     defense: 4,
     speed: 0.8,
   });
-  
+
   // Add AI
   ecs.addComponent<AIComponent>(entityId, 'ai', {
     type: 'aggressive',
     detectionRange: 12,
     state: 'idle',
   });
-  
+
   // Add rendering
   const coords = getTileCoords(TileSprite.ENEMY_TROLL);
   ecs.addComponent<RenderComponent>(entityId, 'render', {
@@ -168,10 +181,10 @@ function createCustomEnemy(
     color: new LJS.Color(0.8, 0.3, 0.3), // Dark red
     size: new LJS.Vector2(1, 1),
   });
-  
+
   // Add movement
   ecs.addComponent<MovableComponent>(entityId, 'movable', { speed: 1 });
-  
+
   return entityId;
 }
 ```
@@ -203,6 +216,7 @@ GAME_DEBUG=true
 ```
 
 This shows:
+
 - FPS counter
 - Entity count
 - Current location
@@ -238,7 +252,13 @@ const location = world.getCurrentLocation();
 if (location) {
   const pos = location.findRandomWalkablePosition();
   if (pos) {
-    createEnemy(ecs, pos.x, pos.y, location.worldPosition.x, location.worldPosition.y);
+    createEnemy(
+      ecs,
+      pos.x,
+      pos.y,
+      location.worldPosition.x,
+      location.worldPosition.y
+    );
   }
 }
 ```

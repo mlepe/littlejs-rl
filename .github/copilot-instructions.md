@@ -1242,6 +1242,7 @@ The project includes extensive documentation organized for easy navigation:
 - **[COMPONENTS-REFERENCE.md](../COMPONENTS-REFERENCE.md)** - All 26+ ECS components with properties, usage, and examples
 - **[SYSTEMS-REFERENCE.md](../SYSTEMS-REFERENCE.md)** - All 40+ ECS systems with signatures, descriptions, and execution order
 - **[VIEW-MODES.md](../VIEW-MODES.md)** - UI view mode system (location, world_map, inventory, examine)
+- **[KEYBINDINGS-REFERENCE.md](../KEYBINDINGS-REFERENCE.md)** - Complete keyboard controls reference with all alternative keys
 
 ### Quick Access Documentation
 
@@ -1251,6 +1252,7 @@ The project includes extensive documentation organized for easy navigation:
 - **Find all components** → Check [COMPONENTS-REFERENCE.md](../COMPONENTS-REFERENCE.md)
 - **Find all systems** → Check [SYSTEMS-REFERENCE.md](../SYSTEMS-REFERENCE.md)
 - **Work with view modes** → Read [VIEW-MODES.md](../VIEW-MODES.md)
+- **Learn keyboard controls** → Check [KEYBINDINGS-REFERENCE.md](../KEYBINDINGS-REFERENCE.md)
 - **Find any documentation** → Start at [DOCUMENTATION-INDEX.md](../DOCUMENTATION-INDEX.md)
 
 ### Important Notes

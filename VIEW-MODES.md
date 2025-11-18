@@ -12,11 +12,18 @@ The game uses a **view mode system** to switch between different gameplay contex
 
 **Key Bindings:**
 
-- Arrow keys / WASD: Move player
-- M: Switch to world map
-- I: Open inventory
-- X: Enter examine mode
+- Arrow keys / WASD / Numpad: Move player (8 directions)
+- Space/Enter/E: Action
+- G: Pickup items
 - U: Use item
+- [ (BracketLeft, Numpad -): Open world map
+- L: Enter examine mode
+- I: Open inventory
+- T: Zoom camera
+- C: Toggle collision overlay (debug)
+- X: Toggle debug text (debug)
+
+📋 **[Complete Keybindings Reference](./KEYBINDINGS-REFERENCE.md)** - All controls with alternative keys
 
 **Active Systems:**
 
@@ -43,9 +50,14 @@ The game uses a **view mode system** to switch between different gameplay contex
 
 **Key Bindings:**
 
-- Arrow keys: Move cursor on world map
-- Enter: Travel to selected location
-- Escape / M: Return to location mode
+- Arrow keys / WASD / Numpad: Move cursor
+- ] (BracketRight, Numpad +): Enter selected location
+- Escape / [: Return to location mode
+- T: Zoom camera
+- C: Toggle collision overlay (debug)
+- X: Toggle debug text (debug)
+
+📋 **[Complete Keybindings Reference](./KEYBINDINGS-REFERENCE.md)** - All controls with alternative keys
 
 **Active Systems:**
 
@@ -90,8 +102,13 @@ The game uses a **view mode system** to switch between different gameplay contex
 
 **Key Bindings:**
 
-- Arrow keys: Move examine cursor
-- Escape / X: Exit examine mode
+- Arrow keys / WASD / Numpad: Move cursor
+- Escape / L: Exit examine mode
+- T: Zoom camera
+- C: Toggle collision overlay (debug)
+- X: Toggle debug text (debug)
+
+📋 **[Complete Keybindings Reference](./KEYBINDINGS-REFERENCE.md)** - All controls with alternative keys
 
 **Active Systems:**
 

@@ -12,6 +12,7 @@ Equipable
 equipables
 Halfling
 Halflings
+hjkl
 Keybinds
 littlejs
 LittleJS

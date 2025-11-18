@@ -75,10 +75,11 @@ This is the central index for all documentation in the LittleJS Roguelike projec
 
 ### Input & UI
 
-| Document                                     | Purpose                                                 | Read When                       |
-| -------------------------------------------- | ------------------------------------------------------- | ------------------------------- |
-| [TURN-BASED-INPUT.md](./TURN-BASED-INPUT.md) | Turn-based input handling                               | Working with input or game loop |
-| [VIEW-MODES.md](./VIEW-MODES.md)             | UI view modes (location, world map, inventory, examine) | Implementing UI features        |
+| Document                                               | Purpose                                                 | Read When                             |
+| ------------------------------------------------------ | ------------------------------------------------------- | ------------------------------------- |
+| [KEYBINDINGS-REFERENCE.md](./KEYBINDINGS-REFERENCE.md) | Complete keyboard controls reference                    | Learning controls or customizing keys |
+| [TURN-BASED-INPUT.md](./TURN-BASED-INPUT.md)           | Turn-based input handling                               | Working with input or game loop       |
+| [VIEW-MODES.md](./VIEW-MODES.md)                       | UI view modes (location, world map, inventory, examine) | Implementing UI features              |
 
 ---
 
@@ -141,12 +142,15 @@ This is the central index for all documentation in the LittleJS Roguelike projec
 - **Add a new system** → [SYSTEMS-REFERENCE.md](./SYSTEMS-REFERENCE.md), [ARCHITECTURE.md](./ARCHITECTURE.md)
 - **Add a new view mode** → [VIEW-MODES.md](./VIEW-MODES.md)
 - **Add new AI behavior** → [DISPOSITION-SYSTEM.md](./DISPOSITION-SYSTEM.md)
+- **Change keybindings** → [KEYBINDINGS-REFERENCE.md](./KEYBINDINGS-REFERENCE.md)
+- **Adjust turn speed** → [TURN-BASED-INPUT.md](./TURN-BASED-INPUT.md), [KEYBINDINGS-REFERENCE.md](./KEYBINDINGS-REFERENCE.md)
 
 #### Debug Issues
 
 - **Inventory not working** → [INVENTORY-TESTING-GUIDE.md](./INVENTORY-TESTING-GUIDE.md)
 - **Examine mode bugs** → [EXAMINE-MODE-FIXES.md](./EXAMINE-MODE-FIXES.md)
 - **Entity storage issues** → [ECS-WORLD-MIGRATION.md](./ECS-WORLD-MIGRATION.md)
+- **Keys not responding** → [KEYBINDINGS-REFERENCE.md](./KEYBINDINGS-REFERENCE.md)
 
 ---
 
@@ -200,6 +204,7 @@ This is the central index for all documentation in the LittleJS Roguelike projec
 
 - [VIEW-MODES.md](./VIEW-MODES.md)
 - [TURN-BASED-INPUT.md](./TURN-BASED-INPUT.md)
+- [KEYBINDINGS-REFERENCE.md](./KEYBINDINGS-REFERENCE.md)
 
 ---
 
