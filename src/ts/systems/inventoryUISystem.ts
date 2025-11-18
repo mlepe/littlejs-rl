@@ -27,6 +27,56 @@ import ECS from '../ecs';
 import { EquipmentSlot } from '../components/item';
 
 /**
+ * Map EquipmentSlot enum values to EquipmentComponent property names
+ * Must match the mapping in equipmentSystem.ts
+ */
+const SLOT_MAPPING: Record<EquipmentSlot, keyof EquipmentComponent> = {
+  head: 'head',
+  face: 'face',
+  neck: 'neck',
+  body: 'body',
+  'shoulder-left': 'shoulderLeft',
+  'shoulder-right': 'shoulderRight',
+  'wrist-left': 'wristLeft',
+  'wrist-right': 'wristRight',
+  'hand-left': 'handLeft',
+  'hand-right': 'handRight',
+  'main-hand': 'mainHand',
+  'off-hand': 'offHand',
+  'ring-left': 'ringLeft',
+  'ring-right': 'ringRight',
+  back: 'back',
+  belt: 'belt',
+  legs: 'legs',
+  feet: 'feet',
+};
+
+/**
+ * Reverse mapping: EquipmentComponent property names to EquipmentSlot enum
+ * Used to convert from UI slot names (camelCase) to item.equipSlot (kebab-case)
+ */
+const REVERSE_SLOT_MAPPING: Record<keyof EquipmentComponent, EquipmentSlot> = {
+  head: 'head',
+  face: 'face',
+  neck: 'neck',
+  body: 'body',
+  shoulderLeft: 'shoulder-left',
+  shoulderRight: 'shoulder-right',
+  wristLeft: 'wrist-left',
+  wristRight: 'wrist-right',
+  handLeft: 'hand-left',
+  handRight: 'hand-right',
+  mainHand: 'main-hand',
+  offHand: 'off-hand',
+  ringLeft: 'ring-left',
+  ringRight: 'ring-right',
+  back: 'back',
+  belt: 'belt',
+  legs: 'legs',
+  feet: 'feet',
+};
+
+/**
  * Inventory UI Layout Constants
  * Using screen-relative percentages for responsive layout
  */
@@ -255,7 +305,7 @@ function handleInventoryInput(
     const eqSlot = getEquipmentSlotAt(mousePos.x, mousePos.y);
     if (eqSlot && !inventoryUI.isDragging) {
       inventoryUI.hoverEquipSlot = eqSlot;
-      const itemId = (equipment as any)[eqSlot];
+      const itemId = equipment[eqSlot as keyof EquipmentComponent];
       if (itemId !== undefined) {
         inventoryUI.hoverItemId = itemId;
       }
@@ -287,7 +337,7 @@ function handleInventoryInput(
     if (equipment) {
       const eqSlot = getEquipmentSlotAt(mousePos.x, mousePos.y);
       if (eqSlot) {
-        const itemId = (equipment as any)[eqSlot];
+        const itemId = equipment[eqSlot as keyof EquipmentComponent];
         if (itemId !== undefined) {
           inventoryUI.isDragging = true;
           inventoryUI.dragItemId = itemId;
@@ -348,16 +398,18 @@ function handleInventoryInput(
         if (selectedItem.equipped) {
           // Unequip item
           if (selectedItem.equipSlot) {
-            (equipment as any)[selectedItem.equipSlot] = undefined;
+            const slotKey = SLOT_MAPPING[selectedItem.equipSlot];
+            equipment[slotKey] = undefined;
             selectedItem.equipped = false;
             console.log(`[inventoryUI] Unequipped ${selectedItem.name}`);
           }
         } else if (selectedItem.equipSlot) {
           // Equip item
           const targetSlot = selectedItem.equipSlot;
+          const slotKey = SLOT_MAPPING[targetSlot];
 
           // Unequip existing item in that slot
-          const existingItemId = (equipment as any)[targetSlot];
+          const existingItemId = equipment[slotKey];
           if (existingItemId !== undefined) {
             const existingItem = ecs.getComponent<ItemComponent>(
               existingItemId,
@@ -373,7 +425,7 @@ function handleInventoryInput(
           }
 
           // Equip new item
-          (equipment as any)[targetSlot] = selectedItemId;
+          equipment[slotKey] = selectedItemId;
           selectedItem.equipped = true;
 
           // Remove from inventory list (equipped items still tracked but not shown)
@@ -390,7 +442,7 @@ function handleInventoryInput(
           }
 
           console.log(
-            `[inventoryUI] Equipped ${selectedItem.name} to ${targetSlot}`
+            `[inventoryUI] Equipped ${selectedItem.name} to ${targetSlot} (${slotKey})`
           );
         } else {
           console.log(
@@ -456,11 +508,16 @@ function handleItemDrop(
   if (equipment) {
     const targetSlot = getEquipmentSlotAt(mousePos.x, mousePos.y);
     if (targetSlot) {
+      // targetSlot is camelCase (e.g., 'mainHand'), need to convert for comparison
+      const targetSlotKebab =
+        REVERSE_SLOT_MAPPING[targetSlot as keyof EquipmentComponent];
+
       // Validate slot compatibility
-      if (canEquipToSlot(dragItem, targetSlot)) {
+      if (canEquipToSlot(dragItem, targetSlotKebab)) {
         // Unequip from source if coming from equipment
         if (inventoryUI.dragSourceSlot) {
-          (equipment as any)[inventoryUI.dragSourceSlot] = undefined;
+          equipment[inventoryUI.dragSourceSlot as keyof EquipmentComponent] =
+            undefined;
           // Add back to inventory
           if (!inventory.items.includes(dragItemId)) {
             inventory.items.push(dragItemId);
@@ -468,7 +525,8 @@ function handleItemDrop(
         }
 
         // Handle existing item in target slot
-        const existingItemId = (equipment as any)[targetSlot];
+        const existingItemId =
+          equipment[targetSlot as keyof EquipmentComponent];
         if (existingItemId !== undefined) {
           // Move existing item to inventory
           if (!inventory.items.includes(existingItemId)) {
@@ -484,9 +542,9 @@ function handleItemDrop(
         }
 
         // Equip item to target slot
-        (equipment as any)[targetSlot] = dragItemId;
+        equipment[targetSlot as keyof EquipmentComponent] = dragItemId;
         dragItem.equipped = true;
-        dragItem.equipSlot = targetSlot as EquipmentSlot;
+        dragItem.equipSlot = targetSlotKebab; // Store kebab-case version
 
         // Remove from inventory if it's there
         const invIndex = inventory.items.indexOf(dragItemId);
@@ -494,7 +552,9 @@ function handleItemDrop(
           inventory.items.splice(invIndex, 1);
         }
 
-        console.log(`[inventoryUI] Equipped ${dragItem.name} to ${targetSlot}`);
+        console.log(
+          `[inventoryUI] Equipped ${dragItem.name} to ${targetSlot} (${targetSlotKebab})`
+        );
       } else {
         console.log(
           `[inventoryUI] Cannot equip ${dragItem.name} to ${targetSlot} slot`
@@ -510,7 +570,8 @@ function handleItemDrop(
   if (isPointInRect(mousePos.x, mousePos.y, invBounds)) {
     // If coming from equipment, unequip it
     if (inventoryUI.dragSourceSlot && equipment) {
-      (equipment as any)[inventoryUI.dragSourceSlot] = undefined;
+      equipment[inventoryUI.dragSourceSlot as keyof EquipmentComponent] =
+        undefined;
       dragItem.equipped = false;
       dragItem.equipSlot = undefined;
 
@@ -720,7 +781,7 @@ function renderEquipmentPanel(
     const slotY = y + h * layout.yPercent - UI_CONFIG.EQUIPMENT_SLOT_SIZE / 2;
     const slotSize = UI_CONFIG.EQUIPMENT_SLOT_SIZE;
 
-    const itemId = (equipment as any)[slotName];
+    const itemId = equipment[slotName as keyof EquipmentComponent];
     const isHovered = slotName === inventoryUI.hoverEquipSlot;
 
     // Don't render if being dragged

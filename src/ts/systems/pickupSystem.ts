@@ -55,6 +55,13 @@ export function pickupSystem(ecs: ECS): void {
 
     // Check if pickup key was pressed
     if (input.pickup) {
+      console.log(
+        `[Pickup] Attempting pickup at (${Math.floor(playerPos.x)}, ${Math.floor(playerPos.y)}) in location (${playerLoc.worldX}, ${playerLoc.worldY})`
+      );
+
+      // Reset pickup flag now that we're processing it
+      input.pickup = false;
+
       // Get all items at player's position
       const itemsAtPosition = getItemsAtPosition(
         ecs,
@@ -64,8 +71,12 @@ export function pickupSystem(ecs: ECS): void {
         playerLoc.worldY
       );
 
+      console.log(
+        `[Pickup] Found ${itemsAtPosition.length} item(s) at position`
+      );
+
       if (itemsAtPosition.length === 0) {
-        console.log('Nothing to pick up here.');
+        console.log('[Pickup] Nothing to pick up here.');
         continue;
       }
 

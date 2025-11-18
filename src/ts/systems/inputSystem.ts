@@ -75,7 +75,8 @@ export function inputSystem(ecs: ECS): void {
     input.moveX = 0;
     input.moveY = 0;
     input.action = false;
-    input.pickup = false;
+    // DON'T reset pickup flag - it needs to persist until processed by turn-based pickupSystem
+    // input.pickup is reset by pickupSystem after processing
     input.useItem = false;
     input.zoom = false;
     input.debugToggleCollision = false;
@@ -150,6 +151,7 @@ export function inputSystem(ecs: ECS): void {
     // Check PICKUP
     if (keybinds.PICKUP.some((key) => LJS.keyWasPressed(key))) {
       input.pickup = true;
+      console.log('[Input] PICKUP key (G) pressed');
     }
 
     // Check USE_ITEM
