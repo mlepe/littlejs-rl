@@ -13,6 +13,7 @@
 import type ECS from '../ecs';
 import type { HealthComponent } from '../components/health';
 import type { PositionComponent } from '../components/position';
+import type { RenderComponent } from '../components/render';
 import type { StatsComponent } from '../components/stats';
 import { relationSystem } from './relationSystem';
 
@@ -74,6 +75,20 @@ export function meleeAttack(
   // Apply damage
   defenderHealth.current -= damage;
   const killed = defenderHealth.current <= 0;
+
+  // Add damage flash effect
+  const defenderRender = ecs.getComponent<RenderComponent>(
+    defenderId,
+    'render'
+  );
+  if (defenderRender) {
+    defenderRender.damageFlashTimer = 0.2; // Flash for 0.2 seconds
+    defenderRender.floatingDamage = {
+      amount: damage,
+      timer: 0.5, // Display for 0.5 seconds
+      offsetY: 0,
+    };
+  }
 
   // Update relations (attacker now hostile to defender)
   relationSystem(ecs, defenderId, attackerId, -15);

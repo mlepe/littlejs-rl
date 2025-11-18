@@ -34,4 +34,12 @@ export interface RenderComponent {
   outlineColor?: LJS.Color;
   /** Outline width in tiles (optional) */
   outlineWidth?: number;
+  /** Damage flash timer - entity flashes white when > 0 */
+  damageFlashTimer?: number;
+  /** Floating damage number data (optional) */
+  floatingDamage?: {
+    amount: number;
+    timer: number;
+    offsetY: number;
+  };
 }

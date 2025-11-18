@@ -123,6 +123,11 @@ export function generateLoot(ecs: ECS, entityId: number): number[] {
         worldY: location.worldY,
       });
 
+      // Remove MovableComponent if present - items on ground shouldn't block movement
+      if (ecs.hasComponent(itemId, 'movable')) {
+        ecs.removeComponent(itemId, 'movable');
+      }
+
       droppedItems.push(itemId);
     }
   }

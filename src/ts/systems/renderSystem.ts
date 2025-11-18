@@ -67,15 +67,50 @@ export function renderSystem(ecs: ECS): void {
         );
       }
 
+      // Determine sprite color (white flash on damage, normal otherwise)
+      let spriteColor = render.color;
+      if (render.damageFlashTimer && render.damageFlashTimer > 0) {
+        // Flash white when damaged
+        spriteColor = new LJS.Color(1, 1, 1, 1);
+        // Decrement timer (use engine time delta)
+        render.damageFlashTimer -= LJS.timeDelta;
+        if (render.damageFlashTimer < 0) render.damageFlashTimer = 0;
+      }
+
       // Draw main sprite on top
       LJS.drawTile(
         position,
         render.size,
         render.tileInfo,
-        render.color,
+        spriteColor,
         render.angle || 0,
         render.mirror || false
       );
+
+      // Draw floating damage number if present
+      if (render.floatingDamage && render.floatingDamage.timer > 0) {
+        const dmg = render.floatingDamage;
+        const damagePos = LJS.vec2(pos.x + 0.5, pos.y + 0.5 + dmg.offsetY);
+        const damageColor = new LJS.Color(1, 0.2, 0.2, dmg.timer / 0.5); // Fade out
+
+        LJS.drawText(
+          dmg.amount.toString(),
+          damagePos,
+          0.5, // Font size
+          damageColor,
+          0, // Outline size
+          undefined, // Outline color
+          'center' // Text align
+        );
+
+        // Update floating animation
+        dmg.timer -= LJS.timeDelta;
+        dmg.offsetY += 2.0 * LJS.timeDelta; // Float upward
+
+        if (dmg.timer <= 0) {
+          render.floatingDamage = undefined; // Remove when done
+        }
+      }
     }
   }
 }

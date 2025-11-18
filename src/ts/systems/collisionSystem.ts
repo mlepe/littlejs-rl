@@ -12,6 +12,7 @@
 
 import type ECS from '../ecs';
 import type { PositionComponent } from '../components/position';
+import type { MovableComponent } from '../components/movable';
 
 /**
  * Check if an entity can move to a specific position
@@ -44,7 +45,9 @@ export function canMoveTo(
   newX: number,
   newY: number
 ): boolean {
-  const entities = ecs.query('position');
+  // Only check collision with entities that have MovableComponent
+  // This excludes items on the ground, which shouldn't block movement
+  const entities = ecs.query('position', 'movable');
 
   for (const otherId of entities) {
     // Skip self
@@ -60,7 +63,7 @@ export function canMoveTo(
     const otherTileY = Math.floor(otherPos.y);
 
     if (targetTileX === otherTileX && targetTileY === otherTileY) {
-      return false; // Blocked by another entity
+      return false; // Blocked by another movable entity
     }
   }
 

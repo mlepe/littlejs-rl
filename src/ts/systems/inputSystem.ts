@@ -54,6 +54,7 @@ export function inputSystem(ecs: ECS): void {
     LOCATION_ENTER_WORLDMAP: ['BracketLeft', 'NumpadSubtract'], // [ opens world map
     WORLDMAP_ENTER_LOCATION: ['BracketRight', 'NumpadAdd'], // ] enters location
     TOGGLE_EXAMINE: ['KeyL'], // L toggles examine mode
+    TOGGLE_INVENTORY: ['KeyI'], // I toggles inventory
     ZOOM: ['KeyT'], // Numpad *
     DEBUG_TOGGLE_COLLISION_DISPLAY: ['KeyC'],
     DEBUG_TOGGLE_DEBUG_TEXT: ['KeyX'],
@@ -75,6 +76,7 @@ export function inputSystem(ecs: ECS): void {
     input.locationEnterWorldMap = false;
     input.worldMapEnterLocation = false;
     input.toggleExamine = false;
+    input.toggleInventory = false;
 
     // Read keyboard input (LittleJS)
     // Movement: Use keyIsDown for continuous movement while held
@@ -159,6 +161,12 @@ export function inputSystem(ecs: ECS): void {
     if (keybinds.TOGGLE_EXAMINE.some((key) => LJS.keyWasPressed(key))) {
       input.toggleExamine = true;
       console.log('[Input] TOGGLE_EXAMINE pressed');
+    }
+
+    // Check TOGGLE_INVENTORY (I key toggles inventory)
+    if (keybinds.TOGGLE_INVENTORY.some((key) => LJS.keyWasPressed(key))) {
+      input.toggleInventory = true;
+      console.log('[Input] TOGGLE_INVENTORY pressed');
     }
 
     // Check ZOOM

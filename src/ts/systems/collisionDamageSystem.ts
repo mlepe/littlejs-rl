@@ -15,6 +15,7 @@ import ECS from '../ecs';
 import { HealthComponent } from '../components/health';
 import { PlayerComponent } from '../components/player';
 import { PositionComponent } from '../components/position';
+import { RenderComponent } from '../components/render';
 import { StatsComponent } from '../components/stats';
 
 /**
@@ -146,6 +147,20 @@ export function applyDamage(
 
   // Apply damage
   defenderHealth.current = Math.max(0, defenderHealth.current - finalDamage);
+
+  // Add damage flash effect
+  const defenderRender = ecs.getComponent<RenderComponent>(
+    defenderId,
+    'render'
+  );
+  if (defenderRender) {
+    defenderRender.damageFlashTimer = 0.2; // Flash for 0.2 seconds
+    defenderRender.floatingDamage = {
+      amount: finalDamage,
+      timer: 0.5, // Display for 0.5 seconds
+      offsetY: 0,
+    };
+  }
 
   // Log combat (for testing)
   const attackerName = ecs.hasComponent(attackerId, 'player')
