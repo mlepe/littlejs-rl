@@ -332,6 +332,100 @@ function handleInventoryInput(
     }
   }
 
+  // Equip/unequip selected item (E key)
+  if (LJS.keyWasPressed('KeyE') && equipment) {
+    if (
+      inventoryUI.selectedItemIndex >= 0 &&
+      inventoryUI.selectedItemIndex < inventory.items.length
+    ) {
+      const selectedItemId = inventory.items[inventoryUI.selectedItemIndex];
+      const selectedItem = ecs.getComponent<ItemComponent>(
+        selectedItemId,
+        'item'
+      );
+
+      if (selectedItem) {
+        if (selectedItem.equipped) {
+          // Unequip item
+          if (selectedItem.equipSlot) {
+            (equipment as any)[selectedItem.equipSlot] = undefined;
+            selectedItem.equipped = false;
+            console.log(`[inventoryUI] Unequipped ${selectedItem.name}`);
+          }
+        } else if (selectedItem.equipSlot) {
+          // Equip item
+          const targetSlot = selectedItem.equipSlot;
+
+          // Unequip existing item in that slot
+          const existingItemId = (equipment as any)[targetSlot];
+          if (existingItemId !== undefined) {
+            const existingItem = ecs.getComponent<ItemComponent>(
+              existingItemId,
+              'item'
+            );
+            if (existingItem) {
+              existingItem.equipped = false;
+              // Add back to inventory if not already there
+              if (!inventory.items.includes(existingItemId)) {
+                inventory.items.push(existingItemId);
+              }
+            }
+          }
+
+          // Equip new item
+          (equipment as any)[targetSlot] = selectedItemId;
+          selectedItem.equipped = true;
+
+          // Remove from inventory list (equipped items still tracked but not shown)
+          const invIndex = inventory.items.indexOf(selectedItemId);
+          if (invIndex >= 0) {
+            inventory.items.splice(invIndex, 1);
+            // Adjust selected index if needed
+            if (inventoryUI.selectedItemIndex >= inventory.items.length) {
+              inventoryUI.selectedItemIndex = Math.max(
+                0,
+                inventory.items.length - 1
+              );
+            }
+          }
+
+          console.log(
+            `[inventoryUI] Equipped ${selectedItem.name} to ${targetSlot}`
+          );
+        } else {
+          console.log(
+            `[inventoryUI] ${selectedItem.name} cannot be equipped (no slot defined)`
+          );
+        }
+      }
+    }
+  }
+
+  // Use/consume selected item (U key)
+  if (LJS.keyWasPressed('KeyU')) {
+    if (
+      inventoryUI.selectedItemIndex >= 0 &&
+      inventoryUI.selectedItemIndex < inventory.items.length
+    ) {
+      const selectedItemId = inventory.items[inventoryUI.selectedItemIndex];
+      const selectedItem = ecs.getComponent<ItemComponent>(
+        selectedItemId,
+        'item'
+      );
+
+      if (selectedItem && selectedItem.itemType === 'consumable') {
+        // TODO: Implement item usage system
+        console.log(
+          `[inventoryUI] Using ${selectedItem.name} (not implemented yet)`
+        );
+      } else if (selectedItem) {
+        console.log(
+          `[inventoryUI] ${selectedItem.name} is not a consumable item`
+        );
+      }
+    }
+  }
+
   // Close inventory (I key only - ESC is reserved for debug overlay)
   if (LJS.keyWasPressed('KeyI')) {
     const viewMode = ecs.getComponent<ViewModeComponent>(playerId, 'viewMode');
@@ -852,9 +946,11 @@ function renderDraggedItem(
 function renderInstructions(): void {
   const instructions = [
     'I: Close',
-    'Mouse: Drag items',
     'Arrows: Navigate',
+    'E: Equip/Unequip',
+    'U: Use/Consume',
     'Space: Details',
+    'Mouse: Drag items',
   ];
 
   let instrY = 20;
