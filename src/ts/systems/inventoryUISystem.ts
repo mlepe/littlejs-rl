@@ -11,6 +11,7 @@
  */
 
 import * as LJS from 'littlejsengine';
+import { getColor, BaseColor, rgba } from '../colorPalette';
 
 import {
   EquipmentComponent,
@@ -62,6 +63,52 @@ function drawRectOutlineScreen(
  * Inventory UI Layout Constants
  * Using screen-relative percentages for responsive layout
  */
+// UI Opacity Settings (easily adjustable)
+const UI_OPACITY = {
+  BACKGROUND: 0.92, // Panel backgrounds (0.0 = transparent, 1.0 = opaque)
+  BORDER: 1.0, // Panel borders
+  TEXT: 1.0, // Text and titles
+  SELECTED: 0.5, // Selected item highlight
+  HOVER: 0.3, // Mouse hover highlight
+  DRAG: 0.7, // Dragged item overlay
+  EMPTY_SLOT: 0.5, // Empty equipment slots
+};
+
+// Helper functions to get palette-based colors with opacity
+function getBgColor() {
+  // Use BACKGROUND base color, with custom opacity
+  const c = getColor(BaseColor.BACKGROUND);
+  return rgba(c.r * 255, c.g * 255, c.b * 255, UI_OPACITY.BACKGROUND);
+}
+function getBorderColor() {
+  const c = getColor(BaseColor.LIGHT_GRAY);
+  return rgba(c.r * 255, c.g * 255, c.b * 255, UI_OPACITY.BORDER);
+}
+function getTitleColor() {
+  const c = getColor(BaseColor.ACCENT);
+  return rgba(c.r * 255, c.g * 255, c.b * 255, UI_OPACITY.TEXT);
+}
+function getTextColor() {
+  const c = getColor(BaseColor.TEXT);
+  return rgba(c.r * 255, c.g * 255, c.b * 255, UI_OPACITY.TEXT);
+}
+function getSelectedColor() {
+  const c = getColor(BaseColor.HIGHLIGHT);
+  return rgba(c.r * 255, c.g * 255, c.b * 255, UI_OPACITY.SELECTED);
+}
+function getHoverColor() {
+  const c = getColor(BaseColor.HIGHLIGHT);
+  return rgba(c.r * 255, c.g * 255, c.b * 255, UI_OPACITY.HOVER);
+}
+function getDragColor() {
+  const c = getColor(BaseColor.INFO);
+  return rgba(c.r * 255, c.g * 255, c.b * 255, UI_OPACITY.DRAG);
+}
+function getEmptySlotColor() {
+  const c = getColor(BaseColor.DARK_GRAY);
+  return rgba(c.r * 255, c.g * 255, c.b * 255, UI_OPACITY.EMPTY_SLOT);
+}
+
 const UI_CONFIG = {
   // Screen layout percentages
   PANEL_PADDING: 20,
@@ -90,27 +137,6 @@ const UI_CONFIG = {
   DETAILS_Y_PERCENT: 0.85,
   DETAILS_WIDTH_PERCENT: 0.82,
   DETAILS_HEIGHT_PERCENT: 0.12,
-
-  // UI Opacity Settings (easily adjustable)
-  OPACITY: {
-    BACKGROUND: 0.98, // Panel backgrounds (0.0 = transparent, 1.0 = opaque)
-    BORDER: 1.0, // Panel borders
-    TEXT: 1.0, // Text and titles
-    SELECTED: 0.5, // Selected item highlight
-    HOVER: 0.3, // Mouse hover highlight
-    DRAG: 0.7, // Dragged item overlay
-    EMPTY_SLOT: 0.5, // Empty equipment slots
-  },
-
-  // Colors
-  BG_COLOR: new LJS.Color(0.1, 0.1, 0.1, 0.98),
-  BORDER_COLOR: new LJS.Color(0.5, 0.5, 0.5, 1.0),
-  TITLE_COLOR: new LJS.Color(1.0, 1.0, 0.8, 1.0),
-  TEXT_COLOR: new LJS.Color(0.9, 0.9, 0.9, 1.0),
-  SELECTED_COLOR: new LJS.Color(1.0, 1.0, 0.0, 0.5),
-  HOVER_COLOR: new LJS.Color(0.7, 0.7, 0.0, 0.3),
-  DRAG_COLOR: new LJS.Color(0.5, 0.5, 1.0, 0.7),
-  EMPTY_SLOT_COLOR: new LJS.Color(0.2, 0.2, 0.2, 0.5),
 
   // Font sizes
   TITLE_FONT_SIZE: 24,
@@ -488,15 +514,15 @@ function renderInventoryPanel(
   const h = bounds.height;
 
   // Draw panel background
-  drawRectScreen(x, y, w, h, UI_CONFIG.BG_COLOR);
-  drawRectOutlineScreen(x, y, w, h, UI_CONFIG.BORDER_COLOR, 2);
+  drawRectScreen(x, y, w, h, getBgColor());
+  drawRectOutlineScreen(x, y, w, h, getBorderColor(), 2);
 
   // Draw title
   LJS.drawTextScreen(
     'Inventory',
     LJS.vec2(x + w / 2, y + 15),
     UI_CONFIG.TITLE_FONT_SIZE,
-    UI_CONFIG.TITLE_COLOR,
+    getTitleColor(),
     undefined,
     undefined,
     'center'
@@ -508,7 +534,7 @@ function renderInventoryPanel(
     capacityText,
     LJS.vec2(x + w - 10, y + 15),
     UI_CONFIG.SMALL_FONT_SIZE,
-    UI_CONFIG.TEXT_COLOR,
+    getTextColor(),
     undefined,
     undefined,
     'right'
@@ -545,11 +571,11 @@ function renderInventoryPanel(
     }
 
     // Draw slot background
-    let slotColor = UI_CONFIG.EMPTY_SLOT_COLOR;
+    let slotColor = getEmptySlotColor();
     if (i === inventoryUI.selectedItemIndex) {
-      slotColor = UI_CONFIG.SELECTED_COLOR;
+      slotColor = getSelectedColor();
     } else if (itemId === inventoryUI.hoverItemId) {
-      slotColor = UI_CONFIG.HOVER_COLOR;
+      slotColor = getHoverColor();
     }
 
     drawRectScreen(slotX, slotY, slotSize, slotSize, slotColor);
@@ -558,7 +584,7 @@ function renderInventoryPanel(
       slotY,
       slotSize,
       slotSize,
-      UI_CONFIG.BORDER_COLOR,
+      getBorderColor(),
       1
     );
 
@@ -569,7 +595,7 @@ function renderInventoryPanel(
       itemName,
       LJS.vec2(slotX + slotSize / 2, slotY + slotSize / 2),
       UI_CONFIG.SMALL_FONT_SIZE,
-      UI_CONFIG.TEXT_COLOR,
+      getTextColor(),
       undefined,
       undefined,
       'center'
@@ -581,7 +607,7 @@ function renderInventoryPanel(
         `x${item.quantity}`,
         LJS.vec2(slotX + slotSize - 5, slotY + slotSize - 5),
         UI_CONFIG.SMALL_FONT_SIZE,
-        UI_CONFIG.TITLE_COLOR,
+        getTitleColor(),
         undefined,
         undefined,
         'right'
@@ -605,15 +631,15 @@ function renderEquipmentPanel(
   const h = bounds.height;
 
   // Draw panel background
-  drawRectScreen(x, y, w, h, UI_CONFIG.BG_COLOR);
-  drawRectOutlineScreen(x, y, w, h, UI_CONFIG.BORDER_COLOR, 2);
+  drawRectScreen(x, y, w, h, getBgColor());
+  drawRectOutlineScreen(x, y, w, h, getBorderColor(), 2);
 
   // Draw title
   LJS.drawTextScreen(
     'Equipment',
     LJS.vec2(x + w / 2, y + 15),
     UI_CONFIG.TITLE_FONT_SIZE,
-    UI_CONFIG.TITLE_COLOR,
+    getTitleColor(),
     undefined,
     undefined,
     'center'
@@ -631,33 +657,25 @@ function renderEquipmentPanel(
     // Don't render if being dragged
     if (inventoryUI.isDragging && itemId === inventoryUI.dragItemId) {
       // Draw empty slot
-      drawRectScreen(
-        slotX,
-        slotY,
-        slotSize,
-        slotSize,
-        UI_CONFIG.EMPTY_SLOT_COLOR
-      );
+      drawRectScreen(slotX, slotY, slotSize, slotSize, getEmptySlotColor());
       drawRectOutlineScreen(
         slotX,
         slotY,
         slotSize,
         slotSize,
-        UI_CONFIG.BORDER_COLOR,
+        getBorderColor(),
         1
       );
     } else {
       // Draw slot
-      const slotColor = isHovered
-        ? UI_CONFIG.HOVER_COLOR
-        : UI_CONFIG.EMPTY_SLOT_COLOR;
+      const slotColor = isHovered ? getHoverColor() : getEmptySlotColor();
       drawRectScreen(slotX, slotY, slotSize, slotSize, slotColor);
       drawRectOutlineScreen(
         slotX,
         slotY,
         slotSize,
         slotSize,
-        UI_CONFIG.BORDER_COLOR,
+        getBorderColor(),
         1
       );
 
@@ -671,7 +689,7 @@ function renderEquipmentPanel(
             itemName,
             LJS.vec2(slotX + slotSize / 2, slotY + slotSize / 2),
             UI_CONFIG.SMALL_FONT_SIZE,
-            UI_CONFIG.TEXT_COLOR,
+            getTextColor(),
             undefined,
             undefined,
             'center'
@@ -685,7 +703,7 @@ function renderEquipmentPanel(
       layout.label,
       LJS.vec2(slotX + slotSize / 2, slotY - 10),
       UI_CONFIG.SMALL_FONT_SIZE,
-      UI_CONFIG.TEXT_COLOR,
+      getTextColor(),
       undefined,
       undefined,
       'center'
@@ -707,15 +725,15 @@ function renderDetailsPanel(ecs: ECS, itemId: number): void {
   const h = bounds.height;
 
   // Draw panel background
-  drawRectScreen(x, y, w, h, UI_CONFIG.BG_COLOR);
-  drawRectOutlineScreen(x, y, w, h, UI_CONFIG.BORDER_COLOR, 2);
+  drawRectScreen(x, y, w, h, getBgColor());
+  drawRectOutlineScreen(x, y, w, h, getBorderColor(), 2);
 
   // Draw item name
   LJS.drawTextScreen(
     item.name,
     LJS.vec2(x + 10, y + 20),
     UI_CONFIG.TEXT_FONT_SIZE,
-    UI_CONFIG.TITLE_COLOR,
+    getTitleColor(),
     undefined,
     undefined,
     'left'
@@ -726,7 +744,7 @@ function renderDetailsPanel(ecs: ECS, itemId: number): void {
     item.description,
     LJS.vec2(x + 10, y + 45),
     UI_CONFIG.SMALL_FONT_SIZE,
-    UI_CONFIG.TEXT_COLOR,
+    getTextColor(),
     undefined,
     undefined,
     'left'
@@ -746,7 +764,7 @@ function renderDetailsPanel(ecs: ECS, itemId: number): void {
       prop,
       LJS.vec2(x + 10, propY),
       UI_CONFIG.SMALL_FONT_SIZE,
-      UI_CONFIG.TEXT_COLOR,
+      getTextColor(),
       undefined,
       undefined,
       'left'
@@ -775,22 +793,15 @@ function renderItemTooltip(
   const y = mousePos.y + offsetY;
 
   // Draw tooltip background
-  drawRectScreen(x, y, tooltipWidth, tooltipHeight, UI_CONFIG.BG_COLOR);
-  drawRectOutlineScreen(
-    x,
-    y,
-    tooltipWidth,
-    tooltipHeight,
-    UI_CONFIG.BORDER_COLOR,
-    2
-  );
+  drawRectScreen(x, y, tooltipWidth, tooltipHeight, getBgColor());
+  drawRectOutlineScreen(x, y, tooltipWidth, tooltipHeight, getBorderColor(), 2);
 
   // Draw item name
   LJS.drawTextScreen(
     item.name,
     LJS.vec2(x + 10, y + 15),
     UI_CONFIG.TEXT_FONT_SIZE,
-    UI_CONFIG.TITLE_COLOR,
+    getTitleColor(),
     undefined,
     undefined,
     'left'
@@ -801,7 +812,7 @@ function renderItemTooltip(
     `${item.itemType} (${item.weight} lbs)`,
     LJS.vec2(x + 10, y + 35),
     UI_CONFIG.SMALL_FONT_SIZE,
-    UI_CONFIG.TEXT_COLOR,
+    getTextColor(),
     undefined,
     undefined,
     'left'
@@ -811,7 +822,7 @@ function renderItemTooltip(
     `Value: ${item.value}g`,
     LJS.vec2(x + 10, y + 55),
     UI_CONFIG.SMALL_FONT_SIZE,
-    UI_CONFIG.TEXT_COLOR,
+    getTextColor(),
     undefined,
     undefined,
     'left'
@@ -837,14 +848,14 @@ function renderDraggedItem(
     mousePos.y - size / 2,
     size,
     size,
-    UI_CONFIG.DRAG_COLOR
+    getDragColor()
   );
   drawRectOutlineScreen(
     mousePos.x - size / 2,
     mousePos.y - size / 2,
     size,
     size,
-    UI_CONFIG.BORDER_COLOR,
+    getBorderColor(),
     2
   );
 
@@ -855,7 +866,7 @@ function renderDraggedItem(
     itemName,
     LJS.vec2(mousePos.x, mousePos.y),
     UI_CONFIG.SMALL_FONT_SIZE,
-    UI_CONFIG.TEXT_COLOR,
+    getTextColor(),
     undefined,
     undefined,
     'center'
@@ -879,7 +890,7 @@ function renderInstructions(): void {
       instr,
       LJS.vec2(20, instrY),
       UI_CONFIG.SMALL_FONT_SIZE,
-      UI_CONFIG.TEXT_COLOR,
+      getTextColor(),
       undefined,
       undefined,
       'left'
