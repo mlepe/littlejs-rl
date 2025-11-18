@@ -153,6 +153,10 @@ export default class Game {
     await dataLoader.loadAllData();
     console.log('[Game] Game data loaded');
 
+    // Initialize UI System
+    new LJS.UISystemPlugin();
+    console.log('[Game] UI System initialized');
+
     // Set up initial location (WILDERNESS for open world exploration)
     this.world.setCurrentLocation(
       this.currentWorldPos.x,
