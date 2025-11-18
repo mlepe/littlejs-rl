@@ -87,7 +87,7 @@ export function viewModeTransitionSystem(ecs: ECS): void {
     }
 
     // Toggle INVENTORY mode (from LOCATION or back to LOCATION)
-    if (LJS.keyWasPressed('KeyI')) {
+    if (input.toggleInventory) {
       if (viewMode.mode === ViewMode.LOCATION) {
         console.log('[ViewMode] TRANSITIONING: LOCATION -> INVENTORY');
         viewMode.mode = ViewMode.INVENTORY;

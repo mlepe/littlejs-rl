@@ -89,15 +89,15 @@ npm run dev          # Build + serve
 
 **Recent Changes:** The inventory UI has been converted from world coordinates to screen coordinates to fix display size issues. The following functionality needs testing:
 
-- [ ] Open inventory with **I key** - should display at proper size (not massive)
+- [x] Open inventory with **I key** - should display at proper size (not massive)
 - [ ] Mouse hover over inventory items - should highlight correctly
 - [ ] Mouse drag-and-drop between inventory and equipment slots
 - [ ] Keyboard navigation with arrow keys
 - [ ] Equipment slot interaction and item display
 - [ ] Item details panel display
-- [ ] **I key** closes inventory properly
-- [ ] **ESC key** does NOT close inventory (should open LittleJS debug overlay instead)
-- [ ] Responsive layout scales correctly with different window sizes
+- [x] **I key** closes inventory properly
+- [x] **ESC key** does NOT close inventory (should open LittleJS debug overlay instead)
+- [x] Responsive layout scales correctly with different window sizes
 - [ ] Tooltip displays correctly when hovering over items
 
 **Note:** If issues are found, see `INVENTORY-UI-COORDINATE-FIX.md` for implementation details.

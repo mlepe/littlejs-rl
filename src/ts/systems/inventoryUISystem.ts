@@ -91,8 +91,19 @@ const UI_CONFIG = {
   DETAILS_WIDTH_PERCENT: 0.82,
   DETAILS_HEIGHT_PERCENT: 0.12,
 
+  // UI Opacity Settings (easily adjustable)
+  OPACITY: {
+    BACKGROUND: 0.98, // Panel backgrounds (0.0 = transparent, 1.0 = opaque)
+    BORDER: 1.0, // Panel borders
+    TEXT: 1.0, // Text and titles
+    SELECTED: 0.5, // Selected item highlight
+    HOVER: 0.3, // Mouse hover highlight
+    DRAG: 0.7, // Dragged item overlay
+    EMPTY_SLOT: 0.5, // Empty equipment slots
+  },
+
   // Colors
-  BG_COLOR: new LJS.Color(0.1, 0.1, 0.1, 0.9),
+  BG_COLOR: new LJS.Color(0.1, 0.1, 0.1, 0.98),
   BORDER_COLOR: new LJS.Color(0.5, 0.5, 0.5, 1.0),
   TITLE_COLOR: new LJS.Color(1.0, 1.0, 0.8, 1.0),
   TEXT_COLOR: new LJS.Color(0.9, 0.9, 0.9, 1.0),

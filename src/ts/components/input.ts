@@ -38,4 +38,6 @@ export interface InputComponent {
   worldMapEnterLocation: boolean;
   /** Toggle examine mode (L key) */
   toggleExamine: boolean;
+  /** Toggle inventory (I key) */
+  toggleInventory: boolean;
 }

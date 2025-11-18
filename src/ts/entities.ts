@@ -109,6 +109,7 @@ export function createPlayer(
     locationEnterWorldMap: false,
     worldMapEnterLocation: false,
     toggleExamine: false,
+    toggleInventory: false,
   });
 
   // Add view mode component (starts in LOCATION view)
