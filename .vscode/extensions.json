@@ -1,0 +1,94 @@
+{
+  "recommendations": [
+    // Core Development
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "ms-vscode.vscode-typescript-next",
+
+    // AI Assistant
+    "github.copilot",
+
+    // Git & Version Control
+    "eamodio.gitlens",
+    "donjayamanne.githistory",
+    "mhutchie.git-graph",
+    "github.vscode-pull-request-github",
+
+    // JavaScript/TypeScript Development
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "pmneo.tsimporter",
+    "yoavbls.pretty-ts-errors",
+    "sburg.vscode-javascript-booster",
+
+    // Code Quality & Error Detection
+    "usernamehw.errorlens",
+    "streetsidesoftware.code-spell-checker",
+
+    // Productivity & Navigation
+    "gruntfuggly.todo-tree",
+    "alefragnani.bookmarks",
+    "alefragnani.project-manager",
+
+    // Documentation & Markdown
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+
+    // Web Development (for game testing)
+    "ms-vscode.live-server",
+    "ritwickdey.liveserver",
+    "pranaygp.vscode-css-peek",
+
+    // Build Tools
+    "jeremyrajan.webpack",
+
+    // Themes & Icons (Optional)
+    "pkief.material-icon-theme",
+    "github.github-vscode-theme",
+
+    // Utilities
+    "formulahendry.code-runner",
+    "wmaurer.change-case",
+    "tyriar.sort-lines",
+    "xyz.local-history"
+  ],
+  "unwantedRecommendations": [
+    // PHP
+    "devsense.composer-php-vscode",
+    "devsense.php-tools-vscode",
+    "ronvanderheijden.phpdoc-generator",
+
+    // C#/.NET
+    "ms-dotnettools.csdevkit",
+    "ms-dotnettools.csharp",
+
+    // Dart/Flutter
+    "dart-code.dart-code",
+    "dart-code.flutter",
+
+    // Rust
+    "rust-lang.rust-analyzer",
+
+    // Python
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+
+    // Unity/Game Engines (not LittleJS)
+    "visualstudiotoolsforunity.vstuc",
+    "tobiah.unity-tools",
+    "geequlim.godot-tools",
+
+    // React Native
+    "msjsdiag.vscode-react-native",
+
+    // Remote Development (not needed for local game dev)
+    "ms-vscode-remote.remote-containers",
+    "ms-vscode-remote.remote-ssh",
+    "github.codespaces",
+
+    // Database Tools (not needed for roguelike)
+    "mongodb.mongodb-vscode",
+    "cweijan.vscode-mysql-client2"
+  ]
+}
