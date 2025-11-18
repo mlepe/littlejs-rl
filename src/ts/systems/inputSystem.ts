@@ -13,7 +13,7 @@
 import * as LJS from 'littlejsengine';
 
 import ECS from '../ecs';
-import { InputComponent } from '../components';
+import { InputComponent, ViewModeComponent, ViewMode } from '../components';
 
 /**
  * Input System - Captures keyboard input for player entities
@@ -64,6 +64,13 @@ export function inputSystem(ecs: ECS): void {
     const input = ecs.getComponent<InputComponent>(entityId, 'input');
     if (!input) continue;
 
+    // Get view mode to determine which inputs to process
+    const viewModeComp = ecs.getComponent<ViewModeComponent>(
+      entityId,
+      'viewMode'
+    );
+    const viewMode = viewModeComp?.mode || ViewMode.LOCATION;
+
     // Reset input
     input.moveX = 0;
     input.moveY = 0;
@@ -82,48 +89,57 @@ export function inputSystem(ecs: ECS): void {
     // Movement: Use keyIsDown for continuous movement while held
     // Actions: Use keyWasPressed for single activation
 
-    // Check LEFT movement
-    if (keybinds.LEFT.some((key) => LJS.keyIsDown(key))) {
-      input.moveX = -1;
-    }
+    // Only process movement keys in LOCATION, WORLD_MAP, and EXAMINE modes
+    // (NOT in INVENTORY mode - inventory handles its own navigation)
+    const shouldProcessMovement =
+      viewMode === ViewMode.LOCATION ||
+      viewMode === ViewMode.WORLD_MAP ||
+      viewMode === ViewMode.EXAMINE;
 
-    // Check RIGHT movement
-    if (keybinds.RIGHT.some((key) => LJS.keyIsDown(key))) {
-      input.moveX = 1;
-    }
+    if (shouldProcessMovement) {
+      // Check LEFT movement
+      if (keybinds.LEFT.some((key) => LJS.keyIsDown(key))) {
+        input.moveX = -1;
+      }
 
-    // Check UP movement (Y axis is inverted in screen coordinates)
-    if (keybinds.UP.some((key) => LJS.keyIsDown(key))) {
-      input.moveY = 1;
-    }
+      // Check RIGHT movement
+      if (keybinds.RIGHT.some((key) => LJS.keyIsDown(key))) {
+        input.moveX = 1;
+      }
 
-    // Check DOWN movement
-    if (keybinds.DOWN.some((key) => LJS.keyIsDown(key))) {
-      input.moveY = -1;
-    }
+      // Check UP movement (Y axis is inverted in screen coordinates)
+      if (keybinds.UP.some((key) => LJS.keyIsDown(key))) {
+        input.moveY = 1;
+      }
 
-    // Check UP_LEFT movement (Y axis is inverted in screen coordinates)
-    if (keybinds.UP_LEFT.some((key) => LJS.keyIsDown(key))) {
-      input.moveX = -1;
-      input.moveY = 1;
-    }
+      // Check DOWN movement
+      if (keybinds.DOWN.some((key) => LJS.keyIsDown(key))) {
+        input.moveY = -1;
+      }
 
-    // Check UP_RIGHT movement
-    if (keybinds.UP_RIGHT.some((key) => LJS.keyIsDown(key))) {
-      input.moveX = 1;
-      input.moveY = 1;
-    }
+      // Check UP_LEFT movement (Y axis is inverted in screen coordinates)
+      if (keybinds.UP_LEFT.some((key) => LJS.keyIsDown(key))) {
+        input.moveX = -1;
+        input.moveY = 1;
+      }
 
-    // Check DOWN_LEFT movement
-    if (keybinds.DOWN_LEFT.some((key) => LJS.keyIsDown(key))) {
-      input.moveX = -1;
-      input.moveY = -1;
-    }
+      // Check UP_RIGHT movement
+      if (keybinds.UP_RIGHT.some((key) => LJS.keyIsDown(key))) {
+        input.moveX = 1;
+        input.moveY = 1;
+      }
 
-    // Check DOWN_RIGHT movement
-    if (keybinds.DOWN_RIGHT.some((key) => LJS.keyIsDown(key))) {
-      input.moveX = 1;
-      input.moveY = -1;
+      // Check DOWN_LEFT movement
+      if (keybinds.DOWN_LEFT.some((key) => LJS.keyIsDown(key))) {
+        input.moveX = -1;
+        input.moveY = -1;
+      }
+
+      // Check DOWN_RIGHT movement
+      if (keybinds.DOWN_RIGHT.some((key) => LJS.keyIsDown(key))) {
+        input.moveX = 1;
+        input.moveY = -1;
+      }
     }
 
     // Check ACTION
