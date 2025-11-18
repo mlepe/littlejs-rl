@@ -22,6 +22,7 @@ LJS.setCanvasPixelated(true);
 LJS.setOverlayCanvasPixelated(true);
 LJS.setTilesPixelated(true);
 LJS.setCameraScale(25);
+LJS.setDebugKey('NumpadDivide');
 
 // Get the Game singleton instance
 const game = Game.getInstance();
