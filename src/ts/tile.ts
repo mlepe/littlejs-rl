@@ -58,6 +58,8 @@ export interface TileProperties {
   readonly collisionValue: number;
   /** Base color identifier for this tile type */
   readonly baseColor: BaseColor;
+  /** Opacity for non-blocking tiles (0.0-1.0, default 1.0) */
+  readonly opacity?: number;
 }
 
 // Tile type properties lookup
@@ -115,6 +117,7 @@ const TILE_PROPERTIES: Record<TileType, TileProperties> = {
     transparent: true,
     collisionValue: 0,
     baseColor: BaseColor.GRASS,
+    opacity: 0.7, // Reduced opacity to distinguish from walls
   },
 };
 
