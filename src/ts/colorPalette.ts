@@ -442,7 +442,7 @@ export class ColorPaletteManager {
 export function getColor(baseColor: BaseColor, alpha?: number): LJS.Color {
   let ljsColor: LJS.Color =
     ColorPaletteManager.getInstance().getColor(baseColor);
-  ljsColor.a = alpha || 1.0;
+  ljsColor.a = alpha !== undefined ? alpha : 1.0;
   return ljsColor;
 }
 
