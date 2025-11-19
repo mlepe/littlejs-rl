@@ -173,6 +173,8 @@ export enum TileSprite {
 
   // Legacy character aliases (for backward compatibility)
   PLAYER_WARRIOR = 24, // CHAR_WARRIOR_1
+  PLAYER_WARRIOR_1 = 24, // CHAR_WARRIOR_1
+  PLAYER_WARRIOR_2 = 25, // CHAR_WARRIOR_2
 
   // ============================================================================
   // ROW 1 (Tiles 48-95): TERRAIN - WALLS

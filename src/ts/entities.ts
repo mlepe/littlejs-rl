@@ -197,25 +197,6 @@ export function createPlayer(
     states: new Set(),
   });
 
-  // Define multiple animation states
-  const idleAnim = createHorizontalAnimation(0, 0, 16, 16, 1, 0.5, true);
-  const walkAnim = createHorizontalAnimation(0, 0, 16, 16, 4, 0.2, true);
-  const attackAnim = createHorizontalAnimation(0, 16, 16, 16, 3, 0.15, false);
-  const deathAnim = createHorizontalAnimation(0, 32, 16, 16, 4, 0.2, false);
-
-  ecs.addComponent<AnimationComponent>(playerId, 'animation', {
-    animations: new Map([
-      ['idle', idleAnim],
-      ['walk', walkAnim],
-      ['attack', attackAnim],
-      ['death', deathAnim],
-    ]),
-    currentAnimation: 'idle',
-    currentFrame: 0,
-    timer: 0,
-    playing: true,
-  });
-
   return playerId;
 }
 
