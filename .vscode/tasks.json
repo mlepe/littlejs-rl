@@ -157,7 +157,23 @@
         "focus": false
       },
       "problemMatcher": []
+    },{
+      // Updates or creates any documentation files based on recent changes
+      "label": "Copilot: Generate a Pull Request with informations based on recent changes on this branch",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "--reuse-window",
+        "chat",
+        "Generate a #git_pull_request with informations based on recent #changes on this branch."
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
     },
+
 
     // ============================================================================
     // EDITOR/WORKSPACE OPTIMIZATION TASKS
@@ -278,6 +294,18 @@
         "chat",
         "Verify that new ECS component named ${input:componentName} in src/ts/components/ and new ECS system named ${input:systemName} in src/ts/systems/${input:entityTypeOptional:+ and ECS Entity Factory create${input:entityTypeOptional} in src/ts/entities.ts} are coherent"
       ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
+      // Generates unit tests for the selected code
+      "label": "Copilot: Generated tests based on recent changes",
+      "type": "shell",
+      "command": "code",
+      "args": ["--reuse-window", "chat", "Generate tests based on recent #changes ?"],
       "presentation": {
         "reveal": "never",
         "focus": false
