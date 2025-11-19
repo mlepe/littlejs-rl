@@ -17,6 +17,7 @@ import { VisualEffectComponent } from '../components/visualEffect';
 
 import ECS from '../ecs';
 import Global from '../global';
+import { BaseColor, getColor } from '../colorPalette';
 
 /**
  * Render System - Renders all entities with visual components
@@ -100,7 +101,7 @@ export function renderSystem(ecs: ECS): void {
       // Legacy damage flash (kept for backward compatibility)
       else if (render.damageFlashTimer && render.damageFlashTimer > 0) {
         // Flash white when damaged
-        spriteColor = new LJS.Color(1, 1, 1, 1);
+        spriteColor = getColor(BaseColor.WHITE);
         // Decrement timer (use engine time delta)
         render.damageFlashTimer -= LJS.timeDelta;
         if (render.damageFlashTimer < 0) render.damageFlashTimer = 0;
@@ -119,13 +120,13 @@ export function renderSystem(ecs: ECS): void {
       // Draw floating damage number if present
       if (render.floatingDamage && render.floatingDamage.timer > 0) {
         const dmg = render.floatingDamage;
-        const damagePos = LJS.vec2(pos.x + 0.5, pos.y + 0.5 + dmg.offsetY);
-        const damageColor = new LJS.Color(1, 0.2, 0.2, dmg.timer / 0.5); // Fade out
-
+        const damagePos = LJS.vec2(pos.x + 0.5, pos.y + 2 + dmg.offsetY);
+        //const damageColor = new LJS.Color(1, 0.2, 0.2, dmg.timer / 0.5); // Fade out
+        const damageColor = getColor(BaseColor.RED, dmg.timer / 0.5); // Fade out
         LJS.drawText(
           dmg.amount.toString(),
           damagePos,
-          0.5, // Font size
+          1, // Font size
           damageColor,
           0, // Outline size
           undefined, // Outline color
@@ -133,8 +134,8 @@ export function renderSystem(ecs: ECS): void {
         );
 
         // Update floating animation
-        dmg.timer -= LJS.timeDelta;
-        dmg.offsetY += 2.0 * LJS.timeDelta; // Float upward
+        dmg.timer -= LJS.timeDelta / 2;
+        dmg.offsetY += (2.0 * LJS.timeDelta) / 2; // Float upward
 
         if (dmg.timer <= 0) {
           render.floatingDamage = undefined; // Remove when done
