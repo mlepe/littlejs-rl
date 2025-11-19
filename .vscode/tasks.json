@@ -127,7 +127,7 @@
       "problemMatcher": []
     },
     {
-      // Updates the main copilot-instructions.md file to reflect recent code changes, especially about/on prompt information. 
+      // Updates the main copilot-instructions.md file to reflect recent code changes, especially about/on prompt information.
       "label": "Copilot: Update copilot-instructions.md based on recent changes (with additional information)",
       "type": "shell",
       "command": "code",
@@ -157,15 +157,16 @@
         "focus": false
       },
       "problemMatcher": []
-    },{
+    },
+    {
       // Updates or creates any documentation files based on recent changes
-      "label": "Copilot: Generate a Pull Request with informations based on recent changes on this branch",
+      "label": "Copilot: Generate a Pull Request with information based on recent changes on this branch",
       "type": "shell",
       "command": "code",
       "args": [
         "--reuse-window",
         "chat",
-        "Generate a #git_pull_request with informations based on recent #changes on this branch."
+        "Generate a #git_pull_request with information based on recent #changes on this branch."
       ],
       "presentation": {
         "reveal": "never",
@@ -173,7 +174,6 @@
       },
       "problemMatcher": []
     },
-
 
     // ============================================================================
     // EDITOR/WORKSPACE OPTIMIZATION TASKS
@@ -305,7 +305,11 @@
       "label": "Copilot: Generated tests based on recent changes",
       "type": "shell",
       "command": "code",
-      "args": ["--reuse-window", "chat", "Generate tests based on recent #changes ?"],
+      "args": [
+        "--reuse-window",
+        "chat",
+        "Generate tests based on recent #changes ?"
+      ],
       "presentation": {
         "reveal": "never",
         "focus": false
