@@ -19,6 +19,7 @@ import { PlayerComponent } from '../components/player';
 import { PositionComponent } from '../components/position';
 import { RenderComponent } from '../components/render';
 import { StatsComponent } from '../components/stats';
+import { VisualEffectComponent } from '../components/visualEffect';
 import {
   addFlashEffect,
   addOffsetEffect,
@@ -170,8 +171,18 @@ export function applyDamage(
   }
 
   // Add flash and shake effects to defender
+  console.log(`[Combat] Adding visual effects to defender ${defenderId}`);
   addFlashEffect(ecs, defenderId, new LJS.Color(1, 0.2, 0.2, 1), 0.15);
   addShakeEffect(ecs, defenderId, 0.1, 0.2);
+
+  // Verify effects were added
+  const vfx = ecs.getComponent<VisualEffectComponent>(
+    defenderId,
+    'visualEffect'
+  );
+  console.log(
+    `[Combat] Defender has ${vfx?.effects.length || 0} active effects`
+  );
 
   // Add attack recoil effect to attacker (jump toward defender)
   const attackerPos = ecs.getComponent<PositionComponent>(

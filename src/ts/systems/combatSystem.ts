@@ -10,12 +10,19 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
+import * as LJS from 'littlejsengine';
+
 import type ECS from '../ecs';
 import type { HealthComponent } from '../components/health';
 import type { PositionComponent } from '../components/position';
 import type { RenderComponent } from '../components/render';
 import type { StatsComponent } from '../components/stats';
 import { relationSystem } from './relationSystem';
+import {
+  addFlashEffect,
+  addOffsetEffect,
+  addShakeEffect,
+} from './visualEffectSystem';
 
 /**
  * Result of a melee attack
@@ -88,6 +95,34 @@ export function meleeAttack(
       timer: 0.5, // Display for 0.5 seconds
       offsetY: 0,
     };
+  }
+
+  // Add visual effects (shake, flash, recoil)
+  addFlashEffect(ecs, defenderId, new LJS.Color(1, 0.2, 0.2, 1), 0.15);
+  addShakeEffect(ecs, defenderId, 0.15, 0.2);
+
+  // Add attack recoil effect to attacker (jump toward defender)
+  const attackerPos = ecs.getComponent<PositionComponent>(
+    attackerId,
+    'position'
+  );
+  const defenderPos = ecs.getComponent<PositionComponent>(
+    defenderId,
+    'position'
+  );
+
+  if (attackerPos && defenderPos) {
+    // Calculate direction from attacker to defender
+    const dx = defenderPos.x - attackerPos.x;
+    const dy = defenderPos.y - attackerPos.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > 0) {
+      // Normalize and scale for small jump toward target
+      const jumpX = (dx / distance) * 0.15;
+      const jumpY = (dy / distance) * 0.15;
+      addOffsetEffect(ecs, attackerId, LJS.vec2(jumpX, jumpY), 0.15, 'easeOut');
+    }
   }
 
   // Update relations (attacker now hostile to defender)

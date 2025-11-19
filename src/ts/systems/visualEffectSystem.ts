@@ -50,6 +50,12 @@ export function visualEffectSystem(ecs: ECS): void {
     const vfx = ecs.getComponent<VisualEffectComponent>(id, 'visualEffect');
     if (!vfx) continue;
 
+    if (vfx.effects.length > 0) {
+      console.log(
+        `[VFX] Processing ${vfx.effects.length} effects for entity ${id}`
+      );
+    }
+
     // Reset accumulated values
     vfx.currentOffset = LJS.vec2(0, 0);
     vfx.currentScale = LJS.vec2(1, 1);

@@ -362,10 +362,12 @@ export default class Game {
         chargesSystem(this.ecs); // Passive charge regeneration for rods/wands
         identificationSystem(this.ecs); // Auto-identify items based on intelligence
 
-        visualEffectSystem(this.ecs); // Process visual effects
-        basicAnimationSystem(this.ecs); // Process frame animations
         // Combat (simple collision-based for testing)
         collisionDamageSystem(this.ecs); // Apply damage when entities collide
+
+        // Visual effects AFTER combat to show damage effects immediately
+        visualEffectSystem(this.ecs); // Process visual effects
+        basicAnimationSystem(this.ecs); // Process frame animations
 
         aiSystem(this.ecs, this.playerId); // AI behaviors for NPCs/enemies
         deathSystem(this.ecs); // Handle entity death and loot drops
