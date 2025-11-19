@@ -14,6 +14,7 @@ import * as LJS from 'littlejsengine';
 
 import { ExamineData } from './examineSystem';
 import Global from '../global';
+import { BaseColor, getColor } from '../colorPalette';
 
 /**
  * Examine Render System - Renders the examine cursor and information panel
@@ -46,13 +47,13 @@ export function examineRenderSystem(
   // Draw cursor highlight (yellow square)
   const cursorPos = LJS.vec2(cursorX + 0.5, cursorY + 0.5);
   const cursorSize = LJS.vec2(1, 1);
-  const cursorColor = new LJS.Color(1, 1, 0, 0.5); // Yellow, semi-transparent
+  const cursorColor = getColor(BaseColor.YELLOW, 0.5); // Yellow, semi-transparent
 
   // Draw filled square for cursor background
   LJS.drawRect(cursorPos, cursorSize, cursorColor);
 
   // Draw cursor border by drawing 4 thin rectangles (brighter yellow)
-  const borderColor = new LJS.Color(1, 1, 0, 1);
+  const borderColor = getColor(BaseColor.HIGHLIGHT);
   const borderWidth = 0.05;
   // Top border
   LJS.drawRect(
@@ -91,9 +92,9 @@ export function examineRenderSystem(
     examineData.tileName,
     labelPos,
     0.3,
-    LJS.WHITE,
+    getColor(BaseColor.WHITE),
     2,
-    LJS.BLACK,
+    getColor(BaseColor.BLACK),
     'center'
   );
 
@@ -113,9 +114,9 @@ export function examineRenderSystem(
     `Tile: ${examineData.tileName}`,
     LJS.vec2(textX, textY),
     18,
-    LJS.WHITE,
+    getColor(BaseColor.WHITE),
     2,
-    LJS.BLACK,
+    getColor(BaseColor.BLACK),
     'left'
   );
   textY += lineHeight;
@@ -124,9 +125,9 @@ export function examineRenderSystem(
     examineData.tileDescription,
     LJS.vec2(textX, textY),
     14,
-    new LJS.Color(0.7, 0.7, 0.7),
+    getColor(BaseColor.LIGHT_GRAY),
     1,
-    LJS.BLACK,
+    getColor(BaseColor.BLACK),
     'left'
   );
   textY += lineHeight + 5;
@@ -137,24 +138,24 @@ export function examineRenderSystem(
       'Entities:',
       LJS.vec2(textX, textY),
       16,
-      new LJS.Color(1, 1, 0.5),
+      getColor(BaseColor.HIGHLIGHT),
       2,
-      LJS.BLACK,
+      getColor(BaseColor.BLACK),
       'left'
     );
     textY += lineHeight;
 
     for (const entity of examineData.entities) {
       // Color code by entity type
-      let entityColor = LJS.WHITE;
+      let entityColor = getColor(BaseColor.WHITE);
       if (entity.type === 'player') {
-        entityColor = new LJS.Color(0.5, 1, 0.5); // Green for player
+        entityColor = getColor(BaseColor.GREEN); // Green for player
       } else if (entity.type === 'enemy') {
-        entityColor = new LJS.Color(1, 0.3, 0.3); // Red for enemies
+        entityColor = getColor(BaseColor.RED); // Red for enemies
       } else if (entity.type === 'item') {
-        entityColor = new LJS.Color(0.7, 0.7, 1); // Light blue for items
+        entityColor = getColor(BaseColor.CYAN); // Light blue for items
       } else if (entity.type === 'npc') {
-        entityColor = new LJS.Color(1, 1, 0.5); // Yellow for NPCs
+        entityColor = getColor(BaseColor.YELLOW); // Yellow for NPCs
       }
 
       LJS.drawTextScreen(
@@ -163,7 +164,7 @@ export function examineRenderSystem(
         14,
         entityColor,
         1.5,
-        LJS.BLACK,
+        getColor(BaseColor.BLACK),
         'left'
       );
       textY += lineHeight;
@@ -174,9 +175,9 @@ export function examineRenderSystem(
           `    ${entity.details}`,
           LJS.vec2(textX + 20, textY),
           12,
-          new LJS.Color(0.6, 0.6, 0.6),
+          getColor(BaseColor.LIGHT_GRAY),
           1,
-          LJS.BLACK,
+          getColor(BaseColor.BLACK),
           'left'
         );
         textY += lineHeight - 5;
@@ -187,9 +188,9 @@ export function examineRenderSystem(
       'No entities here.',
       LJS.vec2(textX, textY),
       14,
-      new LJS.Color(0.5, 0.5, 0.5),
+      getColor(BaseColor.LIGHT_GRAY),
       1,
-      LJS.BLACK,
+      getColor(BaseColor.BLACK),
       'left'
     );
   }
@@ -200,9 +201,9 @@ export function examineRenderSystem(
     helpText,
     LJS.vec2(screenWidth - 20, 20),
     14,
-    new LJS.Color(1, 1, 0.5),
+    getColor(BaseColor.HIGHLIGHT),
     1.5,
-    LJS.BLACK,
+    getColor(BaseColor.BLACK),
     'right'
   );
 }

@@ -16,11 +16,13 @@ import {
   PositionComponent,
   StatsComponent,
 } from '../components';
+import { EntityState } from '../components/state';
 
 import ECS from '../ecs';
 import Game from '../game';
 import { collisionSystem } from './collisionSystem';
 import { combatSystem } from './combatSystem';
+import { addState, removeState } from './stateSystem';
 
 /**
  * Player Movement System - Moves player entities based on input
@@ -54,14 +56,22 @@ export function playerMovementSystem(ecs: ECS): void {
 
     if (!pos || !input || !locationComp) continue;
 
+    // Track if player is moving this frame
+    const isMovingThisFrame = input.moveX !== 0 || input.moveY !== 0;
+
     // Apply movement (grid-based, one tile at a time)
-    if (input.moveX !== 0 || input.moveY !== 0) {
+    if (isMovingThisFrame) {
+      // Set MOVING state
+      addState(ecs, entityId, EntityState.MOVING);
+
       const newX = Math.floor(pos.x + input.moveX);
       const newY = Math.floor(pos.y + input.moveY);
 
       // Check if target tile has an entity - if so, attack instead of moving
       if (!collisionSystem(ecs, entityId, newX, newY)) {
         // Tile is occupied - perform melee attack
+        addState(ecs, entityId, EntityState.ATTACKING);
+
         const attackResult = combatSystem(ecs, entityId, newX, newY);
 
         if (attackResult && attackResult.hit) {
@@ -70,6 +80,9 @@ export function playerMovementSystem(ecs: ECS): void {
             console.log('Enemy defeated!');
           }
         }
+
+        // Remove MOVING state (didn't actually move), keep ATTACKING
+        removeState(ecs, entityId, EntityState.MOVING);
 
         // Don't move - stay in current position after attacking
         continue;
@@ -83,7 +96,15 @@ export function playerMovementSystem(ecs: ECS): void {
         // Move to new position (tile-based, integer coordinates)
         pos.x = newX;
         pos.y = newY;
+      } else {
+        // Couldn't move (wall/obstacle)
+        removeState(ecs, entityId, EntityState.MOVING);
       }
+    } else {
+      // Not moving this frame - remove MOVING state
+      removeState(ecs, entityId, EntityState.MOVING);
+      // Also clear ATTACKING state if not attacking
+      removeState(ecs, entityId, EntityState.ATTACKING);
     }
 
     // Handle action

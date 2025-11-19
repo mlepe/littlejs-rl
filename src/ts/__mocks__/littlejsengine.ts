@@ -25,6 +25,10 @@ export class Vector2 {
   distance(v: Vector2): number {
     return this.subtract(v).length();
   }
+
+  scale(s: number): Vector2 {
+    return new Vector2(this.x * s, this.y * s);
+  }
 }
 
 // Mock vec2 helper function
@@ -67,6 +71,30 @@ export class EngineObject {
   destroy() {}
 }
 
+// Mock TileLayer class
+export class TileLayer {
+  pos: Vector2;
+  size: Vector2;
+
+  constructor(
+    pos: Vector2 = vec2(),
+    size: Vector2 = vec2(32, 32),
+    tileInfo: TileInfo = new TileInfo(),
+    scale: Vector2 = vec2(1, 1),
+    renderOrder: number = 0
+  ) {
+    this.pos = pos;
+    this.size = size;
+  }
+
+  setData(x: number, y: number, data: any) {}
+  getData(x: number, y: number): any {
+    return 0;
+  }
+  update() {}
+  render() {}
+}
+
 // Mock utility functions
 export function rand(min: number = 0, max: number = 1): number {
   return Math.random() * (max - min) + min;
@@ -99,9 +127,25 @@ export function mouseIsDown(button: number): boolean {
 
 export const mousePos = vec2(0, 0);
 
-// Mock time values
-export let time = 0;
-export let timeDelta = 0;
+// Mock time values - use a mutable object so tests can modify it
+export const mockTime = { time: 0, timeDelta: 0 };
+
+// Getters that reference the mock object
+export const time = 0;
+Object.defineProperty(exports, 'time', {
+  get: () => mockTime.time,
+  set: (value: number) => {
+    mockTime.time = value;
+  },
+});
+
+export const timeDelta = 0;
+Object.defineProperty(exports, 'timeDelta', {
+  get: () => mockTime.timeDelta,
+  set: (value: number) => {
+    mockTime.timeDelta = value;
+  },
+});
 
 // Mock drawing functions (no-ops for testing)
 export function drawTile(...args: any[]): void {}

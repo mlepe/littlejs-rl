@@ -13,6 +13,7 @@
 import * as LJS from 'littlejsengine';
 
 import {
+  AnimationComponent,
   HealthComponent,
   InventoryPanel,
   InventoryUIComponent,
@@ -36,10 +37,17 @@ import { AIComponent } from './components/ai';
 import ECS from './ecs';
 import { InputComponent } from './components/input';
 import { PlayerComponent } from './components/player';
+import { StateComponent } from './components/state';
 import { StatsComponent } from './components/stats';
 import { ViewMode } from './components/viewMode';
 import { addLootTable } from './systems/lootSystem';
 import { calculateDerivedStats } from './systems/derivedStatsSystem';
+import {
+  createHorizontalAnimation,
+  switchAnimation,
+} from './systems/basicAnimationSystem';
+
+import { BaseColor, getColor } from './colorPalette';
 
 /**
  * Create a player entity with all required components
@@ -180,11 +188,16 @@ export function createPlayer(
       LJS.vec2(16, 16),
       0
     ),
-    color: new LJS.Color(1, 1, 1), // White
+    color: getColor(BaseColor.WHITE), // White
     size: new LJS.Vector2(1, 1),
   });
 
   ecs.addComponent<MovableComponent>(playerId, 'movable', { speed: 1 });
+
+  // Add state component (starts with no active states)
+  ecs.addComponent<StateComponent>(playerId, 'state', {
+    states: new Set(),
+  });
 
   return playerId;
 }
@@ -252,13 +265,18 @@ export function createEnemy(
       LJS.vec2(16, 16),
       0
     ),
-    color: new LJS.Color(1, 1, 1), // White (preserves sprite colors)
+    color: getColor(BaseColor.WHITE), // White (preserves sprite colors)
     size: new LJS.Vector2(1, 1),
-    outlineColor: new LJS.Color(1, 0, 0, 1), // Red outline for enemies
+    outlineColor: getColor(BaseColor.RED), // Red outline for enemies
     outlineWidth: 0.1, // Thin red border
   });
 
   ecs.addComponent<MovableComponent>(enemyId, 'movable', { speed: 1 });
+
+  // Add state component (starts with no active states)
+  ecs.addComponent<StateComponent>(enemyId, 'state', {
+    states: new Set(),
+  });
 
   // Add loot table (goblin drops)
   addLootTable(ecs, enemyId, [
@@ -338,11 +356,16 @@ export function createNPC(
       LJS.vec2(16, 16),
       0
     ),
-    color: new LJS.Color(0, 1, 0), // Green
+    color: getColor(BaseColor.GREEN), // Green
     size: new LJS.Vector2(1, 1),
   });
 
   ecs.addComponent<MovableComponent>(npcId, 'movable', { speed: 1 });
+
+  // Add state component (starts with no active states)
+  ecs.addComponent<StateComponent>(npcId, 'state', {
+    states: new Set(),
+  });
 
   return npcId;
 }
@@ -413,11 +436,16 @@ export function createFleeingCreature(
       LJS.vec2(16, 16),
       0
     ),
-    color: new LJS.Color(1, 1, 0), // Yellow
+    color: getColor(BaseColor.YELLOW), // Yellow
     size: new LJS.Vector2(1, 1),
   });
 
   ecs.addComponent<MovableComponent>(creatureId, 'movable', { speed: 1 });
+
+  // Add state component (starts with no active states)
+  ecs.addComponent<StateComponent>(creatureId, 'state', {
+    states: new Set(),
+  });
 
   return creatureId;
 }
@@ -485,13 +513,18 @@ export function createBoss(
       LJS.vec2(16, 16),
       0
     ),
-    color: new LJS.Color(0.5, 0, 0.5), // Purple
+    color: getColor(BaseColor.PURPLE), // Purple
     size: new LJS.Vector2(2, 2), // Larger size
-    outlineColor: new LJS.Color(1, 0, 0, 1), // Red outline for bosses
+    outlineColor: getColor(BaseColor.RED), // Red outline for bosses
     outlineWidth: 0.15, // Thicker border for bosses
   });
 
   ecs.addComponent<MovableComponent>(bossId, 'movable', { speed: 1 });
+
+  // Add state component (starts with no active states)
+  ecs.addComponent<StateComponent>(bossId, 'state', {
+    states: new Set(),
+  });
 
   // Add boss loot table (rare items with high quality)
   addLootTable(ecs, bossId, [

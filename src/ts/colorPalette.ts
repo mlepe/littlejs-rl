@@ -439,8 +439,11 @@ export class ColorPaletteManager {
  * @param baseColor - The semantic color name
  * @returns LittleJS Color object
  */
-export function getColor(baseColor: BaseColor): LJS.Color {
-  return ColorPaletteManager.getInstance().getColor(baseColor);
+export function getColor(baseColor: BaseColor, alpha?: number): LJS.Color {
+  let ljsColor: LJS.Color =
+    ColorPaletteManager.getInstance().getColor(baseColor);
+  ljsColor.a = alpha !== undefined ? alpha : 1.0;
+  return ljsColor;
 }
 
 /**

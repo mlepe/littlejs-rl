@@ -9,6 +9,7 @@
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
+import * as LJS from 'littlejsengine';
 
 /**
  * Tileset Configuration - Sprite index mappings
@@ -31,7 +32,9 @@
  * ```
  */
 
-/**
+/**Do you see any more categories and subcategories to implement? Based on #sym:TileSprite and #file:tileset.png
+
+ TileSprite
  * Comprehensive enum of all tiles in the tileset
  * Each value represents the linear index of a 16x16 pixel tile in the tileset image
  */
@@ -170,6 +173,8 @@ export enum TileSprite {
 
   // Legacy character aliases (for backward compatibility)
   PLAYER_WARRIOR = 24, // CHAR_WARRIOR_1
+  PLAYER_WARRIOR_1 = 24, // CHAR_WARRIOR_1
+  PLAYER_WARRIOR_2 = 25, // CHAR_WARRIOR_2
 
   // ============================================================================
   // ROW 1 (Tiles 48-95): TERRAIN - WALLS
@@ -470,6 +475,327 @@ export enum TileSprite {
   ICON_ARROW_DOWN = 735,
 }
 
+/**
+ * @todo Add a curated selection of tile sprites.
+ */
+export enum CuratedTileSprite {}
+
+/**
+ * Tile categories for organizing sprites
+ */
+export enum TileCategory {
+  ENVIRONMENT, // Terrain, walls, doors, liquids, hazards
+  CHARACTER, // Player, NPCs, enemies, bosses, creatures
+  ITEM, // Weapons, armor, consumables, treasure
+  OBJECT, // Containers, furniture, decorative props
+  EFFECT, // Visual effects, particles, projectiles
+  ICON, // UI icons and symbols
+  FONT, // (Reserved for future text rendering)
+  OTHER,
+}
+
+/**
+ * Tile subcategories for more specific classification
+ */
+export enum TileSubcategory {
+  // Environment subcategories
+  FLOOR,
+  WALL,
+  DOOR,
+  PASSAGE, // Stairs, ladders, portals, gates
+  LIQUID,
+  HAZARD,
+  TRAP, // Spike traps, fire traps, arrow traps, etc.
+
+  // Object subcategories
+  CONTAINER,
+  FURNITURE,
+  PROP,
+  INTERACTIVE, // Levers, buttons, pressure plates
+
+  // Item subcategories
+  WEAPON,
+  ARMOR,
+  EQUIPMENT, // Rings, amulets, cloaks, belts, backpacks
+  CONSUMABLE,
+  FOOD, // Bread, meat, cheese, apple
+  POTION, // All potion types
+  SCROLL_BOOK, // Scrolls, books, tomes
+  TREASURE,
+  CURRENCY, // Gold, silver, copper coins
+  GEM, // Diamonds, rubies, sapphires, emeralds
+  KEY, // Gold, silver, bronze, skeleton keys
+
+  // Character subcategories
+  PLAYER,
+  NPC,
+  COMPANION,
+  ENEMY_COMMON,
+  ENEMY_UNDEAD,
+  ENEMY_CREATURE,
+  ENEMY_ADVANCED,
+  BOSS,
+
+  // Effect subcategories
+  EFFECT,
+  PARTICLE,
+  PROJECTILE,
+
+  // UI subcategories
+  ICON,
+  OTHER,
+}
+
+interface TileRect {
+  position: LJS.Vector2;
+  size: LJS.Vector2;
+}
+
+/**
+ * @todo Add zones.
+ */
+const TileZones: Map<string, TileRect> = new Map<string, TileRect>();
+
+/**
+ * Get the category for a given tile sprite
+ *
+ * Determines the category based on the sprite's position in the tileset.
+ *
+ * @param sprite - The tile sprite index
+ * @returns The tile category
+ *
+ * @example
+ * ```typescript
+ * const category = getTileCategory(TileSprite.PLAYER_WARRIOR);
+ * // Returns TileCategory.CHARACTER
+ * ```
+ */
+export function getTileCategory(sprite: TileSprite): TileCategory {
+  const coords = getTileCoords(sprite);
+
+  // Characters: columns 24-31, rows 0-9 (new character layout)
+  if (coords.x >= 24 && coords.x <= 31 && coords.y >= 0 && coords.y <= 9) {
+    return TileCategory.CHARACTER;
+  }
+
+  // Characters: rows 10-13 (legacy player, NPCs, enemies, bosses)
+  if (coords.y >= 10 && coords.y <= 13) {
+    return TileCategory.CHARACTER;
+  }
+
+  // Environment: floors (row 0, cols 0-23)
+  if (coords.y === 0 && coords.x < 24) {
+    return TileCategory.ENVIRONMENT;
+  }
+
+  // Environment: walls (row 1)
+  if (coords.y === 1) {
+    return TileCategory.ENVIRONMENT;
+  }
+
+  // Environment: doors/passages (row 2)
+  if (coords.y === 2) {
+    return TileCategory.ENVIRONMENT;
+  }
+
+  // Environment: liquids/hazards (row 3)
+  if (coords.y === 3) {
+    return TileCategory.ENVIRONMENT;
+  }
+
+  // Objects: containers/furniture (row 4)
+  if (coords.y === 4) {
+    return TileCategory.OBJECT;
+  }
+
+  // Objects: decorative/interactive (row 5)
+  if (coords.y === 5) {
+    return TileCategory.OBJECT;
+  }
+
+  // Items: weapons (row 6)
+  if (coords.y === 6) {
+    return TileCategory.ITEM;
+  }
+
+  // Items: armor/equipment (row 7)
+  if (coords.y === 7) {
+    return TileCategory.ITEM;
+  }
+
+  // Items: consumables (row 8)
+  if (coords.y === 8) {
+    return TileCategory.ITEM;
+  }
+
+  // Items: treasure/collectibles (row 9)
+  if (coords.y === 9) {
+    return TileCategory.ITEM;
+  }
+
+  // Effects: particles/projectiles (row 14)
+  if (coords.y === 14) {
+    return TileCategory.EFFECT;
+  }
+
+  // Icons: UI elements (row 15)
+  if (coords.y === 15) {
+    return TileCategory.ICON;
+  }
+
+  return TileCategory.OTHER;
+}
+
+/**
+ * Get the subcategory for a given tile sprite
+ *
+ * Provides more specific classification based on sprite position.
+ *
+ * @param sprite - The tile sprite index
+ * @returns The tile subcategory
+ *
+ * @example
+ * ```typescript
+ * const subcategory = getTileSubcategory(TileSprite.FLOOR_STONE);
+ * // Returns TileSubcategory.FLOOR
+ * ```
+ */
+export function getTileSubcategory(sprite: TileSprite): TileSubcategory {
+  const coords = getTileCoords(sprite);
+
+  // Row 0: Floors (cols 0-23)
+  if (coords.y === 0 && coords.x < 24) {
+    return TileSubcategory.FLOOR;
+  }
+
+  // Row 0: Characters columns 24-31 (Player characters, human-like)
+  if (coords.y === 0 && coords.x >= 24 && coords.x <= 31) {
+    return TileSubcategory.PLAYER;
+  }
+
+  // Row 1: Walls (cols 0-23)
+  if (coords.y === 1 && coords.x < 24) {
+    return TileSubcategory.WALL;
+  }
+
+  // Row 1: Characters columns 24-31 (More player classes)
+  if (coords.y === 1 && coords.x >= 24 && coords.x <= 31) {
+    return TileSubcategory.PLAYER;
+  }
+
+  // Row 2: Doors and passages (cols 0-23)
+  if (coords.y === 2 && coords.x < 24) {
+    return TileSubcategory.DOOR;
+  }
+
+  // Row 2: Characters columns 24-31 (NPCs)
+  if (coords.y === 2 && coords.x >= 24 && coords.x <= 31) {
+    return TileSubcategory.NPC;
+  }
+
+  // Row 3: Liquids and hazards (cols 0-23)
+  if (coords.y === 3 && coords.x < 24) {
+    return TileSubcategory.LIQUID;
+  }
+
+  // Row 3: Characters columns 24-31 (More NPCs)
+  if (coords.y === 3 && coords.x >= 24 && coords.x <= 31) {
+    return TileSubcategory.NPC;
+  }
+
+  // Row 4: Containers and furniture (cols 0-23)
+  if (coords.y === 4 && coords.x < 24) {
+    return TileSubcategory.CONTAINER;
+  }
+
+  // Row 4: Characters columns 24-31 (Common enemies)
+  if (coords.y === 4 && coords.x >= 24 && coords.x <= 31) {
+    return TileSubcategory.ENEMY_COMMON;
+  }
+
+  // Row 5: Decorative and interactive props (cols 0-23)
+  if (coords.y === 5 && coords.x < 24) {
+    return TileSubcategory.PROP;
+  }
+
+  // Row 5: Characters columns 24-31 (Undead enemies)
+  if (coords.y === 5 && coords.x >= 24 && coords.x <= 31) {
+    return TileSubcategory.ENEMY_UNDEAD;
+  }
+
+  // Row 6: Weapons (cols 0-23)
+  if (coords.y === 6 && coords.x < 24) {
+    return TileSubcategory.WEAPON;
+  }
+
+  // Row 6: Characters columns 24-31 (Creatures)
+  if (coords.y === 6 && coords.x >= 24 && coords.x <= 31) {
+    return TileSubcategory.ENEMY_CREATURE;
+  }
+
+  // Row 7: Armor and equipment (cols 0-23)
+  if (coords.y === 7 && coords.x < 24) {
+    return TileSubcategory.ARMOR;
+  }
+
+  // Row 7: Characters columns 24-31 (More creatures)
+  if (coords.y === 7 && coords.x >= 24 && coords.x <= 31) {
+    return TileSubcategory.ENEMY_CREATURE;
+  }
+
+  // Row 8: Consumables (cols 0-23)
+  if (coords.y === 8 && coords.x < 24) {
+    return TileSubcategory.CONSUMABLE;
+  }
+
+  // Row 8: Characters columns 24-31 (Advanced enemies)
+  if (coords.y === 8 && coords.x >= 24 && coords.x <= 31) {
+    return TileSubcategory.ENEMY_ADVANCED;
+  }
+
+  // Row 9: Treasure and collectibles (cols 0-23)
+  if (coords.y === 9 && coords.x < 24) {
+    return TileSubcategory.TREASURE;
+  }
+
+  // Row 9: Characters columns 24-31 (Bosses and special)
+  if (coords.y === 9 && coords.x >= 24 && coords.x <= 31) {
+    return TileSubcategory.BOSS;
+  }
+
+  // Row 10: Player and allies
+  if (coords.y === 10) {
+    return TileSubcategory.PLAYER;
+  }
+
+  // Row 11: Common enemies
+  if (coords.y === 11) {
+    return TileSubcategory.ENEMY_COMMON;
+  }
+
+  // Row 12: Advanced enemies
+  if (coords.y === 12) {
+    return TileSubcategory.ENEMY_ADVANCED;
+  }
+
+  // Row 13: Bosses
+  if (coords.y === 13) {
+    return TileSubcategory.BOSS;
+  }
+
+  // Row 14: Effects and particles
+  if (coords.y === 14) {
+    return TileSubcategory.EFFECT;
+  }
+
+  // Row 15: UI and icons
+  if (coords.y === 15) {
+    return TileSubcategory.ICON;
+  }
+
+  return TileSubcategory.OTHER;
+}
+
 // ============================================================================
 // LEGACY CONSTANTS (for backward compatibility)
 // ============================================================================
@@ -571,4 +897,33 @@ export function getTileCoords(
     x: index % tilesetWidth,
     y: Math.floor(index / tilesetWidth),
   };
+}
+
+/**
+ * Convert tileset coordinates to a sprite index
+ *
+ * This is the inverse of getTileCoords(). Converts grid coordinates
+ * back to a linear sprite index.
+ *
+ * @param x - X coordinate in the tileset grid
+ * @param y - Y coordinate in the tileset grid
+ * @param tilesetWidth - Width of tileset in tiles (default: 48)
+ * @returns The sprite index
+ *
+ * @example
+ * ```typescript
+ * // Get the sprite at position (24, 0) - should be PLAYER_WARRIOR
+ * const index = getTileIndex(24, 0); // Returns 24
+ *
+ * // Verify round-trip conversion
+ * const coords = getTileCoords(TileSprite.PLAYER_WARRIOR);
+ * const index = getTileIndex(coords.x, coords.y); // Returns original sprite value
+ * ```
+ */
+export function getTileIndex(
+  x: number,
+  y: number,
+  tilesetWidth: number = 48
+): number {
+  return y * tilesetWidth + x;
 }

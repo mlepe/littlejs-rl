@@ -43,3 +43,6 @@ export * from './examineSystem';
 export * from './examineCursorMovementSystem';
 export * from './examineRenderSystem';
 export * from './inventoryUISystem';
+export * from './basicAnimationSystem';
+export * from './visualEffectSystem';
+export * from './stateSystem';

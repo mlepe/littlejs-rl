@@ -35,3 +35,6 @@ export * from './charges';
 export * from './consumable';
 export * from './lootTable';
 export * from './viewMode';
+export * from './animation';
+export * from './visualEffect';
+export * from './state';

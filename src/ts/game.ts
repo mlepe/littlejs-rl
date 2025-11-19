@@ -20,6 +20,7 @@ import {
 } from './systems/itemGenerationSystem';
 import {
   aiSystem,
+  basicAnimationSystem,
   cameraSystem,
   chargesSystem,
   collisionDamageSystem,
@@ -36,6 +37,7 @@ import {
   playerMovementSystem,
   renderSystem,
   viewModeTransitionSystem,
+  visualEffectSystem,
   worldMapMovementSystem,
 } from './systems';
 import { createEnemy, createPlayer } from './entities';
@@ -362,6 +364,10 @@ export default class Game {
 
         // Combat (simple collision-based for testing)
         collisionDamageSystem(this.ecs); // Apply damage when entities collide
+
+        // Visual effects AFTER combat to show damage effects immediately
+        visualEffectSystem(this.ecs); // Process visual effects
+        basicAnimationSystem(this.ecs); // Process frame animations
 
         aiSystem(this.ecs, this.playerId); // AI behaviors for NPCs/enemies
         deathSystem(this.ecs); // Handle entity death and loot drops

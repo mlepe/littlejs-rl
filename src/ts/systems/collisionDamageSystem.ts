@@ -10,6 +10,8 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
+import * as LJS from 'littlejsengine';
+
 import { AIComponent } from '../components/ai';
 import ECS from '../ecs';
 import { HealthComponent } from '../components/health';
@@ -17,6 +19,12 @@ import { PlayerComponent } from '../components/player';
 import { PositionComponent } from '../components/position';
 import { RenderComponent } from '../components/render';
 import { StatsComponent } from '../components/stats';
+import { VisualEffectComponent } from '../components/visualEffect';
+import {
+  addFlashEffect,
+  addOffsetEffect,
+  addShakeEffect,
+} from './visualEffectSystem';
 
 /**
  * Process collision-based combat damage
@@ -148,18 +156,45 @@ export function applyDamage(
   // Apply damage
   defenderHealth.current = Math.max(0, defenderHealth.current - finalDamage);
 
-  // Add damage flash effect
+  // Add visual effects for damage
   const defenderRender = ecs.getComponent<RenderComponent>(
     defenderId,
     'render'
   );
   if (defenderRender) {
-    defenderRender.damageFlashTimer = 0.2; // Flash for 0.2 seconds
+    // Floating damage number
     defenderRender.floatingDamage = {
       amount: finalDamage,
-      timer: 0.5, // Display for 0.5 seconds
+      timer: 0.5,
       offsetY: 0,
     };
+  }
+
+  // Add flash and shake effects to defender
+  addFlashEffect(ecs, defenderId, new LJS.Color(1, 0.2, 0.2, 1), 0.15);
+  addShakeEffect(ecs, defenderId, 0.1, 0.2);
+
+  // Add attack recoil effect to attacker (jump toward defender)
+  const attackerPos = ecs.getComponent<PositionComponent>(
+    attackerId,
+    'position'
+  );
+  const defenderPos = ecs.getComponent<PositionComponent>(
+    defenderId,
+    'position'
+  );
+
+  if (attackerPos && defenderPos) {
+    // Calculate direction from attacker to defender
+    const dx = defenderPos.x - attackerPos.x;
+    const dy = defenderPos.y - attackerPos.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > 0) {
+      // Normalize direction and apply scaled offset
+      const direction = LJS.vec2(dx / distance, dy / distance);
+      addOffsetEffect(ecs, attackerId, direction, 0.15, 'easeOut', 0.15);
+    }
   }
 
   // Log combat (for testing)
