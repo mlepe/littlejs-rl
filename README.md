@@ -85,11 +85,22 @@ src/
 
 ### Building
 
-```bash
+````bash
 npm run build        # Build production bundle
 npm run serve        # Start development server
 npm run dev          # Build + serve
-```
+
+### Testing
+
+```bash
+# Run tests once
+npm test
+
+# Run tests in watch mode while you work
+npm run test:watch
+````
+
+````
 
 ### TODO: Inventory UI Testing
 
@@ -114,7 +125,7 @@ Enable debug mode in `.env`:
 
 ```env
 GAME_DEBUG=true
-```
+````
 
 Shows:
 

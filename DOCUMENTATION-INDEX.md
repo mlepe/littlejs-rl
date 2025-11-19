@@ -41,6 +41,12 @@ This is the central index for all documentation in the LittleJS Roguelike projec
 | [ITEM-TEMPLATE-MIXING-SUMMARY.md](./ITEM-TEMPLATE-MIXING-SUMMARY.md) | Item template mixing quick reference          | Creating items with templates                 |
 | [TEMPLATE-MIXING-SUMMARY.md](./TEMPLATE-MIXING-SUMMARY.md)           | Entity template mixing quick reference        | Creating entities with templates              |
 
+### Good First Issues
+
+| Document                                       | Purpose                                 | Read When               |
+| ---------------------------------------------- | --------------------------------------- | ----------------------- |
+| [GOOD_FIRST_ISSUES.md](./GOOD_FIRST_ISSUES.md) | Beginner-friendly tasks with file links | Choosing a starter task |
+
 ### Items & Inventory
 
 | Document                                                             | Purpose                                        | Read When                            |
@@ -100,11 +106,15 @@ This is the central index for all documentation in the LittleJS Roguelike projec
 
 ### For Contributors
 
-| Document                                           | Purpose                             | Read When                      |
-| -------------------------------------------------- | ----------------------------------- | ------------------------------ |
-| [CONTRIBUTING.md](./CONTRIBUTING.md)               | Contributing guidelines             | Making your first contribution |
-| [COPILOT-TOOLS-GUIDE.md](./COPILOT-TOOLS-GUIDE.md) | VS Code tasks and Copilot tools     | Using development tools        |
-| [VERSION-ROADMAP.md](./VERSION-ROADMAP.md)         | Feature roadmap and version history | Planning new features          |
+| Document                                           | Purpose                               | Read When                       |
+| -------------------------------------------------- | ------------------------------------- | ------------------------------- |
+| [CONTRIBUTING.md](./CONTRIBUTING.md)               | Contributing guidelines               | Making your first contribution  |
+| [COPILOT-TOOLS-GUIDE.md](./COPILOT-TOOLS-GUIDE.md) | VS Code tasks and Copilot tools       | Using development tools         |
+| [VERSION-ROADMAP.md](./VERSION-ROADMAP.md)         | Feature roadmap and version history   | Planning new features           |
+| [GOOD_FIRST_ISSUES.md](./GOOD_FIRST_ISSUES.md)     | Starter tasks for newcomers           | Picking an achievable issue     |
+| [DEVELOPER_SUMMARY.md](./DEVELOPER_SUMMARY.md)     | Guide to ECS workflows and tasks      | When you want to be more active |
+| [DEVELOPER_TIPS.md](./DEVELOPER_TIPS.md)           | Quick tips for pairing with Copilot   | Speed up development            |
+| [TESTING-GUIDE.md](./TESTING-GUIDE.md)             | Jest testing setup and best practices | Writing tests for your code     |
 
 ### Code Examples
 
@@ -151,6 +161,13 @@ This is the central index for all documentation in the LittleJS Roguelike projec
 - **Examine mode bugs** → [EXAMINE-MODE-FIXES.md](./EXAMINE-MODE-FIXES.md)
 - **Entity storage issues** → [ECS-WORLD-MIGRATION.md](./ECS-WORLD-MIGRATION.md)
 - **Keys not responding** → [KEYBINDINGS-REFERENCE.md](./KEYBINDINGS-REFERENCE.md)
+
+#### Write Tests
+
+- **Set up testing** → [TESTING-GUIDE.md](./TESTING-GUIDE.md)
+- **Write unit tests** → [TESTING-GUIDE.md](./TESTING-GUIDE.md), [GOOD_FIRST_ISSUES.md](./GOOD_FIRST_ISSUES.md)
+- **Mock LittleJS** → [TESTING-GUIDE.md](./TESTING-GUIDE.md) (Mocking section)
+- **Test coverage** → [TESTING-GUIDE.md](./TESTING-GUIDE.md) (Coverage section)
 
 ---
 

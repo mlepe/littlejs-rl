@@ -123,6 +123,8 @@ Add unit tests or integration tests (if present). If tests use node scripts or o
 - If none exist, open an issue describing what you want to change and tag it `good-first-issue` for yourself.
 - Ask in chat to review your chosen task — we can help scope it.
 
+See `GOOD_FIRST_ISSUES.md` for a short curated list of starter tasks and reference files.
+
 ### Starter tasks (good for new contributors)
 
 - Add a small feature: e.g., a new tile type or new item template.
