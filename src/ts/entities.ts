@@ -47,6 +47,8 @@ import {
   switchAnimation,
 } from './systems/basicAnimationSystem';
 
+import { BaseColor, getColor } from './colorPalette';
+
 /**
  * Create a player entity with all required components
  *
@@ -186,7 +188,7 @@ export function createPlayer(
       LJS.vec2(16, 16),
       0
     ),
-    color: new LJS.Color(1, 1, 1), // White
+    color: getColor(BaseColor.WHITE), // White
     size: new LJS.Vector2(1, 1),
   });
 
@@ -263,9 +265,9 @@ export function createEnemy(
       LJS.vec2(16, 16),
       0
     ),
-    color: new LJS.Color(1, 1, 1), // White (preserves sprite colors)
+    color: getColor(BaseColor.WHITE), // White (preserves sprite colors)
     size: new LJS.Vector2(1, 1),
-    outlineColor: new LJS.Color(1, 0, 0, 1), // Red outline for enemies
+    outlineColor: getColor(BaseColor.RED), // Red outline for enemies
     outlineWidth: 0.1, // Thin red border
   });
 
@@ -354,7 +356,7 @@ export function createNPC(
       LJS.vec2(16, 16),
       0
     ),
-    color: new LJS.Color(0, 1, 0), // Green
+    color: getColor(BaseColor.GREEN), // Green
     size: new LJS.Vector2(1, 1),
   });
 
@@ -434,7 +436,7 @@ export function createFleeingCreature(
       LJS.vec2(16, 16),
       0
     ),
-    color: new LJS.Color(1, 1, 0), // Yellow
+    color: getColor(BaseColor.YELLOW), // Yellow
     size: new LJS.Vector2(1, 1),
   });
 
@@ -511,9 +513,9 @@ export function createBoss(
       LJS.vec2(16, 16),
       0
     ),
-    color: new LJS.Color(0.5, 0, 0.5), // Purple
+    color: getColor(BaseColor.PURPLE), // Purple
     size: new LJS.Vector2(2, 2), // Larger size
-    outlineColor: new LJS.Color(1, 0, 0, 1), // Red outline for bosses
+    outlineColor: getColor(BaseColor.RED), // Red outline for bosses
     outlineWidth: 0.15, // Thicker border for bosses
   });
 

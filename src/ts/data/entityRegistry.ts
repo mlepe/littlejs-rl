@@ -53,6 +53,8 @@ import { applyClassBonuses } from '../systems/classSystem';
 import { applyRacialBonuses } from '../systems/raceSystem';
 import { calculateDerivedStats } from '../systems/derivedStatsSystem';
 
+import { BaseColor, getColor } from '../colorPalette';
+
 /**
  * Registry for entity templates loaded from data files
  * Manages entity definitions and provides factory methods to spawn entities
@@ -495,7 +497,7 @@ export class EntityRegistry {
         const sprite = this.getSpriteFromString(resolvedRender.sprite);
         const color = resolvedRender.color
           ? this.hexToColor(resolvedRender.color)
-          : new LJS.Color(1, 1, 1, 1);
+          : getColor(BaseColor.WHITE);
 
         ecs.addComponent<RenderComponent>(entityId, 'render', {
           tileInfo: sprite,
