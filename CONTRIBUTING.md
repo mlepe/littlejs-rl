@@ -123,13 +123,13 @@ Add unit tests or integration tests (if present). If tests use node scripts or o
 - If none exist, open an issue describing what you want to change and tag it `good-first-issue` for yourself.
 - Ask in chat to review your chosen task — we can help scope it.
 
-See `GOOD_FIRST_ISSUES.md` for a short curated list of starter tasks and reference files.
+See `docs/GOOD_FIRST_ISSUES.md` for a short curated list of starter tasks and reference files.
 
 ### Starter tasks (good for new contributors)
 
 - Add a small feature: e.g., a new tile type or new item template.
-- Fix a minor UI bug: check `INVENTORY-UI-FIXES.md` and `INVENTORY-UI-COORDINATE-FIX.md`.
-- Improve docs: update `KEYBINDINGS-REFERENCE.md`, `QUICKSTART.md`, or add a walkthrough in `docs/`.
+- Fix a minor UI bug: check `docs/INVENTORY-UI-FIXES.md` and `docs/INVENTORY-UI-COORDINATE-FIX.md`.
+- Improve docs: update `docs/KEYBINDINGS-REFERENCE.md`, `QUICKSTART.md`, or add a walkthrough in `docs/`.
 - Add unit tests for a system (start with `spatialSystem` or `derivedStatsSystem`).
 - Add `good-first-issue` label to an issue you want to work on.
 
@@ -152,7 +152,7 @@ If you want, I can scaffold a test framework in the repo and add an example test
 
 9. Keep docs updated
 
-- If you add or change controls, update `KEYBINDINGS-REFERENCE.md` and `QUICKSTART.md`.
-- If you change systems, update `SYSTEMS-REFERENCE.md` and `COMPONENTS-REFERENCE.md` where relevant.
+- If you add or change controls, update `docs/KEYBINDINGS-REFERENCE.md` and `QUICKSTART.md`.
+- If you change systems, update `docs/SYSTEMS-REFERENCE.md` and `docs/COMPONENTS-REFERENCE.md` where relevant.
 
 Small measurable steps → confidence → larger changes. You're the lead developer; use the CI, issues, and PRs to stay in control.

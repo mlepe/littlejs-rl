@@ -33,34 +33,34 @@ The game will be available at `http://localhost:8080`
 - **L**: Toggle examine mode
 - **[** / **]**: World map navigation
 
-📋 **[Complete Keybindings Reference](./KEYBINDINGS-REFERENCE.md)** - All keyboard controls with alternatives
+📋 **[Complete Keybindings Reference](./docs/KEYBINDINGS-REFERENCE.md)** - All keyboard controls with alternatives
 
 ## Documentation
 
-📚 **[Complete Documentation Index](./DOCUMENTATION-INDEX.md)** - Find all documentation organized by topic
+📚 **[Complete Documentation Index](./docs/DOCUMENTATION-INDEX.md)** - Find all documentation organized by topic
 
 ### Getting Started
 
 - **[Quick Start Guide](./QUICKSTART.md)** - Get up and running quickly
-- **[Quick Start - Data System](./QUICKSTART-DATA.md)** - Using the data-driven content system
+- **[Quick Start - Data System](./docs/QUICKSTART-DATA.md)** - Using the data-driven content system
 
 ### Core References
 
-- **[Architecture Overview](./ARCHITECTURE.md)** - System design and patterns
-- **[Components Reference](./COMPONENTS-REFERENCE.md)** - All ECS components
-- **[Systems Reference](./SYSTEMS-REFERENCE.md)** - All ECS systems
-- **[View Modes](./VIEW-MODES.md)** - UI view mode system
+- **[Architecture Overview](./docs/ARCHITECTURE.md)** - System design and patterns
+- **[Components Reference](./docs/COMPONENTS-REFERENCE.md)** - All ECS components
+- **[Systems Reference](./docs/SYSTEMS-REFERENCE.md)** - All ECS systems
+- **[View Modes](./docs/VIEW-MODES.md)** - UI view mode system
 
 ### Feature Guides
 
-- **[Data System](./DATA-SYSTEM.md)** - JSON-based content
-- **[Item System](./ITEM-SYSTEM.md)** - Inventory & equipment
-- **[Combat & Elements](./ELEMENTAL-SYSTEM.md)** - Damage & effects
-- **[AI & Behavior](./DISPOSITION-SYSTEM.md)** - NPC behaviors
-- **[Template Mixing](./TEMPLATE-MIXING.md)** - Modular composition
-- **[World & Navigation](./LOCATION-TYPES-BIOMES.md)** - Locations & biomes
+- **[Data System](./docs/DATA-SYSTEM.md)** - JSON-based content
+- **[Item System](./docs/ITEM-SYSTEM.md)** - Inventory & equipment
+- **[Combat & Elements](./docs/ELEMENTAL-SYSTEM.md)** - Damage & effects
+- **[AI & Behavior](./docs/DISPOSITION-SYSTEM.md)** - NPC behaviors
+- **[Template Mixing](./docs/TEMPLATE-MIXING.md)** - Modular composition
+- **[World & Navigation](./docs/LOCATION-TYPES-BIOMES.md)** - Locations & biomes
 
-_See [DOCUMENTATION-INDEX.md](./DOCUMENTATION-INDEX.md) for the complete list organized by task and category._
+_See [DOCUMENTATION-INDEX.md](./docs/DOCUMENTATION-INDEX.md) for the complete list organized by task and category._
 
 ## Project Structure
 

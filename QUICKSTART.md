@@ -35,7 +35,7 @@ The game will be available at `http://localhost:8080`
 - **C**: Toggle collision overlay (debug)
 - **X**: Toggle debug text
 
-📋 **[Complete Keybindings Reference](./KEYBINDINGS-REFERENCE.md)** - Full list of all controls with alternatives
+📋 **[Complete Keybindings Reference](./docs/KEYBINDINGS-REFERENCE.md)** - Full list of all controls with alternatives
 
 ## Creating Your First Entity
 
@@ -296,7 +296,7 @@ for (const id of entities) {
 
 ## Next Steps
 
-- Read [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed architecture documentation
+- Read [ARCHITECTURE.md](./docs/ARCHITECTURE.md) for detailed architecture documentation
 - Check `src/ts/examples/` for more usage examples
 - Browse component files to see available data structures
 - Browse system files to see available processing functions
@@ -306,4 +306,4 @@ for (const id of entities) {
 - Component reference: `src/ts/components/`
 - System reference: `src/ts/systems/`
 - Examples: `src/ts/examples/`
-- Architecture: [ARCHITECTURE.md](./ARCHITECTURE.md)
+- Architecture: [ARCHITECTURE.md](./docs/ARCHITECTURE.md)
