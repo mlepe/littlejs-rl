@@ -1010,15 +1010,13 @@ if (pos) {
 16. Use `renderDebug()` to visualize collision tiles during development
 17. Use `Game.getInstance()` to access the singleton game instance
 18. Access ECS, World, and Player through Game class getters instead of global variables
-19. **Always use `create_file` tool for creating markdown/documentation files** - Never use `echo` or `node -e` on Windows
-20. **Relation system is event-driven** - Call `relationSystem()` when actions affect relationships, not in main loop
-21. Relations are automatically initialized via `world.initializeRelations(ecs)` in `Game.init()`
-22. **Always use color palette system** - Use `getColor(BaseColor.*)` for semantic colors, `rgba()` for custom colors
-23. **Never hardcode colors in JSON** - Use BaseColor enum names (lowercase) like `"color": "red"`
-24. **Use template mixing for entities/items** - Define once in templates, reference in multiple entities
-25. **Layer templates strategically** - Use base template + modifiers pattern (max 3-4 per component)
-26. **Template naming convention** - `{descriptor}{ComponentType}` for bases, `{effect}Modifier/Bonus` for modifiers
-27. **Template naming convention** - `{descriptor}{ComponentType}` for bases, `{effect}Modifier/Bonus` for modifiers
+19. **Relation system is event-driven** - Call `relationSystem()` when actions affect relationships, not in main loop
+20. Relations are automatically initialized via `world.initializeRelations(ecs)` in `Game.init()`
+21. **Always use color palette system** - Use `getColor(BaseColor.*)` for semantic colors, `rgba()` for custom colors
+22. **Never hardcode colors in JSON** - Use BaseColor enum names (lowercase) like `"color": "red"`
+23. **Use template mixing for entities/items** - Define once in templates, reference in multiple entities
+24. **Layer templates strategically** - Use base template + modifiers pattern (max 3-4 per component)
+25. **Template naming convention** - `{descriptor}{ComponentType}` for bases, `{effect}Modifier/Bonus` for modifiers
 
 Read more: [copilot-instructions.md](../.github/copilot-instructions.md)
 
