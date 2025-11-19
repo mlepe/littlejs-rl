@@ -13,6 +13,7 @@
 import * as LJS from 'littlejsengine';
 
 import {
+  AnimationComponent,
   HealthComponent,
   InventoryPanel,
   InventoryUIComponent,
@@ -36,10 +37,15 @@ import { AIComponent } from './components/ai';
 import ECS from './ecs';
 import { InputComponent } from './components/input';
 import { PlayerComponent } from './components/player';
+import { StateComponent } from './components/state';
 import { StatsComponent } from './components/stats';
 import { ViewMode } from './components/viewMode';
 import { addLootTable } from './systems/lootSystem';
 import { calculateDerivedStats } from './systems/derivedStatsSystem';
+import {
+  createHorizontalAnimation,
+  switchAnimation,
+} from './systems/basicAnimationSystem';
 
 /**
  * Create a player entity with all required components
@@ -186,6 +192,30 @@ export function createPlayer(
 
   ecs.addComponent<MovableComponent>(playerId, 'movable', { speed: 1 });
 
+  // Add state component (starts with no active states)
+  ecs.addComponent<StateComponent>(playerId, 'state', {
+    states: new Set(),
+  });
+
+  // Define multiple animation states
+  const idleAnim = createHorizontalAnimation(0, 0, 16, 16, 1, 0.5, true);
+  const walkAnim = createHorizontalAnimation(0, 0, 16, 16, 4, 0.2, true);
+  const attackAnim = createHorizontalAnimation(0, 16, 16, 16, 3, 0.15, false);
+  const deathAnim = createHorizontalAnimation(0, 32, 16, 16, 4, 0.2, false);
+
+  ecs.addComponent<AnimationComponent>(playerId, 'animation', {
+    animations: new Map([
+      ['idle', idleAnim],
+      ['walk', walkAnim],
+      ['attack', attackAnim],
+      ['death', deathAnim],
+    ]),
+    currentAnimation: 'idle',
+    currentFrame: 0,
+    timer: 0,
+    playing: true,
+  });
+
   return playerId;
 }
 
@@ -259,6 +289,11 @@ export function createEnemy(
   });
 
   ecs.addComponent<MovableComponent>(enemyId, 'movable', { speed: 1 });
+
+  // Add state component (starts with no active states)
+  ecs.addComponent<StateComponent>(enemyId, 'state', {
+    states: new Set(),
+  });
 
   // Add loot table (goblin drops)
   addLootTable(ecs, enemyId, [
@@ -344,6 +379,11 @@ export function createNPC(
 
   ecs.addComponent<MovableComponent>(npcId, 'movable', { speed: 1 });
 
+  // Add state component (starts with no active states)
+  ecs.addComponent<StateComponent>(npcId, 'state', {
+    states: new Set(),
+  });
+
   return npcId;
 }
 
@@ -419,6 +459,11 @@ export function createFleeingCreature(
 
   ecs.addComponent<MovableComponent>(creatureId, 'movable', { speed: 1 });
 
+  // Add state component (starts with no active states)
+  ecs.addComponent<StateComponent>(creatureId, 'state', {
+    states: new Set(),
+  });
+
   return creatureId;
 }
 
@@ -492,6 +537,11 @@ export function createBoss(
   });
 
   ecs.addComponent<MovableComponent>(bossId, 'movable', { speed: 1 });
+
+  // Add state component (starts with no active states)
+  ecs.addComponent<StateComponent>(bossId, 'state', {
+    states: new Set(),
+  });
 
   // Add boss loot table (rare items with high quality)
   addLootTable(ecs, bossId, [

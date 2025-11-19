@@ -20,6 +20,7 @@ import {
 } from './systems/itemGenerationSystem';
 import {
   aiSystem,
+  basicAnimationSystem,
   cameraSystem,
   chargesSystem,
   collisionDamageSystem,
@@ -36,6 +37,7 @@ import {
   playerMovementSystem,
   renderSystem,
   viewModeTransitionSystem,
+  visualEffectSystem,
   worldMapMovementSystem,
 } from './systems';
 import { createEnemy, createPlayer } from './entities';
@@ -360,6 +362,8 @@ export default class Game {
         chargesSystem(this.ecs); // Passive charge regeneration for rods/wands
         identificationSystem(this.ecs); // Auto-identify items based on intelligence
 
+        visualEffectSystem(this.ecs); // Process visual effects
+        basicAnimationSystem(this.ecs); // Process frame animations
         // Combat (simple collision-based for testing)
         collisionDamageSystem(this.ecs); // Apply damage when entities collide
 
