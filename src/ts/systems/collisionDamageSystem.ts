@@ -171,18 +171,8 @@ export function applyDamage(
   }
 
   // Add flash and shake effects to defender
-  console.log(`[Combat] Adding visual effects to defender ${defenderId}`);
   addFlashEffect(ecs, defenderId, new LJS.Color(1, 0.2, 0.2, 1), 0.15);
   addShakeEffect(ecs, defenderId, 0.1, 0.2);
-
-  // Verify effects were added
-  const vfx = ecs.getComponent<VisualEffectComponent>(
-    defenderId,
-    'visualEffect'
-  );
-  console.log(
-    `[Combat] Defender has ${vfx?.effects.length || 0} active effects`
-  );
 
   // Add attack recoil effect to attacker (jump toward defender)
   const attackerPos = ecs.getComponent<PositionComponent>(
@@ -201,10 +191,9 @@ export function applyDamage(
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     if (distance > 0) {
-      // Normalize and scale for small jump
-      const jumpX = (dx / distance) * 0.15;
-      const jumpY = (dy / distance) * 0.15;
-      addOffsetEffect(ecs, attackerId, LJS.vec2(jumpX, jumpY), 0.15, 'easeOut');
+      // Normalize direction and apply scaled offset
+      const direction = LJS.vec2(dx / distance, dy / distance);
+      addOffsetEffect(ecs, attackerId, direction, 0.15, 'easeOut', 0.15);
     }
   }
 

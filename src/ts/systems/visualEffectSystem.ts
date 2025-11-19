@@ -170,17 +170,22 @@ function applyEasing(t: number, easing: string): number {
  *
  * @param ecs - The ECS instance
  * @param entityId - Entity to apply effect to
- * @param offset - Offset to apply (in tiles)
+ * @param offset - Offset direction or base offset (in tiles)
  * @param duration - Effect duration (in seconds)
  * @param easing - Easing function
+ * @param scale - Scale multiplier for offset (default: 1.0)
  *
  * @example
  * ```typescript
  * // Jump up slightly when attacking
  * addOffsetEffect(ecs, playerId, LJS.vec2(0.1, 0.1), 0.2, 'easeOut');
  *
- * // Knockback to the left
- * addOffsetEffect(ecs, enemyId, LJS.vec2(-0.3, 0), 0.15, 'easeOut');
+ * // Knockback using direction vector
+ * const direction = LJS.vec2(dx, dy).normalize();
+ * addOffsetEffect(ecs, enemyId, direction, 0.15, 'easeOut', 0.3);
+ *
+ * // Large knockback
+ * addOffsetEffect(ecs, enemyId, direction, 0.2, 'easeOut', 1.5);
  * ```
  */
 export function addOffsetEffect(
@@ -188,7 +193,8 @@ export function addOffsetEffect(
   entityId: number,
   offset: LJS.Vector2,
   duration: number,
-  easing: string = 'easeOut'
+  easing: string = 'easeOut',
+  scale: number = 1.0
 ): void {
   const vfx = ensureVisualEffectComponent(ecs, entityId);
 
@@ -196,7 +202,7 @@ export function addOffsetEffect(
     type: VisualEffectType.OFFSET,
     duration,
     elapsed: 0,
-    data: { offset },
+    data: { offset: offset.scale(scale) },
     easing,
     returnToOriginal: true,
   });
@@ -207,20 +213,28 @@ export function addOffsetEffect(
  *
  * @param ecs - The ECS instance
  * @param entityId - Entity to apply effect to
- * @param intensity - Shake intensity (in tiles)
+ * @param intensity - Base shake intensity (in tiles)
  * @param duration - Effect duration (in seconds)
+ * @param scale - Scale multiplier for intensity (default: 1.0)
  *
  * @example
  * ```typescript
  * // Shake sprite when taking damage
  * addShakeEffect(ecs, playerId, 0.15, 0.3);
+ *
+ * // Stronger shake for heavy hit
+ * addShakeEffect(ecs, enemyId, 0.15, 0.3, 2.0);
+ *
+ * // Subtle shake
+ * addShakeEffect(ecs, playerId, 0.15, 0.2, 0.5);
  * ```
  */
 export function addShakeEffect(
   ecs: ECS,
   entityId: number,
   intensity: number,
-  duration: number
+  duration: number,
+  scale: number = 1.0
 ): void {
   const vfx = ensureVisualEffectComponent(ecs, entityId);
 
@@ -228,7 +242,7 @@ export function addShakeEffect(
     type: VisualEffectType.SHAKE,
     duration,
     elapsed: 0,
-    data: { intensity },
+    data: { intensity: intensity * scale },
     easing: 'easeOut',
     returnToOriginal: true,
   });
@@ -276,14 +290,21 @@ export function addScaleEffect(
  *
  * @param ecs - The ECS instance
  * @param entityId - Entity to apply effect to
- * @param rotation - Target rotation (in radians)
+ * @param rotation - Base rotation (in radians)
  * @param duration - Effect duration (in seconds)
  * @param easing - Easing function
+ * @param scale - Scale multiplier for rotation (default: 1.0)
  *
  * @example
  * ```typescript
  * // Spin sprite 360 degrees
  * addRotationEffect(ecs, itemId, Math.PI * 2, 1.0, 'linear');
+ *
+ * // Half spin (180 degrees)
+ * addRotationEffect(ecs, itemId, Math.PI * 2, 0.5, 'linear', 0.5);
+ *
+ * // Double spin (720 degrees)
+ * addRotationEffect(ecs, itemId, Math.PI * 2, 1.0, 'linear', 2.0);
  * ```
  */
 export function addRotationEffect(
@@ -291,7 +312,8 @@ export function addRotationEffect(
   entityId: number,
   rotation: number,
   duration: number,
-  easing: string = 'linear'
+  easing: string = 'linear',
+  scale: number = 1.0
 ): void {
   const vfx = ensureVisualEffectComponent(ecs, entityId);
 
@@ -299,7 +321,7 @@ export function addRotationEffect(
     type: VisualEffectType.ROTATE,
     duration,
     elapsed: 0,
-    data: { rotation },
+    data: { rotation: rotation * scale },
     easing,
     returnToOriginal: true,
   });

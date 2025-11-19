@@ -118,10 +118,9 @@ export function meleeAttack(
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     if (distance > 0) {
-      // Normalize and scale for small jump toward target
-      const jumpX = (dx / distance) * 0.15;
-      const jumpY = (dy / distance) * 0.15;
-      addOffsetEffect(ecs, attackerId, LJS.vec2(jumpX, jumpY), 0.15, 'easeOut');
+      // Normalize direction and apply scaled offset
+      const direction = LJS.vec2(dx / distance, dy / distance);
+      addOffsetEffect(ecs, attackerId, direction, 0.15, 'easeOut', 0.15);
     }
   }
 
