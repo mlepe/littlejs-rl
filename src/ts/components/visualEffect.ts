@@ -29,6 +29,58 @@ export enum VisualEffectType {
 }
 
 /**
+ * Effect Duration Presets - Standardized durations for effects (in seconds)
+ */
+export enum EffectDuration {
+  /** Very quick effect (0.05s) - instant feedback */
+  INSTANT = 0.05,
+  /** Very fast effect (0.1s) - quick reactions */
+  VERY_FAST = 0.1,
+  /** Fast effect (0.15s) - standard quick effects */
+  FAST = 0.15,
+  /** Normal effect (0.2s) - default duration */
+  NORMAL = 0.2,
+  /** Slow effect (0.3s) - deliberate effects */
+  SLOW = 0.3,
+  /** Very slow effect (0.5s) - dramatic effects */
+  VERY_SLOW = 0.5,
+  /** Extended effect (1.0s) - long-lasting effects */
+  EXTENDED = 1.0,
+}
+
+/**
+ * Effect Scale Presets - Standardized intensity/scale multipliers
+ */
+export enum EffectScale {
+  /** Subtle effect (0.5x) - barely noticeable */
+  SUBTLE = 0.5,
+  /** Normal intensity (1.0x) - default strength */
+  NORMAL = 1.0,
+  /** Strong effect (1.5x) - noticeable impact */
+  STRONG = 1.5,
+  /** Very strong effect (2.0x) - heavy impact */
+  VERY_STRONG = 2.0,
+  /** Extreme effect (3.0x) - maximum impact */
+  EXTREME = 3.0,
+}
+
+/**
+ * Effect Distance Presets - Standardized offset/knockback distances (in tiles)
+ */
+export enum EffectDistance {
+  /** Tiny distance (0.1 tiles) - small hop */
+  TINY = 0.1,
+  /** Small distance (0.15 tiles) - standard jump */
+  SMALL = 0.15,
+  /** Normal distance (0.3 tiles) - medium knockback */
+  NORMAL = 0.3,
+  /** Large distance (0.5 tiles) - heavy knockback */
+  LARGE = 0.5,
+  /** Huge distance (1.0 tiles) - massive knockback */
+  HUGE = 1.0,
+}
+
+/**
  * Visual Effect Data - Single visual effect instance
  */
 export interface VisualEffect {

@@ -14,6 +14,9 @@ import * as LJS from 'littlejsengine';
 
 import ECS from '../ecs';
 import {
+  EffectDistance,
+  EffectDuration,
+  EffectScale,
   VisualEffect,
   VisualEffectComponent,
   VisualEffectType,
@@ -180,12 +183,12 @@ function applyEasing(t: number, easing: string): number {
  * // Jump up slightly when attacking
  * addOffsetEffect(ecs, playerId, LJS.vec2(0.1, 0.1), 0.2, 'easeOut');
  *
- * // Knockback using direction vector
+ * // Knockback using direction vector with presets
  * const direction = LJS.vec2(dx, dy).normalize();
- * addOffsetEffect(ecs, enemyId, direction, 0.15, 'easeOut', 0.3);
+ * addOffsetEffect(ecs, enemyId, direction, EffectDuration.FAST, 'easeOut', EffectDistance.NORMAL);
  *
- * // Large knockback
- * addOffsetEffect(ecs, enemyId, direction, 0.2, 'easeOut', 1.5);
+ * // Large knockback with presets
+ * addOffsetEffect(ecs, enemyId, direction, EffectDuration.NORMAL, 'easeOut', EffectDistance.LARGE);
  * ```
  */
 export function addOffsetEffect(
@@ -219,14 +222,14 @@ export function addOffsetEffect(
  *
  * @example
  * ```typescript
- * // Shake sprite when taking damage
- * addShakeEffect(ecs, playerId, 0.15, 0.3);
+ * // Shake sprite when taking damage with presets
+ * addShakeEffect(ecs, playerId, EffectDistance.SMALL, EffectDuration.NORMAL, EffectScale.NORMAL);
  *
  * // Stronger shake for heavy hit
- * addShakeEffect(ecs, enemyId, 0.15, 0.3, 2.0);
+ * addShakeEffect(ecs, enemyId, EffectDistance.SMALL, EffectDuration.NORMAL, EffectScale.VERY_STRONG);
  *
  * // Subtle shake
- * addShakeEffect(ecs, playerId, 0.15, 0.2, 0.5);
+ * addShakeEffect(ecs, playerId, EffectDistance.SMALL, EffectDuration.FAST, EffectScale.SUBTLE);
  * ```
  */
 export function addShakeEffect(
@@ -297,14 +300,14 @@ export function addScaleEffect(
  *
  * @example
  * ```typescript
- * // Spin sprite 360 degrees
- * addRotationEffect(ecs, itemId, Math.PI * 2, 1.0, 'linear');
+ * // Spin sprite 360 degrees with presets
+ * addRotationEffect(ecs, itemId, Math.PI * 2, EffectDuration.EXTENDED, 'linear', EffectScale.NORMAL);
  *
  * // Half spin (180 degrees)
- * addRotationEffect(ecs, itemId, Math.PI * 2, 0.5, 'linear', 0.5);
+ * addRotationEffect(ecs, itemId, Math.PI * 2, EffectDuration.NORMAL, 'linear', EffectScale.SUBTLE);
  *
  * // Double spin (720 degrees)
- * addRotationEffect(ecs, itemId, Math.PI * 2, 1.0, 'linear', 2.0);
+ * addRotationEffect(ecs, itemId, Math.PI * 2, EffectDuration.EXTENDED, 'linear', EffectScale.VERY_STRONG);
  * ```
  */
 export function addRotationEffect(
