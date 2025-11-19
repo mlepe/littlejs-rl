@@ -898,3 +898,32 @@ export function getTileCoords(
     y: Math.floor(index / tilesetWidth),
   };
 }
+
+/**
+ * Convert tileset coordinates to a sprite index
+ *
+ * This is the inverse of getTileCoords(). Converts grid coordinates
+ * back to a linear sprite index.
+ *
+ * @param x - X coordinate in the tileset grid
+ * @param y - Y coordinate in the tileset grid
+ * @param tilesetWidth - Width of tileset in tiles (default: 48)
+ * @returns The sprite index
+ *
+ * @example
+ * ```typescript
+ * // Get the sprite at position (24, 0) - should be PLAYER_WARRIOR
+ * const index = getTileIndex(24, 0); // Returns 24
+ *
+ * // Verify round-trip conversion
+ * const coords = getTileCoords(TileSprite.PLAYER_WARRIOR);
+ * const index = getTileIndex(coords.x, coords.y); // Returns original sprite value
+ * ```
+ */
+export function getTileIndex(
+  x: number,
+  y: number,
+  tilesetWidth: number = 48
+): number {
+  return y * tilesetWidth + x;
+}

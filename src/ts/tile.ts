@@ -139,10 +139,10 @@ const TILE_SPRITE_MAP: Record<TileType, number> = {
   [TileType.WALL]: 48, // TileSprite.WALL_STONE
   [TileType.DOOR_OPEN]: 97, // TileSprite.DOOR_OPEN_WOOD
   [TileType.DOOR_CLOSED]: 96, // TileSprite.DOOR_CLOSED_WOOD
-  [TileType.STAIRS_UP]: 102, // TileSprite.STAIRS_UP
-  [TileType.STAIRS_DOWN]: 103, // TileSprite.STAIRS_DOWN
-  [TileType.WATER]: 144, // TileSprite.WATER_DEEP
-  [TileType.GRASS]: 4, // TileSprite.FLOOR_GRASS
+  [TileType.STAIRS_UP]: 244, // TileSprite.STAIRS_UP
+  [TileType.STAIRS_DOWN]: 245, // TileSprite.STAIRS_DOWN
+  [TileType.WATER]: 103, // TileSprite.WATER_DEEP
+  [TileType.GRASS]: 5, // TileSprite.FLOOR_GRASS
 };
 
 /**
