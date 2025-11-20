@@ -23,15 +23,7 @@ import {
   RenderComponent,
   ViewModeComponent,
 } from './components';
-import {
-  SPRITE_BOSS,
-  SPRITE_ENEMY,
-  SPRITE_FLEEING_CREATURE,
-  SPRITE_NPC,
-  SPRITE_PLAYER,
-  TileSprite,
-  getTileCoords,
-} from './tileConfig';
+import { resolveTileInfo } from './tileConfig';
 
 import { AIComponent } from './components/ai';
 import ECS from './ecs';
@@ -180,14 +172,10 @@ export function createPlayer(
     enabled: true,
   });
 
-  // Render component - using proper enum reference
-  const coords = getTileCoords(TileSprite.PLAYER_WARRIOR);
+  // Render component - using resolver for dynamic tileset support
+  // resolveTileInfo automatically falls back to AutoTileSprite if needed
   ecs.addComponent<RenderComponent>(playerId, 'render', {
-    tileInfo: new LJS.TileInfo(
-      LJS.vec2(coords.x * 16, coords.y * 16),
-      LJS.vec2(16, 16),
-      0
-    ),
+    tileInfo: resolveTileInfo('PLAYER_WARRIOR'),
     color: getColor(BaseColor.WHITE), // White
     size: new LJS.Vector2(1, 1),
   });
@@ -258,13 +246,8 @@ export function createEnemy(
     state: 'idle',
   });
 
-  const enemyCoords = getTileCoords(SPRITE_ENEMY);
   ecs.addComponent<RenderComponent>(enemyId, 'render', {
-    tileInfo: new LJS.TileInfo(
-      LJS.vec2(enemyCoords.x * 16, enemyCoords.y * 16),
-      LJS.vec2(16, 16),
-      0
-    ),
+    tileInfo: resolveTileInfo('ENEMY_GOBLIN'),
     color: getColor(BaseColor.WHITE), // White (preserves sprite colors)
     size: new LJS.Vector2(1, 1),
     outlineColor: getColor(BaseColor.RED), // Red outline for enemies
@@ -349,13 +332,8 @@ export function createNPC(
     state: 'idle',
   });
 
-  const npcCoords = getTileCoords(SPRITE_NPC);
   ecs.addComponent<RenderComponent>(npcId, 'render', {
-    tileInfo: new LJS.TileInfo(
-      LJS.vec2(npcCoords.x * 16, npcCoords.y * 16),
-      LJS.vec2(16, 16),
-      0
-    ),
+    tileInfo: resolveTileInfo('NPC_MERCHANT'),
     color: getColor(BaseColor.GREEN), // Green
     size: new LJS.Vector2(1, 1),
   });
@@ -425,17 +403,12 @@ export function createFleeingCreature(
 
   ecs.addComponent<AIComponent>(creatureId, 'ai', {
     disposition: 'fleeing',
-    detectionRange: 12,
+    detectionRange: 8,
     state: 'idle',
   });
 
-  const creatureCoords = getTileCoords(SPRITE_FLEEING_CREATURE);
   ecs.addComponent<RenderComponent>(creatureId, 'render', {
-    tileInfo: new LJS.TileInfo(
-      LJS.vec2(creatureCoords.x * 16, creatureCoords.y * 16),
-      LJS.vec2(16, 16),
-      0
-    ),
+    tileInfo: resolveTileInfo('ENEMY_RAT_GIANT'),
     color: getColor(BaseColor.YELLOW), // Yellow
     size: new LJS.Vector2(1, 1),
   });
@@ -506,17 +479,12 @@ export function createBoss(
     state: 'idle',
   });
 
-  const bossCoords = getTileCoords(SPRITE_BOSS);
   ecs.addComponent<RenderComponent>(bossId, 'render', {
-    tileInfo: new LJS.TileInfo(
-      LJS.vec2(bossCoords.x * 16, bossCoords.y * 16),
-      LJS.vec2(16, 16),
-      0
-    ),
-    color: getColor(BaseColor.PURPLE), // Purple
-    size: new LJS.Vector2(2, 2), // Larger size
-    outlineColor: getColor(BaseColor.RED), // Red outline for bosses
-    outlineWidth: 0.15, // Thicker border for bosses
+    tileInfo: resolveTileInfo('BOSS_DRAGON_RED'),
+    color: getColor(BaseColor.RED), // Red
+    size: new LJS.Vector2(2, 2), // Larger than normal entities
+    outlineColor: getColor(BaseColor.DANGER), // Danger red outline for bosses
+    outlineWidth: 0.15, // Thicker red border
   });
 
   ecs.addComponent<MovableComponent>(bossId, 'movable', { speed: 1 });

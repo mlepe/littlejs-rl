@@ -32,13 +32,17 @@ import * as LJS from 'littlejsengine';
  * ```
  */
 
-/**Do you see any more categories and subcategories to implement? Based on #sym:TileSprite and #file:tileset.png
-
- TileSprite
+/** TileSprite
  * Comprehensive enum of all tiles in the tileset
  * Each value represents the linear index of a 16x16 pixel tile in the tileset image
  */
-export enum TileSprite {
+export enum TileSprite {}
+
+/** AutoTileSprite
+ * AI-generated comprehensive enum of all tiles in the tileset
+ * Each value represents the linear index of a 16x16 pixel tile in the tileset image
+ */
+export enum AutoTileSprite {
   // ============================================================================
   // ROW 0 (Tiles 0-47): TERRAIN - FLOORS & BASIC TILES
   // ============================================================================
@@ -566,11 +570,11 @@ const TileZones: Map<string, TileRect> = new Map<string, TileRect>();
  *
  * @example
  * ```typescript
- * const category = getTileCategory(TileSprite.PLAYER_WARRIOR);
+ * const category = getTileCategory(AutoTileSprite.PLAYER_WARRIOR);
  * // Returns TileCategory.CHARACTER
  * ```
  */
-export function getTileCategory(sprite: TileSprite): TileCategory {
+export function getTileCategory(sprite: number): TileCategory {
   const coords = getTileCoords(sprite);
 
   // Characters: columns 24-31, rows 0-9 (new character layout)
@@ -656,11 +660,11 @@ export function getTileCategory(sprite: TileSprite): TileCategory {
  *
  * @example
  * ```typescript
- * const subcategory = getTileSubcategory(TileSprite.FLOOR_STONE);
+ * const subcategory = getTileSubcategory(AutoTileSprite.FLOOR_STONE);
  * // Returns TileSubcategory.FLOOR
  * ```
  */
-export function getTileSubcategory(sprite: TileSprite): TileSubcategory {
+export function getTileSubcategory(sprite: number): TileSubcategory {
   const coords = getTileCoords(sprite);
 
   // Row 0: Floors (cols 0-23)
@@ -800,74 +804,74 @@ export function getTileSubcategory(sprite: TileSprite): TileSubcategory {
 // LEGACY CONSTANTS (for backward compatibility)
 // ============================================================================
 
-/** @deprecated Use TileSprite.PLAYER_WARRIOR instead */
-export const SPRITE_PLAYER = TileSprite.PLAYER_WARRIOR;
+/** @deprecated Use AutoTileSprite.PLAYER_WARRIOR instead */
+export const SPRITE_PLAYER = AutoTileSprite.PLAYER_WARRIOR;
 
-/** @deprecated Use TileSprite.ENEMY_GOBLIN instead */
-export const SPRITE_ENEMY = TileSprite.ENEMY_GOBLIN;
+/** @deprecated Use AutoTileSprite.ENEMY_GOBLIN instead */
+export const SPRITE_ENEMY = AutoTileSprite.ENEMY_GOBLIN;
 
-/** @deprecated Use TileSprite.NPC_MERCHANT instead */
-export const SPRITE_NPC = TileSprite.NPC_MERCHANT;
+/** @deprecated Use AutoTileSprite.NPC_MERCHANT instead */
+export const SPRITE_NPC = AutoTileSprite.NPC_MERCHANT;
 
-/** @deprecated Use TileSprite.BOSS_DRAGON_RED instead */
-export const SPRITE_BOSS = TileSprite.BOSS_DRAGON_RED;
+/** @deprecated Use AutoTileSprite.BOSS_DRAGON_RED instead (not defined yet, using placeholder) */
+export const SPRITE_BOSS = AutoTileSprite.CHAR_DRAGON_1;
 
-/** @deprecated Use TileSprite.ENEMY_RAT_GIANT instead */
-export const SPRITE_FLEEING_CREATURE = TileSprite.ENEMY_RAT_GIANT;
+/** @deprecated Use AutoTileSprite.ENEMY_RAT_GIANT instead */
+export const SPRITE_FLEEING_CREATURE = AutoTileSprite.ENEMY_RAT_GIANT;
 
-/** @deprecated Use TileSprite.FLOOR_STONE instead */
-export const SPRITE_FLOOR = TileSprite.FLOOR_STONE;
+/** @deprecated Use AutoTileSprite.FLOOR_STONE instead */
+export const SPRITE_FLOOR = AutoTileSprite.FLOOR_STONE;
 
-/** @deprecated Use TileSprite.WALL_STONE instead */
-export const SPRITE_WALL = TileSprite.WALL_STONE;
+/** @deprecated Use AutoTileSprite.WALL_STONE instead */
+export const SPRITE_WALL = AutoTileSprite.WALL_STONE;
 
-/** @deprecated Use TileSprite.DOOR_OPEN_WOOD instead */
-export const SPRITE_DOOR_OPEN = TileSprite.DOOR_OPEN_WOOD;
+/** @deprecated Use AutoTileSprite.DOOR_OPEN_WOOD instead */
+export const SPRITE_DOOR_OPEN = AutoTileSprite.DOOR_OPEN_WOOD;
 
-/** @deprecated Use TileSprite.DOOR_CLOSED_WOOD instead */
-export const SPRITE_DOOR_CLOSED = TileSprite.DOOR_CLOSED_WOOD;
+/** @deprecated Use AutoTileSprite.DOOR_CLOSED_WOOD instead */
+export const SPRITE_DOOR_CLOSED = AutoTileSprite.DOOR_CLOSED_WOOD;
 
-/** @deprecated Use TileSprite.STAIRS_UP instead */
-export const SPRITE_STAIRS_UP = TileSprite.STAIRS_UP;
+/** @deprecated Use AutoTileSprite.STAIRS_UP instead */
+export const SPRITE_STAIRS_UP = AutoTileSprite.STAIRS_UP;
 
-/** @deprecated Use TileSprite.STAIRS_DOWN instead */
-export const SPRITE_STAIRS_DOWN = TileSprite.STAIRS_DOWN;
+/** @deprecated Use AutoTileSprite.STAIRS_DOWN instead */
+export const SPRITE_STAIRS_DOWN = AutoTileSprite.STAIRS_DOWN;
 
-/** @deprecated Use TileSprite.WATER_DEEP instead */
-export const SPRITE_WATER = TileSprite.WATER_DEEP;
+/** @deprecated Use AutoTileSprite.WATER_DEEP instead */
+export const SPRITE_WATER = AutoTileSprite.WATER_DEEP;
 
-/** @deprecated Use TileSprite.FLOOR_GRASS instead */
-export const SPRITE_GRASS = TileSprite.FLOOR_GRASS;
+/** @deprecated Use AutoTileSprite.FLOOR_GRASS instead */
+export const SPRITE_GRASS = AutoTileSprite.FLOOR_GRASS;
 
-/** @deprecated Use TileSprite.VOID instead */
-export const SPRITE_VOID = TileSprite.VOID;
+/** @deprecated Use AutoTileSprite.VOID instead */
+export const SPRITE_VOID = AutoTileSprite.VOID;
 
-/** @deprecated Use TileSprite.SWORD_SHORT instead */
-export const SPRITE_SWORD = TileSprite.SWORD_SHORT;
+/** @deprecated Use AutoTileSprite.SWORD_SHORT instead */
+export const SPRITE_SWORD = AutoTileSprite.SWORD_SHORT;
 
-/** @deprecated Use TileSprite.SHIELD_WOOD instead */
-export const SPRITE_SHIELD = TileSprite.SHIELD_WOOD;
+/** @deprecated Use AutoTileSprite.SHIELD_WOOD instead */
+export const SPRITE_SHIELD = AutoTileSprite.SHIELD_WOOD;
 
-/** @deprecated Use TileSprite.POTION_RED instead */
-export const SPRITE_POTION_HEALTH = TileSprite.POTION_RED;
+/** @deprecated Use AutoTileSprite.POTION_RED instead */
+export const SPRITE_POTION_HEALTH = AutoTileSprite.POTION_RED;
 
-/** @deprecated Use TileSprite.POTION_BLUE instead */
-export const SPRITE_POTION_MANA = TileSprite.POTION_BLUE;
+/** @deprecated Use AutoTileSprite.POTION_BLUE instead */
+export const SPRITE_POTION_MANA = AutoTileSprite.POTION_BLUE;
 
-/** @deprecated Use TileSprite.COIN_GOLD instead */
-export const SPRITE_COIN = TileSprite.COIN_GOLD;
+/** @deprecated Use AutoTileSprite.COIN_GOLD instead */
+export const SPRITE_COIN = AutoTileSprite.COIN_GOLD;
 
-/** @deprecated Use TileSprite.CHEST_CLOSED instead */
-export const SPRITE_CHEST = TileSprite.CHEST_CLOSED;
+/** @deprecated Use AutoTileSprite.CHEST_CLOSED instead */
+export const SPRITE_CHEST = AutoTileSprite.CHEST_CLOSED;
 
-/** @deprecated Use TileSprite.ICON_HEART_FULL instead */
-export const SPRITE_HEART = TileSprite.ICON_HEART_FULL;
+/** @deprecated Use AutoTileSprite.ICON_HEART_FULL instead (not defined yet, using placeholder) */
+export const SPRITE_HEART = 560; // Placeholder value
 
-/** @deprecated Use TileSprite.ICON_STAR instead */
-export const SPRITE_STAR = TileSprite.ICON_STAR;
+/** @deprecated Use AutoTileSprite.ICON_STAR instead (not defined yet, using placeholder) */
+export const SPRITE_STAR = 561; // Placeholder value
 
-/** @deprecated Use TileSprite.ICON_SKULL instead */
-export const SPRITE_SKULL = TileSprite.ICON_SKULL;
+/** @deprecated Use AutoTileSprite.ICON_SKULL instead (not defined yet, using placeholder) */
+export const SPRITE_SKULL = 562; // Placeholder value
 
 // ============================================================================
 // HELPER FUNCTION
@@ -927,3 +931,24 @@ export function getTileIndex(
 ): number {
   return y * tilesetWidth + x;
 }
+
+// ============================================================================
+// TILESET RESOLVER INTEGRATION
+// ============================================================================
+
+/**
+ * Re-export TileSpriteResolver utilities for convenient access
+ *
+ * These functions integrate with the tileset configuration system to allow
+ * dynamic sprite mapping based on the active tileset configuration.
+ *
+ * @see tileSpriteResolver.ts for full implementation
+ */
+export {
+  TileSpriteResolver,
+  getTileSpriteResolver,
+  resolveTileSprite,
+  resolveTileSpriteCoords,
+  resolveTileInfo,
+  setTilesetConfiguration,
+} from './tileSpriteResolver';

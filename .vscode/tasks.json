@@ -323,6 +323,22 @@
     // ============================================================================
 
     {
+      // Provides a detailed implementation plan for a specified featureture
+      "label": "Copilot: Help me implement this feature (Interactive)",
+      "type": "shell",
+      "command": "code",
+      "args": [
+        "--reuse-window",
+        "chat",
+        "Help me implement this feature: *ask me to describe the feature*. Provide a detailed implementation plan. You may ask me for more details if needed."
+      ],
+      "presentation": {
+        "reveal": "never",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
       // Interactive workflow: Copilot asks which ECS elements to create and handles the conditional logic, and optionally verifies coherence
       "label": "Copilot: Create ECS Elements and optionally verify coherence (Interactive)",
       "type": "shell",

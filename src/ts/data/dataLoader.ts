@@ -20,6 +20,7 @@ import { ItemRegistry } from './itemRegistry';
 import { RaceRegistry } from './raceRegistry';
 import { RenderTemplateRegistry } from './renderTemplateRegistry';
 import { StatsTemplateRegistry } from './statsTemplateRegistry';
+import { TileSpriteResolver } from '../tileSpriteResolver';
 
 /**
  * Central data loading system
@@ -86,6 +87,14 @@ export class DataLoader {
     const classRegistry = ClassRegistry.getInstance();
 
     const errors: Error[] = [];
+
+    // Load tileset configurations first (rendering depends on them)
+    try {
+      await this.loadTilesetConfigurations();
+    } catch (error) {
+      errors.push(error as Error);
+      logError(error as Error, 'Loading Tileset Configurations');
+    }
 
     // Load component templates first (entities may reference them)
     try {
@@ -205,6 +214,72 @@ export class DataLoader {
   }
 
   /**
+   * Load tileset configurations
+   */
+  private async loadTilesetConfigurations(): Promise<void> {
+    console.log('[DataLoader] Loading tileset configurations...');
+
+    const resolver = TileSpriteResolver.getInstance();
+    const tilesetFiles = [
+      'src/data/base/tilesets/default.json',
+      'src/data/base/tilesets/pixel-art.json',
+    ];
+
+    for (const path of tilesetFiles) {
+      try {
+        const response = await fetch(path);
+
+        if (!response.ok) {
+          throw new FileLoadError(path, response.status);
+        }
+
+        const text = await response.text();
+        let data;
+
+        try {
+          data = JSON.parse(text);
+        } catch (parseError) {
+          throw new ParseError(path, parseError as Error);
+        }
+
+        if (!data.tilesets || !Array.isArray(data.tilesets)) {
+          throw new Error(
+            `Invalid data format in ${path}: expected 'tilesets' array`
+          );
+        }
+
+        // Register each tileset configuration
+        for (const config of data.tilesets) {
+          resolver.registerConfiguration(config);
+          console.log(
+            `[DataLoader] Registered tileset: ${config.name} (${config.id})`
+          );
+        }
+      } catch (error) {
+        // Tileset files are optional - log but continue
+        console.warn(
+          `[DataLoader] Failed to load tileset configurations from ${path}`
+        );
+        logError(error as Error, `Loading Tileset Configurations`);
+      }
+    }
+
+    // Set default configuration if available
+    const availableConfigs = resolver.getAvailableConfigurations();
+    if (availableConfigs.length > 0 && !resolver.getActiveConfigurationId()) {
+      const defaultConfig = availableConfigs.includes('default')
+        ? 'default'
+        : availableConfigs[0];
+      resolver.setConfiguration(defaultConfig);
+      console.log(
+        `[DataLoader] Set default tileset configuration: ${defaultConfig}`
+      );
+    }
+
+    console.log('[DataLoader] Tileset configurations loaded');
+  }
+
+  /**
    * Load race definitions
    */
   private async loadRaces(registry: RaceRegistry): Promise<void> {
@@ -302,6 +377,9 @@ export class DataLoader {
     StatsTemplateRegistry.getInstance().clear();
     AITemplateRegistry.getInstance().clear();
     HealthTemplateRegistry.getInstance().clear();
+
+    // Clear tileset resolver
+    TileSpriteResolver.getInstance().reset();
 
     // Future: Clear other registries
 

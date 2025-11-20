@@ -1,0 +1,33 @@
+{
+  "tilesets": [
+    {
+      "id": "pixel-art",
+      "name": "Pixel Art Tileset",
+      "description": "Alternative pixel art style tileset with remapped sprite indices",
+      "image": "tileset-pixel.png",
+      "tileSize": 16,
+      "gridWidth": 48,
+      "gridHeight": 21,
+      "mappings": {
+        "PLAYER_WARRIOR": 40,
+        "PLAYER_WARRIOR_1": 40,
+        "PLAYER_WARRIOR_2": 41,
+        "PLAYER_MAGE": 42,
+        "PLAYER_ROGUE": 43,
+        "PLAYER_CLERIC": 44,
+        "ENEMY_GOBLIN": 100,
+        "ENEMY_ORC": 101,
+        "ENEMY_SKELETON": 102,
+        "FLOOR_STONE": 5,
+        "FLOOR_WOOD": 6,
+        "FLOOR_GRASS": 7,
+        "WALL_STONE": 50,
+        "WALL_BRICK": 51,
+        "DOOR_CLOSED_WOOD": 80,
+        "DOOR_OPEN_WOOD": 81,
+        "STAIRS_UP": 85,
+        "STAIRS_DOWN": 86
+      }
+    }
+  ]
+}

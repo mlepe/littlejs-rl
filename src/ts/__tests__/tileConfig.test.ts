@@ -13,7 +13,7 @@
 import { describe, test, expect } from '@jest/globals';
 
 import {
-  TileSprite,
+  AutoTileSprite as TileSprite,
   TileCategory,
   TileSubcategory,
   getTileCoords,

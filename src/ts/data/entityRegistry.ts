@@ -39,7 +39,7 @@ import {
   ValidationError,
   logWarnings,
 } from './errors';
-import { TileSprite, getTileCoords } from '../tileConfig';
+import { TileSpriteResolver } from '../tileSpriteResolver';
 
 import { AITemplateRegistry } from './aiTemplateRegistry';
 import { ClassRegistry } from './classRegistry';
@@ -159,15 +159,15 @@ export class EntityRegistry {
       );
     }
 
-    // Validate sprite exists in TileSprite enum
-    if (
-      validation.data.render?.sprite &&
-      !(validation.data.render.sprite in TileSprite)
-    ) {
-      console.error(
-        `[EntityRegistry] Invalid sprite '${validation.data.render.sprite}' for entity '${validation.data.id}'. Using default.`
-      );
-      validation.data.render.sprite = DEFAULT_VALUES.ENTITY.render!.sprite;
+    // Validate sprite exists using resolver
+    if (validation.data.render?.sprite) {
+      const resolver = TileSpriteResolver.getInstance();
+      if (!resolver.hasSprite(validation.data.render.sprite)) {
+        console.error(
+          `[EntityRegistry] Invalid sprite '${validation.data.render.sprite}' for entity '${validation.data.id}'. Using default.`
+        );
+        validation.data.render.sprite = DEFAULT_VALUES.ENTITY.render!.sprite;
+      }
     }
 
     this.templates.set(validation.data.id, validation.data);
@@ -689,22 +689,26 @@ export class EntityRegistry {
   }
 
   /**
-   * Convert sprite name string to TileInfo
+   * Convert sprite name string to TileInfo using the active tileset configuration
    */
   private getSpriteFromString(spriteName: string): LJS.TileInfo {
-    // Check if the sprite name exists in TileSprite enum
-    if (!(spriteName in TileSprite)) {
-      console.warn(
-        `[EntityRegistry] Unknown sprite: ${spriteName}, using default`
-      );
-      // Default to first sprite
-      const coords = getTileCoords(TileSprite.PLAYER_WARRIOR);
-      return new LJS.TileInfo(LJS.vec2(coords.x, coords.y), LJS.vec2(1, 1), 0);
-    }
+    const resolver = TileSpriteResolver.getInstance();
 
-    const spriteEnum = TileSprite[spriteName as keyof typeof TileSprite];
-    const coords = getTileCoords(spriteEnum);
-    return new LJS.TileInfo(LJS.vec2(coords.x, coords.y), LJS.vec2(1, 1), 0);
+    try {
+      // Use resolver to get TileInfo (automatically uses active configuration)
+      return resolver.resolveToTileInfo(spriteName);
+    } catch (error) {
+      console.warn(
+        `[EntityRegistry] Failed to resolve sprite: ${spriteName}, using default`
+      );
+      // Default to first sprite as fallback
+      try {
+        return resolver.resolveToTileInfo('PLAYER_WARRIOR');
+      } catch {
+        // Ultimate fallback: manually create TileInfo
+        return new LJS.TileInfo(LJS.vec2(0, 0), LJS.vec2(16, 16), 0);
+      }
+    }
   }
 
   /**

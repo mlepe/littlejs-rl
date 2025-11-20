@@ -554,3 +554,45 @@ export interface AITemplateDataFile {
 export interface HealthTemplateDataFile {
   healthTemplates: HealthTemplate[];
 }
+
+/**
+ * Tileset configuration for sprite mapping
+ * Allows multiple tileset configurations with different sprite indices and images
+ */
+export interface TilesetConfig {
+  /** Unique identifier for this tileset configuration */
+  id: string;
+
+  /** Display name for this tileset */
+  name: string;
+
+  /** Optional description */
+  description?: string;
+
+  /** Path to tileset image file (relative to assets/img/) */
+  image: string;
+
+  /** Size of each tile in pixels (default: 16) */
+  tileSize: number;
+
+  /** Width of tileset in tiles (default: 48) */
+  gridWidth: number;
+
+  /** Height of tileset in tiles (optional, for validation) */
+  gridHeight?: number;
+
+  /** Mapping of sprite names to indices
+   * Keys are TileSprite enum names (e.g., "PLAYER_WARRIOR")
+   * Values are linear indices in this tileset
+   */
+  mappings: {
+    [spriteName: string]: number;
+  };
+}
+
+/**
+ * Container for tileset configuration data files
+ */
+export interface TilesetConfigDataFile {
+  tilesets: TilesetConfig[];
+}

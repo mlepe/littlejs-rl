@@ -15,7 +15,7 @@ import * as LJS from 'littlejsengine';
 import { BiomeType, LocationType, getBiomePalette } from './locationType';
 
 import Global from './global';
-import { TileSprite } from './tileConfig';
+import { AutoTileSprite } from './tileConfig';
 import World from './world';
 
 /**
@@ -238,28 +238,28 @@ export default class WorldMap {
    * Get tile sprite for a biome
    * @private
    */
-  private getBiomeTileSprite(biome: BiomeType): TileSprite {
+  private getBiomeTileSprite(biome: BiomeType): AutoTileSprite {
     switch (biome) {
       case BiomeType.FOREST:
-        return TileSprite.FLOOR_GRASS;
+        return AutoTileSprite.FLOOR_GRASS;
       case BiomeType.MOUNTAIN:
-        return TileSprite.FLOOR_MOUNTAIN;
+        return AutoTileSprite.FLOOR_MOUNTAIN;
       case BiomeType.SNOWY:
-        return TileSprite.FLOOR_SNOW;
+        return AutoTileSprite.FLOOR_SNOW;
       case BiomeType.BARREN:
-        return TileSprite.FLOOR_BARREN;
+        return AutoTileSprite.FLOOR_BARREN;
       case BiomeType.DESERT:
-        return TileSprite.FLOOR_DESERT;
+        return AutoTileSprite.FLOOR_DESERT;
       case BiomeType.BEACH:
-        return TileSprite.FLOOR_BEACH;
+        return AutoTileSprite.FLOOR_BEACH;
       case BiomeType.WATER:
-        return TileSprite.WATER_DEEP;
+        return AutoTileSprite.WATER_DEEP;
       case BiomeType.VOLCANIC:
-        return TileSprite.FLOOR_VOLCANIC_ROCK;
+        return AutoTileSprite.FLOOR_VOLCANIC_ROCK;
       case BiomeType.SWAMP:
-        return TileSprite.FLOOR_SWAMP;
+        return AutoTileSprite.FLOOR_SWAMP;
       default:
-        return TileSprite.FLOOR_STONE;
+        return AutoTileSprite.FLOOR_STONE;
     }
   }
 
