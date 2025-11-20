@@ -13,6 +13,7 @@
 import * as LJS from 'littlejsengine';
 
 import { BaseColor, getColor } from './colorPalette';
+import { TileSprite } from './tileConfig';
 
 /**
  * Tile types available in the game
@@ -27,6 +28,8 @@ export enum TileType {
   STAIRS_DOWN = 6, // Stairs going down
   WATER = 7, // Water terrain
   GRASS = 8, // Grass terrain
+  TREE = 9, // Tree obstacle
+  FLORA = 10, // Small plants
 }
 
 /**
@@ -117,7 +120,18 @@ const TILE_PROPERTIES: Record<TileType, TileProperties> = {
     transparent: true,
     collisionValue: 0,
     baseColor: BaseColor.GRASS,
-    opacity: 0.7, // Reduced opacity to distinguish from walls
+  },
+  [TileType.TREE]: {
+    walkable: false,
+    transparent: false,
+    collisionValue: 1,
+    baseColor: BaseColor.GREEN,
+  },
+  [TileType.FLORA]: {
+    walkable: true,
+    transparent: true,
+    collisionValue: 0,
+    baseColor: BaseColor.YELLOW,
   },
 };
 
@@ -134,15 +148,17 @@ export function getTileProperties(type: TileType): TileProperties {
  * Map TileType enum to correct sprite indices from TileSprite
  */
 const TILE_SPRITE_MAP: Record<TileType, number> = {
-  [TileType.VOID]: 0, // TileSprite.VOID
-  [TileType.FLOOR]: 1, // TileSprite.FLOOR_STONE
-  [TileType.WALL]: 48, // TileSprite.WALL_STONE
-  [TileType.DOOR_OPEN]: 97, // TileSprite.DOOR_OPEN_WOOD
-  [TileType.DOOR_CLOSED]: 96, // TileSprite.DOOR_CLOSED_WOOD
-  [TileType.STAIRS_UP]: 244, // TileSprite.STAIRS_UP
-  [TileType.STAIRS_DOWN]: 245, // TileSprite.STAIRS_DOWN
-  [TileType.WATER]: 103, // TileSprite.WATER_DEEP
-  [TileType.GRASS]: 5, // TileSprite.FLOOR_GRASS
+  [TileType.VOID]: TileSprite.VOID, // TileSprite.VOID
+  [TileType.FLOOR]: TileSprite.FLOOR_ROCKY, // TileSprite.FLOOR_STONE
+  [TileType.WALL]: TileSprite.WALL_STONE, // TileSprite.WALL_STONE
+  [TileType.DOOR_OPEN]: TileSprite.DOOR_OPEN, // TileSprite.DOOR_OPEN_WOOD
+  [TileType.DOOR_CLOSED]: TileSprite.DOOR_CLOSED, // TileSprite.DOOR_CLOSED_WOOD
+  [TileType.STAIRS_UP]: TileSprite.STAIRS_UP, // TileSprite.STAIRS_UP
+  [TileType.STAIRS_DOWN]: TileSprite.STAIRS_DOWN, // TileSprite.STAIRS_DOWN
+  [TileType.WATER]: TileSprite.FLOOR_PUDDLE, // TileSprite.WATER_DEEP
+  [TileType.GRASS]: TileSprite.FLOOR_GRASS, // TileSprite.FLOOR_GRASS
+  [TileType.TREE]: TileSprite.VEGETATION_TREE, // TileSprite.TREE_OAK
+  [TileType.FLORA]: TileSprite.FLOOR_FLOWERS, // TileSprite.FLOOR_SAND
 };
 
 /**
@@ -206,6 +222,8 @@ export function getTileName(type: TileType): string {
     [TileType.STAIRS_DOWN]: 'Stairs Down',
     [TileType.WATER]: 'Water',
     [TileType.GRASS]: 'Grass',
+    [TileType.TREE]: 'Tree',
+    [TileType.FLORA]: 'Flowers',
   };
   return names[type] || 'Unknown';
 }

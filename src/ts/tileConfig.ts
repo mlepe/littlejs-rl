@@ -36,7 +36,62 @@ import * as LJS from 'littlejsengine';
  * Comprehensive enum of all tiles in the tileset
  * Each value represents the linear index of a 16x16 pixel tile in the tileset image
  */
-export enum TileSprite {}
+export enum TileSprite {
+  VOID = 0,
+
+  _9_FLOOR_BRICK = 69,
+  FLOOR_ROCKY = 1,
+  FLOOR_STONE = 2,
+  FLOOR_STONE_2 = 3,
+  FLOOR_STONE_3 = 4,
+  FLOOR_GRASS = 5,
+  FLOOR_FLOWERS = 6,
+  FLOOR_PUDDLE = 103,
+
+  _9_FLOOR_ROAD = 9,
+  _9_FLOOR_ROAD_MIDDLE = 9,
+  _9_FLOOR_ROAD_TOP_LEFT = 10,
+  _9_FLOOR_ROAD_LEFT_INTERSECTION_RIGHT = 11,
+  _9_FLOOR_ROAD_MIDDLE_INTERSECTION_ALL = 12,
+  _9_FLOOR_ROAD_TOP = 13,
+
+  _9_FLOOR_RIVER = 58,
+
+  _9_WALL_BRICK_TOP_LEFT = 19,
+  _9_WALL_BRICK = 20,
+  _9_WALL_BRICK_MIDDLE = 20,
+  _9_WALL_BRICK_TOP = 20,
+  _9_WALL_BRICK_TOP_RIGHT = 21,
+  _9_WALL_BRICK_LEFT = 68,
+  _9_WALL_BRICK_RIGHT = 70,
+  _9_WALL_BRICK_BOTTOM_LEFT = 117,
+  _9_WALL_BRICK_BOTTOM = 118,
+  _9_WALL_BRICK_BOTTOM_RIGHT = 119,
+
+  WALL_STONE = 585,
+  WALL_BRICK = 591,
+
+  STAIRS_UP = 244,
+  STAIRS_DOWN = 245,
+
+  VEGETATION_TREE = 49,
+  VEGETATION_TREE_2 = 50,
+  VEGETATION_TREE_3 = 51,
+  VEGETATION_TREES = 52,
+  VEGETATION_TREES_2 = 101,
+  VEGETATION_TREE_4 = 53,
+  VEGETATION_TREE_5 = 54,
+  VEGETATION_CACTUS = 55,
+  VEGETATION_CACTI = 56,
+
+  TILE_PATTERN = 17,
+  TILE_PATTERN_2 = 18,
+
+  DOOR_LOCKED = 389,
+  DOOR_UNLOCKED = 390,
+  DOOR_OPEN = 391,
+  DOOR_CLOSED = 392,
+}
 
 /** AutoTileSprite
  * AI-generated comprehensive enum of all tiles in the tileset

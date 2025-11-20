@@ -13,24 +13,24 @@
 import { describe, test, expect } from '@jest/globals';
 
 import {
-  AutoTileSprite as TileSprite,
   TileCategory,
   TileSubcategory,
   getTileCoords,
   getTileIndex,
   getTileCategory,
   getTileSubcategory,
+  AutoTileSprite,
 } from '../tileConfig';
 
 describe('Tile Configuration Helpers', () => {
   describe('getTileIndex', () => {
     test('is inverse of getTileCoords', () => {
       const testSprites = [
-        TileSprite.PLAYER_WARRIOR,
-        TileSprite.FLOOR_STONE,
-        TileSprite.WALL_STONE,
-        TileSprite.SWORD_SHORT,
-        TileSprite.ENEMY_ORC,
+        AutoTileSprite.PLAYER_WARRIOR,
+        AutoTileSprite.FLOOR_STONE,
+        AutoTileSprite.WALL_STONE,
+        AutoTileSprite.SWORD_SHORT,
+        AutoTileSprite.ENEMY_ORC,
       ];
 
       testSprites.forEach((originalIndex) => {
@@ -104,54 +104,62 @@ describe('Tile Configuration Helpers', () => {
 
   describe('getTileCategory', () => {
     test('correctly categorizes character sprites', () => {
-      expect(getTileCategory(TileSprite.PLAYER_WARRIOR)).toBe(
+      expect(getTileCategory(AutoTileSprite.PLAYER_WARRIOR)).toBe(
         TileCategory.CHARACTER
       );
-      expect(getTileCategory(TileSprite.ENEMY_ORC)).toBe(
+      expect(getTileCategory(AutoTileSprite.ENEMY_ORC)).toBe(
         TileCategory.CHARACTER
       );
-      expect(getTileCategory(TileSprite.NPC_MERCHANT)).toBe(
+      expect(getTileCategory(AutoTileSprite.NPC_MERCHANT)).toBe(
         TileCategory.CHARACTER
       );
     });
 
     test('correctly categorizes environment sprites', () => {
-      expect(getTileCategory(TileSprite.FLOOR_STONE)).toBe(
+      expect(getTileCategory(AutoTileSprite.FLOOR_STONE)).toBe(
         TileCategory.ENVIRONMENT
       );
-      expect(getTileCategory(TileSprite.WALL_STONE)).toBe(
+      expect(getTileCategory(AutoTileSprite.WALL_STONE)).toBe(
         TileCategory.ENVIRONMENT
       );
-      expect(getTileCategory(TileSprite.DOOR_CLOSED_WOOD)).toBe(
+      expect(getTileCategory(AutoTileSprite.DOOR_CLOSED_WOOD)).toBe(
         TileCategory.ENVIRONMENT
       );
-      expect(getTileCategory(TileSprite.WATER_DEEP)).toBe(
+      expect(getTileCategory(AutoTileSprite.WATER_DEEP)).toBe(
         TileCategory.ENVIRONMENT
       );
     });
 
     test('correctly categorizes item sprites', () => {
-      expect(getTileCategory(TileSprite.SWORD_SHORT)).toBe(TileCategory.ITEM);
-      expect(getTileCategory(TileSprite.ARMOR_LEATHER)).toBe(TileCategory.ITEM);
-      expect(getTileCategory(TileSprite.POTION_RED)).toBe(TileCategory.ITEM);
+      expect(getTileCategory(AutoTileSprite.SWORD_SHORT)).toBe(
+        TileCategory.ITEM
+      );
+      expect(getTileCategory(AutoTileSprite.ARMOR_LEATHER)).toBe(
+        TileCategory.ITEM
+      );
+      expect(getTileCategory(AutoTileSprite.POTION_RED)).toBe(
+        TileCategory.ITEM
+      );
     });
 
     test('correctly categorizes object sprites', () => {
-      expect(getTileCategory(TileSprite.CHEST_CLOSED)).toBe(
+      expect(getTileCategory(AutoTileSprite.CHEST_CLOSED)).toBe(
         TileCategory.OBJECT
       );
-      expect(getTileCategory(TileSprite.BARREL)).toBe(TileCategory.OBJECT);
+      expect(getTileCategory(AutoTileSprite.BARREL)).toBe(TileCategory.OBJECT);
     });
 
     test('correctly categorizes effect sprites', () => {
-      expect(getTileCategory(TileSprite.EFFECT_FIRE)).toBe(TileCategory.EFFECT);
+      expect(getTileCategory(AutoTileSprite.EFFECT_FIRE)).toBe(
+        TileCategory.EFFECT
+      );
     });
 
     test('correctly categorizes icon sprites', () => {
-      expect(getTileCategory(TileSprite.ICON_HEART_FULL)).toBe(
+      expect(getTileCategory(AutoTileSprite.ICON_HEART_FULL)).toBe(
         TileCategory.ICON
       );
-      expect(getTileCategory(TileSprite.ICON_SWORD_CROSSED)).toBe(
+      expect(getTileCategory(AutoTileSprite.ICON_SWORD_CROSSED)).toBe(
         TileCategory.ICON
       );
     });
@@ -159,50 +167,50 @@ describe('Tile Configuration Helpers', () => {
 
   describe('getTileSubcategory', () => {
     test('correctly subcategorizes floor tiles', () => {
-      expect(getTileSubcategory(TileSprite.FLOOR_STONE)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.FLOOR_STONE)).toBe(
         TileSubcategory.FLOOR
       );
-      expect(getTileSubcategory(TileSprite.FLOOR_WOOD)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.FLOOR_WOOD)).toBe(
         TileSubcategory.FLOOR
       );
     });
 
     test('correctly subcategorizes wall tiles', () => {
-      expect(getTileSubcategory(TileSprite.WALL_STONE)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.WALL_STONE)).toBe(
         TileSubcategory.WALL
       );
-      expect(getTileSubcategory(TileSprite.WALL_BRICK)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.WALL_BRICK)).toBe(
         TileSubcategory.WALL
       );
     });
 
     test('correctly subcategorizes door tiles', () => {
-      expect(getTileSubcategory(TileSprite.DOOR_CLOSED_WOOD)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.DOOR_CLOSED_WOOD)).toBe(
         TileSubcategory.DOOR
       );
-      expect(getTileSubcategory(TileSprite.DOOR_OPEN_WOOD)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.DOOR_OPEN_WOOD)).toBe(
         TileSubcategory.DOOR
       );
     });
 
     test('correctly subcategorizes player characters', () => {
-      expect(getTileSubcategory(TileSprite.PLAYER_WARRIOR)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.PLAYER_WARRIOR)).toBe(
         TileSubcategory.PLAYER
       );
-      expect(getTileSubcategory(TileSprite.CHAR_MAGE_1)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.CHAR_MAGE_1)).toBe(
         TileSubcategory.PLAYER
       );
     });
 
     test('correctly subcategorizes NPCs', () => {
-      const result = getTileSubcategory(TileSprite.NPC_MERCHANT);
+      const result = getTileSubcategory(AutoTileSprite.NPC_MERCHANT);
       // NPC subcategory value (enum order may change)
       expect(typeof result).toBe('number');
     });
 
     test('correctly subcategorizes enemies', () => {
-      const orc = getTileSubcategory(TileSprite.ENEMY_ORC);
-      const skeleton = getTileSubcategory(TileSprite.ENEMY_SKELETON);
+      const orc = getTileSubcategory(AutoTileSprite.ENEMY_ORC);
+      const skeleton = getTileSubcategory(AutoTileSprite.ENEMY_SKELETON);
       // Both return enemy subcategory values (actual subcategory may vary by implementation)
       expect(typeof orc).toBe('number');
       expect(typeof skeleton).toBe('number');
@@ -212,53 +220,55 @@ describe('Tile Configuration Helpers', () => {
     });
 
     test('correctly subcategorizes weapons', () => {
-      expect(getTileSubcategory(TileSprite.SWORD_SHORT)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.SWORD_SHORT)).toBe(
         TileSubcategory.WEAPON
       );
-      expect(getTileSubcategory(TileSprite.AXE)).toBe(TileSubcategory.WEAPON);
+      expect(getTileSubcategory(AutoTileSprite.AXE)).toBe(
+        TileSubcategory.WEAPON
+      );
     });
 
     test('correctly subcategorizes armor', () => {
-      expect(getTileSubcategory(TileSprite.ARMOR_LEATHER)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.ARMOR_LEATHER)).toBe(
         TileSubcategory.ARMOR
       );
     });
 
     test('correctly subcategorizes containers', () => {
-      expect(getTileSubcategory(TileSprite.CHEST_CLOSED)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.CHEST_CLOSED)).toBe(
         TileSubcategory.CONTAINER
       );
     });
 
     test('correctly subcategorizes effects', () => {
-      expect(getTileSubcategory(TileSprite.EFFECT_FIRE)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.EFFECT_FIRE)).toBe(
         TileSubcategory.EFFECT
       );
     });
 
     test('correctly subcategorizes icons', () => {
-      expect(getTileSubcategory(TileSprite.ICON_HEART_FULL)).toBe(
+      expect(getTileSubcategory(AutoTileSprite.ICON_HEART_FULL)).toBe(
         TileSubcategory.ICON
       );
     });
   });
 
-  describe('TileSprite Enum', () => {
+  describe('AutoTileSprite Enum', () => {
     test('has expected player sprites', () => {
-      expect(TileSprite.PLAYER_WARRIOR).toBe(24);
-      expect(TileSprite.PLAYER_WARRIOR_1).toBe(24);
-      expect(TileSprite.PLAYER_WARRIOR_2).toBe(25);
+      expect(AutoTileSprite.PLAYER_WARRIOR).toBe(24);
+      expect(AutoTileSprite.PLAYER_WARRIOR_1).toBe(24);
+      expect(AutoTileSprite.PLAYER_WARRIOR_2).toBe(25);
     });
 
     test('has expected environment sprites', () => {
-      expect(TileSprite.FLOOR_STONE).toBe(1); // Updated value
-      expect(TileSprite.WALL_STONE).toBe(48);
-      expect(TileSprite.DOOR_CLOSED_WOOD).toBe(96);
+      expect(AutoTileSprite.FLOOR_STONE).toBe(1); // Updated value
+      expect(AutoTileSprite.WALL_STONE).toBe(48);
+      expect(AutoTileSprite.DOOR_CLOSED_WOOD).toBe(96);
     });
 
     test('has expected item sprites', () => {
-      expect(TileSprite.SWORD_SHORT).toBeDefined();
-      expect(TileSprite.POTION_RED).toBeDefined();
+      expect(AutoTileSprite.SWORD_SHORT).toBeDefined();
+      expect(AutoTileSprite.POTION_RED).toBeDefined();
     });
   });
 
@@ -277,13 +287,13 @@ describe('Tile Configuration Helpers', () => {
 
     test('getTileCategory handles out-of-range sprites', () => {
       // Should return OTHER for unknown sprites
-      const result = getTileCategory(9999 as TileSprite);
+      const result = getTileCategory(9999 as AutoTileSprite);
       expect(result).toBe(TileCategory.OTHER);
     });
 
     test('getTileSubcategory handles out-of-range sprites', () => {
       // Should return OTHER for unknown sprites
-      const result = getTileSubcategory(9999 as TileSprite);
+      const result = getTileSubcategory(9999 as AutoTileSprite);
       expect(result).toBe(TileSubcategory.OTHER);
     });
   });
@@ -291,9 +301,9 @@ describe('Tile Configuration Helpers', () => {
   describe('Consistency Checks', () => {
     test('all player sprites are in CHARACTER category', () => {
       const playerSprites = [
-        TileSprite.PLAYER_WARRIOR,
-        TileSprite.CHAR_MAGE_1,
-        TileSprite.CHAR_ROGUE_1,
+        AutoTileSprite.PLAYER_WARRIOR,
+        AutoTileSprite.CHAR_MAGE_1,
+        AutoTileSprite.CHAR_ROGUE_1,
       ];
 
       playerSprites.forEach((sprite) => {
@@ -302,7 +312,7 @@ describe('Tile Configuration Helpers', () => {
     });
 
     test('all weapon sprites are in ITEM category', () => {
-      const weaponSprites = [TileSprite.SWORD_SHORT, TileSprite.AXE];
+      const weaponSprites = [AutoTileSprite.SWORD_SHORT, AutoTileSprite.AXE];
 
       weaponSprites.forEach((sprite) => {
         expect(getTileCategory(sprite)).toBe(TileCategory.ITEM);
