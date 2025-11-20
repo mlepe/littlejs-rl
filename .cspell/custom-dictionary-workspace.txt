@@ -33,6 +33,7 @@ roguelikes
 Shadowrun
 sidequests
 Tileset
+tilesets
 toggleable
 uncursing
 undeath
