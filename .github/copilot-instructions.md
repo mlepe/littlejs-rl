@@ -334,6 +334,92 @@ ColorPaletteManager.getInstance().registerPalette('custom', customPalette);
 5. **Use semantic names over basic colors** when possible - `BaseColor.ENEMY` instead of `BaseColor.RED`
 6. **IDEs show color previews** for `rgba()` calls, making them easier to work with
 
+### Tile Sprite Resolver System
+
+**CRITICAL: Always use the tile sprite resolver for entity sprites, never manually create TileInfo with getTileCoords().**
+
+The game uses a centralized sprite resolution system (`src/ts/tileSpriteResolver.ts`) to enable dynamic tileset switching and mod support.
+
+#### Using the Resolver
+
+```typescript
+import { resolveTileInfo } from './tileConfig';
+
+// Render component using resolver
+ecs.addComponent<RenderComponent>(entityId, 'render', {
+  tileInfo: resolveTileInfo('ENEMY_GOBLIN'),
+  color: getColor(BaseColor.WHITE),
+  size: LJS.vec2(1, 1),
+});
+```
+
+#### Resolution Order
+
+1. **Active Configuration** - Checks current tileset config mappings
+2. **AutoTileSprite Enum** - Falls back to default sprite enum
+3. **Error** - Throws if sprite not found in either
+
+#### Available Helper Functions
+
+```typescript
+import {
+  resolveTileSprite, // Get sprite index
+  resolveTileSpriteCoords, // Get {x, y} coordinates
+  resolveTileInfo, // Get LittleJS TileInfo (most common)
+  setTilesetConfiguration, // Switch tilesets at runtime
+} from './tileConfig';
+
+// Most common usage
+const tileInfo = resolveTileInfo('PLAYER_WARRIOR');
+
+// Switch tileset theme
+setTilesetConfiguration('pixel-art');
+```
+
+#### Sprite Names
+
+Use sprite names from:
+
+- **JSON Configuration** - Names defined in active tileset (see `src/data/base/tilesets/`)
+- **AutoTileSprite Enum** - All enum values (PLAYER_WARRIOR, ENEMY_GOBLIN, etc.)
+
+Common sprite names:
+
+- Characters: `PLAYER_WARRIOR`, `ENEMY_GOBLIN`, `NPC_MERCHANT`, `BOSS_DRAGON_RED`
+- Terrain: `FLOOR_STONE`, `WALL_STONE`, `DOOR_CLOSED_WOOD`, `WATER_DEEP`
+- Items: `SWORD_SHORT`, `POTION_RED`, `CHEST_CLOSED`, `COIN_GOLD`
+- Effects: `EFFECT_FIRE`, `PROJECTILE_FIREBALL`, `ICON_HEART_FULL`
+
+#### Tile Sprite Best Practices
+
+1. **Always use `resolveTileInfo()` for entity sprites** - Don't manually create TileInfo
+2. **Use string sprite names** - Matches JSON data format and supports customization
+3. **Never use `getTileCoords()` for entities** - Only for legacy/internal use
+4. **Create tileset configs for themes/mods** - Place in `src/data/base/tilesets/`
+5. **Direct enum usage OK for static mappings** - Biome tiles, UI elements (see worldMap.ts)
+
+#### Creating Custom Tilesets
+
+```json
+// src/data/base/tilesets/my-theme.json
+{
+  "id": "my-theme",
+  "name": "My Custom Theme",
+  "image": "tileset.png",
+  "tileSize": 16,
+  "gridWidth": 48,
+  "mappings": {
+    "PLAYER_WARRIOR": 100,
+    "ENEMY_GOBLIN": 550,
+    "NPC_MERCHANT": 500
+  }
+}
+```
+
+Configs automatically load on game init via `DataLoader`. Any sprites not in config fall back to `AutoTileSprite` enum.
+
+**See [TILE-SPRITE-RESOLVER-QUICKREF.md](../docs/TILE-SPRITE-RESOLVER-QUICKREF.md) for detailed usage guide.**
+
 ### Available Components
 
 **Core Components:**
@@ -747,9 +833,11 @@ if (health) {
 21. Relations are automatically initialized via `world.initializeRelations(ecs)` in `Game.init()`
 22. **Always use color palette system** - Use `getColor(BaseColor.*)` for semantic colors, `rgba()` for custom colors
 23. **Never hardcode colors in JSON** - Use BaseColor enum names (lowercase) like `"color": "red"`
-24. **Use template mixing for entities/items** - Define once in templates, reference in multiple entities
-25. **Layer templates strategically** - Use base template + modifiers pattern (max 3-4 per component)
-26. **Template naming convention** - `{descriptor}{ComponentType}` for bases, `{effect}Modifier/Bonus` for modifiers
+24. **Always use tile sprite resolver** - Use `resolveTileInfo()` for entity sprites, never manually create TileInfo
+25. **Never use `getTileCoords()` for entities** - Only for legacy/internal use, resolver handles it automatically
+26. **Use template mixing for entities/items** - Define once in templates, reference in multiple entities
+27. **Layer templates strategically** - Use base template + modifiers pattern (max 3-4 per component)
+28. **Template naming convention** - `{descriptor}{ComponentType}` for bases, `{effect}Modifier/Bonus` for modifiers
 
 ### Game Loop with Systems
 

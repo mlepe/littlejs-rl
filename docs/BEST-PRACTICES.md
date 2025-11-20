@@ -603,6 +603,88 @@ ColorPaletteManager.getInstance().registerPalette('custom', customPalette);
 5. **Use semantic names over basic colors** when possible - `BaseColor.ENEMY` instead of `BaseColor.RED`
 6. **IDEs show color previews** for `rgba()` calls, making them easier to work with
 
+### Tile Sprite Best Practices
+
+#### Tile Sprite Resolver System
+
+**CRITICAL: Always use the tile sprite resolver for entity sprites, never manually create TileInfo with getTileCoords().**
+
+The game uses a centralized sprite resolution system (`src/ts/tileSpriteResolver.ts`) to enable dynamic tileset switching and mod support.
+
+**✅ DO:**
+
+- Use `resolveTileInfo()` for all entity sprite creation
+- Use string sprite names (matches JSON format)
+- Create tileset configs in `src/data/base/tilesets/` for themes
+- Switch tilesets at runtime with `setTilesetConfiguration()`
+- Use direct `AutoTileSprite` enum for static mappings (biomes, UI)
+
+**❌ DON'T:**
+
+- Manually create `TileInfo` with `getTileCoords()`
+- Import or use `getTileCoords()` for entity sprites
+- Hardcode sprite indices
+- Bypass resolver for customizable sprites
+
+**Example - Good Pattern:**
+
+```typescript
+import { resolveTileInfo } from './tileConfig';
+
+// Render component using resolver
+ecs.addComponent<RenderComponent>(entityId, 'render', {
+  tileInfo: resolveTileInfo('ENEMY_GOBLIN'),
+  color: getColor(BaseColor.WHITE),
+  size: LJS.vec2(1, 1),
+});
+```
+
+**Example - Bad Pattern:**
+
+```typescript
+// ❌ Don't do this
+import { SPRITE_ENEMY, getTileCoords } from './tileConfig';
+
+const coords = getTileCoords(SPRITE_ENEMY);
+const tileInfo = new LJS.TileInfo(
+  LJS.vec2(coords.x * 16, coords.y * 16),
+  LJS.vec2(16, 16),
+  0
+);
+```
+
+**Resolution Order:**
+
+1. **Active Configuration** - Checks current tileset config mappings
+2. **AutoTileSprite Enum** - Falls back to default sprite enum
+3. **Error** - Throws if sprite not found in either
+
+**Available Sprite Names:**
+
+- Characters: `PLAYER_WARRIOR`, `ENEMY_GOBLIN`, `NPC_MERCHANT`, `BOSS_DRAGON_RED`
+- Terrain: `FLOOR_STONE`, `WALL_STONE`, `DOOR_CLOSED_WOOD`, `WATER_DEEP`
+- Items: `SWORD_SHORT`, `POTION_RED`, `CHEST_CLOSED`, `COIN_GOLD`
+- Effects: `EFFECT_FIRE`, `PROJECTILE_FIREBALL`, `ICON_HEART_FULL`
+
+**Creating Custom Tilesets:**
+
+```json
+// src/data/base/tilesets/my-theme.json
+{
+  "id": "my-theme",
+  "name": "My Custom Theme",
+  "image": "tileset.png",
+  "tileSize": 16,
+  "gridWidth": 48,
+  "mappings": {
+    "PLAYER_WARRIOR": 100,
+    "ENEMY_GOBLIN": 550
+  }
+}
+```
+
+**See [TILE-SPRITE-RESOLVER-QUICKREF.md](./TILE-SPRITE-RESOLVER-QUICKREF.md) for detailed usage guide and [TILE-SPRITE-RESOLVER-MIGRATION.md](./TILE-SPRITE-RESOLVER-MIGRATION.md) for migration documentation.**
+
 ---
 
 ## 6. Testing
@@ -1014,9 +1096,11 @@ if (pos) {
 20. Relations are automatically initialized via `world.initializeRelations(ecs)` in `Game.init()`
 21. **Always use color palette system** - Use `getColor(BaseColor.*)` for semantic colors, `rgba()` for custom colors
 22. **Never hardcode colors in JSON** - Use BaseColor enum names (lowercase) like `"color": "red"`
-23. **Use template mixing for entities/items** - Define once in templates, reference in multiple entities
-24. **Layer templates strategically** - Use base template + modifiers pattern (max 3-4 per component)
-25. **Template naming convention** - `{descriptor}{ComponentType}` for bases, `{effect}Modifier/Bonus` for modifiers
+23. **Always use tile sprite resolver** - Use `resolveTileInfo()` for entity sprites, never manually create TileInfo
+24. **Never use `getTileCoords()` for entities** - Only for legacy/internal use, resolver handles it automatically
+25. **Use template mixing for entities/items** - Define once in templates, reference in multiple entities
+26. **Layer templates strategically** - Use base template + modifiers pattern (max 3-4 per component)
+27. **Template naming convention** - `{descriptor}{ComponentType}` for bases, `{effect}Modifier/Bonus` for modifiers
 
 Read more: [copilot-instructions.md](../.github/copilot-instructions.md)
 
@@ -1028,6 +1112,8 @@ Read more: [copilot-instructions.md](../.github/copilot-instructions.md)
 - [DEVELOPER_SUMMARY.md](./DEVELOPER_SUMMARY.md) - Development guide
 - [TESTING-GUIDE.md](./TESTING-GUIDE.md) - Testing practices
 - [TEMPLATE-MIXING.md](./TEMPLATE-MIXING.md) - Data composition patterns
+- [TILE-SPRITE-RESOLVER-QUICKREF.md](./TILE-SPRITE-RESOLVER-QUICKREF.md) - Sprite resolver usage guide
+- [TILE-SPRITE-RESOLVER-MIGRATION.md](./TILE-SPRITE-RESOLVER-MIGRATION.md) - Migration documentation
 - [LittleJS Documentation](https://github.com/KilledByAPixel/LittleJS)
 - [ECS Patterns](https://github.com/topics/entity-component-system)
 
