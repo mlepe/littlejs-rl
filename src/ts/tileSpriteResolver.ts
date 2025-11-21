@@ -13,7 +13,7 @@
 import * as LJS from 'littlejsengine';
 
 import { TilesetConfig } from './types/dataSchemas';
-import { AutoTileSprite } from './tileConfig';
+import { AutoTileSprite, TileSprite } from './tileConfig';
 
 /**
  * TileSpriteResolver - Singleton manager for tileset configurations
@@ -168,6 +168,14 @@ export class TileSpriteResolver {
       return this.activeConfig.mappings[spriteName];
     }
 
+    // Fall back to TileSprite enum
+    if (spriteName in TileSprite) {
+      const fallbackValue = TileSprite[spriteName as keyof typeof TileSprite];
+      if (typeof fallbackValue === 'number') {
+        return fallbackValue;
+      }
+    }
+
     // Fall back to AutoTileSprite enum
     if (spriteName in AutoTileSprite) {
       const fallbackValue =
@@ -260,6 +268,12 @@ export class TileSpriteResolver {
     // Check active configuration
     if (this.activeConfig && spriteName in this.activeConfig.mappings) {
       return true;
+    }
+
+    // Check TileSprite enum
+    if (spriteName in TileSprite) {
+      const value = TileSprite[spriteName as keyof typeof TileSprite];
+      return typeof value === 'number';
     }
 
     // Check AutoTileSprite enum

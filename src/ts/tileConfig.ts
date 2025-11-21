@@ -68,8 +68,8 @@ export enum TileSprite {
   _9_WALL_BRICK_BOTTOM = 118,
   _9_WALL_BRICK_BOTTOM_RIGHT = 119,
 
-  WALL_STONE = 585,
-  WALL_BRICK = 591,
+  WALL_STONE = 637,
+  WALL_BRICK = 643,
 
   STAIRS_UP = 244,
   STAIRS_DOWN = 245,
@@ -91,6 +91,8 @@ export enum TileSprite {
   DOOR_UNLOCKED = 390,
   DOOR_OPEN = 391,
   DOOR_CLOSED = 392,
+
+  ENEMY_GOBLIN = 143,
 }
 
 /** AutoTileSprite

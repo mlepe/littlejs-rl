@@ -13,7 +13,7 @@
 import * as LJS from 'littlejsengine';
 
 import { BaseColor, getColor } from './colorPalette';
-import { TileSprite } from './tileConfig';
+import { resolveTileSprite } from './tileConfig';
 
 /**
  * Tile types available in the game
@@ -148,17 +148,17 @@ export function getTileProperties(type: TileType): TileProperties {
  * Map TileType enum to correct sprite indices from TileSprite
  */
 const TILE_SPRITE_MAP: Record<TileType, number> = {
-  [TileType.VOID]: TileSprite.VOID, // TileSprite.VOID
-  [TileType.FLOOR]: TileSprite.FLOOR_ROCKY, // TileSprite.FLOOR_STONE
-  [TileType.WALL]: TileSprite.WALL_STONE, // TileSprite.WALL_STONE
-  [TileType.DOOR_OPEN]: TileSprite.DOOR_OPEN, // TileSprite.DOOR_OPEN_WOOD
-  [TileType.DOOR_CLOSED]: TileSprite.DOOR_CLOSED, // TileSprite.DOOR_CLOSED_WOOD
-  [TileType.STAIRS_UP]: TileSprite.STAIRS_UP, // TileSprite.STAIRS_UP
-  [TileType.STAIRS_DOWN]: TileSprite.STAIRS_DOWN, // TileSprite.STAIRS_DOWN
-  [TileType.WATER]: TileSprite.FLOOR_PUDDLE, // TileSprite.WATER_DEEP
-  [TileType.GRASS]: TileSprite.FLOOR_GRASS, // TileSprite.FLOOR_GRASS
-  [TileType.TREE]: TileSprite.VEGETATION_TREE, // TileSprite.TREE_OAK
-  [TileType.FLORA]: TileSprite.FLOOR_FLOWERS, // TileSprite.FLOOR_SAND
+  [TileType.VOID]: resolveTileSprite('VOID'), // TileSprite.VOID
+  [TileType.FLOOR]: resolveTileSprite('FLOOR_ROCKY'), // TileSprite.FLOOR_STONE
+  [TileType.WALL]: resolveTileSprite('WALL_STONE'), // TileSprite.WALL_STONE
+  [TileType.DOOR_OPEN]: resolveTileSprite('DOOR_OPEN'), // TileSprite.DOOR_OPEN_WOOD
+  [TileType.DOOR_CLOSED]: resolveTileSprite('DOOR_CLOSED'), // TileSprite.DOOR_CLOSED_WOOD
+  [TileType.STAIRS_UP]: resolveTileSprite('STAIRS_UP'), // TileSprite.STAIRS_UP
+  [TileType.STAIRS_DOWN]: resolveTileSprite('STAIRS_DOWN'), // TileSprite.STAIRS_DOWN
+  [TileType.WATER]: resolveTileSprite('FLOOR_PUDDLE'), // TileSprite.WATER_DEEP
+  [TileType.GRASS]: resolveTileSprite('FLOOR_GRASS'), // TileSprite.FLOOR_GRASS
+  [TileType.TREE]: resolveTileSprite('VEGETATION_TREE'), // TileSprite.TREE_OAK
+  [TileType.FLORA]: resolveTileSprite('FLOOR_FLOWERS'), // TileSprite.FLOOR_SAND
 };
 
 /**

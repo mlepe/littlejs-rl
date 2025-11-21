@@ -271,7 +271,7 @@
         "NPC_PRIEST": 493,
         "COMPANION_DOG": 494,
         "COMPANION_CAT": 495,
-        "ENEMY_GOBLIN": 528,
+        "ENEMY_GOBLIN": 121,
         "ENEMY_ORC": 529,
         "ENEMY_KOBOLD": 530,
         "ENEMY_SKELETON": 531,
