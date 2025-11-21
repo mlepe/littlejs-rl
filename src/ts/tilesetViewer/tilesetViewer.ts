@@ -360,24 +360,39 @@ export class TilesetViewer {
     const tileIndex = this.getCurrentTileIndex();
     const existing = this.tileData.get(tileIndex);
 
-    if (!existing || !existing.isDocumented) {
-      alert(
-        'Cannot paste to an undocumented tile. Please name the tile first (Enter key).'
+    // If tile exists and is documented, paste metadata preserving name/alternateNames
+    if (existing && existing.isDocumented) {
+      this.tileData.set(tileIndex, {
+        ...existing,
+        categories: [...this.clipboardMetadata.categories],
+        subcategories: [...this.clipboardMetadata.subcategories],
+        notes: this.clipboardMetadata.notes,
+      });
+
+      this.updateStats();
+      console.log(`[TilesetViewer] Pasted metadata to tile ${tileIndex}`);
+      alert('Metadata pasted!');
+    } else {
+      // If tile doesn't exist or isn't documented, create new tile with clipboard metadata
+      // but leave name empty (user will fill it in later)
+      this.tileData.set(tileIndex, {
+        index: tileIndex,
+        name: existing?.name || '',
+        alternateNames: existing?.alternateNames,
+        categories: [...this.clipboardMetadata.categories],
+        subcategories: [...this.clipboardMetadata.subcategories],
+        notes: this.clipboardMetadata.notes,
+        isDocumented: false, // Not documented until name is added
+      });
+
+      this.updateStats();
+      console.log(
+        `[TilesetViewer] Pasted metadata to undocumented tile ${tileIndex}`
       );
-      return;
+      alert(
+        'Metadata pasted! Tile is not documented yet - add a name with Enter key.'
+      );
     }
-
-    // Paste metadata, preserving name and alternate names
-    this.tileData.set(tileIndex, {
-      ...existing,
-      categories: [...this.clipboardMetadata.categories],
-      subcategories: [...this.clipboardMetadata.subcategories],
-      notes: this.clipboardMetadata.notes,
-    });
-
-    this.updateStats();
-    console.log(`[TilesetViewer] Pasted metadata to tile ${tileIndex}`);
-    alert('Metadata pasted!');
   }
 
   /**
