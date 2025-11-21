@@ -13,7 +13,6 @@
 import * as LJS from 'littlejsengine';
 
 import { ExamineData } from './examineSystem';
-import Global from '../global';
 import { BaseColor, getColor } from '../colorPalette';
 
 /**

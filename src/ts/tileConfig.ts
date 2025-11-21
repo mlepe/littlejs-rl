@@ -537,11 +537,6 @@ export enum AutoTileSprite {
 }
 
 /**
- * @todo Add a curated selection of tile sprites.
- */
-export enum CuratedTileSprite {}
-
-/**
  * Tile categories for organizing sprites
  */
 export enum TileCategory {
