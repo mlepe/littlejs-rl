@@ -15,6 +15,8 @@ import * as LJS from 'littlejsengine';
 import { BaseColor, getColor } from './colorPalette';
 import { resolveTileSprite } from './tileConfig';
 
+// TODO: Review tile sprite definitions across the codebase to reduce redundancy and inconsistencies
+
 /**
  * Tile types available in the game
  */

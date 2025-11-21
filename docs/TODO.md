@@ -25,6 +25,12 @@ This document tracks ongoing tasks, features to implement, and technical debt fo
 - [ ] **Implement tile zones** - Add TileZones functionality for region-based sprite management
 - [ ] **Player death handling** - Implement game over, respawn, or permadeath mechanics
 - [ ] **Update data usage examples** - Update `src/ts/examples/dataUsageExample.ts` to use new Location API
+- [ ] **Tile sprites definition** - Complete a basic enum of tiles
+- [ ] **Tile sprites redundancy and incoherences** - Review and streamline tile sprite definitions across the codebase (too many duplicates and inconsistencies)
+- [ ] **Item rendering** - Add item rendering on tiles
+- [ ] **Inventory** - Implement a simpler inventory UI (like old Caves of Qud) (list, no drag and drop, simple and reliable)
+- [ ] **Entities** - Remove distinction between enemy and NPCs in entities data
+- [ ] **Proper use of tile resolver and color palette** - Review data and code for proper use of tile resolver and color palette
 
 ### Critical Systems
 
@@ -168,7 +174,6 @@ This document tracks ongoing tasks, features to implement, and technical debt fo
 - [ ] **Improve error handling** - Add try-catch blocks where needed
 - [ ] **Type safety improvements** - Strengthen TypeScript types
 - [ ] **Legacy constant cleanup** - Phase out deprecated sprite constants
-- [ ] **Tile sprites redundancy and incoherences** - Review and streamline tile sprite definitions across the codebase (too many duplicates and inconsistencies)
 
 ### Architecture
 
