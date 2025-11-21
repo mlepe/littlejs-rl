@@ -1,5 +1,4 @@
 {
-  "$schema": "../../types/dataSchemas.ts#/definitions/FactionData",
   "factions": [
     {
       "id": "player",

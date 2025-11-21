@@ -22,10 +22,12 @@ import {
 import {
   aiSystem,
   basicAnimationSystem,
+  biomeTransitionSystem,
   cameraSystem,
   chargesSystem,
   collisionDamageSystem,
   deathSystem,
+  environmentalSystem,
   examineCursorMovementSystem,
   examineRenderSystem,
   examineSystem,
@@ -39,8 +41,10 @@ import {
   renderSystem,
   viewModeTransitionSystem,
   visualEffectSystem,
+  weatherSystem,
   worldMapMovementSystem,
 } from './systems';
+import { initializeFactionRelations } from './systems/factionSystem';
 import { createEnemy, createPlayer } from './entities';
 
 import { DataLoader } from './data/dataLoader';
@@ -235,6 +239,19 @@ export default class Game {
     // Initialize relations between all entities
     this.world.initializeRelations(this.ecs);
 
+    // Initialize faction system (must be after entity creation)
+    // Give player the 'player' faction
+    this.ecs.addComponent(this.playerId, 'faction', {
+      factionId: 'player',
+      reputation: 50,
+      rank: 1,
+    });
+    initializeFactionRelations(this.ecs, this.playerId, 'player');
+
+    if (Game.isDebug) {
+      console.log('Faction system initialized');
+    }
+
     // Spawn test items for development
     if (Game.isDebug) {
       this.spawnTestItems();
@@ -390,6 +407,11 @@ export default class Game {
         // Item systems
         chargesSystem(this.ecs); // Passive charge regeneration for rods/wands
         identificationSystem(this.ecs); // Auto-identify items based on intelligence
+
+        // Environmental systems (biome-based effects)
+        biomeTransitionSystem(this.ecs); // Handle biome changes between locations
+        weatherSystem(this.ecs); // Update weather based on biome
+        environmentalSystem(this.ecs); // Apply environmental hazards (cold, heat, etc.)
 
         // Combat (simple collision-based for testing)
         collisionDamageSystem(this.ecs); // Apply damage when entities collide
