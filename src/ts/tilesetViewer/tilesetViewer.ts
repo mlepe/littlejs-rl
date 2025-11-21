@@ -44,6 +44,11 @@ export class TilesetViewer {
   private viewportWidth: number;
   private viewportHeight: number;
 
+  // UI panel dimensions
+  private readonly panelWidth: number = 320;
+  private readonly helpPanelHeight: number = 280;
+  private readonly infoPanelHeight: number = 400;
+
   // UI state
   private showHelp: boolean = true;
   private isActive: boolean = false;
@@ -61,11 +66,11 @@ export class TilesetViewer {
     this.viewportWidth = LJS.mainCanvasSize.x;
     this.viewportHeight = LJS.mainCanvasSize.y;
 
-    // Calculate scale to fit entire tileset on screen (with padding)
-    const scaleX =
-      (this.viewportWidth * 0.9) / (this.tilesetWidth * this.tileSize);
-    const scaleY =
-      (this.viewportHeight * 0.9) / (this.tilesetHeight * this.tileSize);
+    // Calculate scale to fit entire tileset on screen (with padding and panel space)
+    const availableWidth = this.viewportWidth - this.panelWidth - 40; // Reserve space for left panel + padding
+    const availableHeight = this.viewportHeight * 0.95; // 95% of height with padding
+    const scaleX = availableWidth / (this.tilesetWidth * this.tileSize);
+    const scaleY = availableHeight / (this.tilesetHeight * this.tileSize);
     this.tileScale = Math.min(scaleX, scaleY);
 
     // Load existing data
@@ -198,8 +203,12 @@ export class TilesetViewer {
    * Update camera to show entire tileset
    */
   private updateCamera(): void {
-    // Center camera on middle of tileset (in world units)
-    const centerX = (this.tilesetWidth - 1) / 2;
+    // Calculate offset to position tileset to the right of left panels
+    const panelSpaceInWorldUnits =
+      (this.panelWidth + 20) / (this.tileSize * this.tileScale);
+
+    // Center camera on middle of tileset (in world units), shifted LEFT to show tileset on right
+    const centerX = (this.tilesetWidth - 1) / 2 - panelSpaceInWorldUnits / 2;
     const centerY = (this.tilesetHeight - 1) / 2;
     LJS.setCameraPos(LJS.vec2(centerX, centerY));
 
@@ -447,11 +456,14 @@ export class TilesetViewer {
    * Render info panel (overlay in screen space)
    */
   private renderInfoPanel(): void {
+    const panelX = this.panelWidth / 2;
+    const panelY = this.helpPanelHeight + this.infoPanelHeight / 2 + 20;
+
     // Use overlay rendering (screen coordinates)
     LJS.drawRect(
-      LJS.vec2(this.viewportWidth - 150, this.viewportHeight - 200),
-      LJS.vec2(300, 400),
-      new LJS.Color(0, 0, 0, 0.8),
+      LJS.vec2(panelX, panelY),
+      LJS.vec2(this.panelWidth, this.infoPanelHeight),
+      new LJS.Color(0, 0, 0, 0.85),
       0,
       true,
       true // Use screen space
@@ -460,66 +472,74 @@ export class TilesetViewer {
     const tileIndex = this.getCurrentTileIndex();
     const metadata = this.tileData.get(tileIndex);
 
-    // Draw text in screen space
-    const textX = this.viewportWidth - 290;
-    let textY = this.viewportHeight - 20;
+    // Draw text in screen space (Y=0 at bottom)
+    const textX = panelX;
+    let textY = panelY - this.infoPanelHeight / 2 + 15;
 
-    LJS.drawText(
+    LJS.drawTextScreen(
       'TILESET VIEWER',
       LJS.vec2(textX, textY),
       24,
-      new LJS.Color(1, 1, 0)
+      new LJS.Color(1, 1, 1)
     );
-    textY -= 30;
+    textY += 30;
 
-    LJS.drawText(`Index: ${tileIndex}`, LJS.vec2(textX, textY), 16);
-    textY -= 20;
-    LJS.drawText(
+    LJS.drawTextScreen(
+      `Index: ${tileIndex}`,
+      LJS.vec2(textX, textY),
+      16,
+      new LJS.Color(1, 1, 1)
+    );
+    textY += 20;
+    LJS.drawTextScreen(
       `Coords: (${this.cursorX}, ${this.cursorY})`,
       LJS.vec2(textX, textY),
-      16
+      16,
+      new LJS.Color(1, 1, 1)
     );
-    textY -= 30;
+    textY += 30;
 
     if (metadata && metadata.isDocumented) {
-      LJS.drawText(
+      LJS.drawTextScreen(
         `Name: ${metadata.name}`,
         LJS.vec2(textX, textY),
         16,
-        new LJS.Color(0, 1, 0)
+        new LJS.Color(0, 0.6, 0)
       );
-      textY -= 20;
+      textY += 20;
 
       if (metadata.alternateNames && metadata.alternateNames.length > 0) {
-        LJS.drawText(
+        LJS.drawTextScreen(
           `Alts: ${metadata.alternateNames.join(', ')}`,
           LJS.vec2(textX, textY),
           12,
-          new LJS.Color(0.5, 1, 0.5)
+          new LJS.Color(0, 0.5, 0)
         );
-        textY -= 20;
+        textY += 20;
       }
 
       if (metadata.categories.length > 0) {
-        LJS.drawText(
+        LJS.drawTextScreen(
           `Categories: ${metadata.categories.map((c) => TileCategory[c]).join(', ')}`,
           LJS.vec2(textX, textY),
-          12
+          12,
+          new LJS.Color(1, 1, 1)
         );
-        textY -= 20;
+        textY += 20;
       }
 
       if (metadata.subcategories.length > 0) {
-        LJS.drawText(
+        LJS.drawTextScreen(
           `Subcats: ${metadata.subcategories.map((s) => TileSubcategory[s]).join(', ')}`,
           LJS.vec2(textX, textY),
-          12
+          12,
+          new LJS.Color(1, 1, 1)
         );
-        textY -= 20;
+        textY += 20;
       }
 
       if (metadata.notes) {
-        LJS.drawText(
+        LJS.drawTextScreen(
           `Notes: ${metadata.notes}`,
           LJS.vec2(textX, textY),
           12,
@@ -527,33 +547,39 @@ export class TilesetViewer {
         );
       }
     } else {
-      LJS.drawText(
+      LJS.drawTextScreen(
         '(Undocumented)',
         LJS.vec2(textX, textY),
         16,
-        new LJS.Color(1, 0, 0)
+        new LJS.Color(0.8, 0, 0)
       );
     }
 
-    textY -= 30;
-    LJS.drawText('─'.repeat(35), LJS.vec2(textX, textY), 16);
-    textY -= 20;
+    textY += 30;
+    LJS.drawTextScreen(
+      '─'.repeat(35),
+      LJS.vec2(textX, textY),
+      16,
+      new LJS.Color(1, 1, 1)
+    );
+    textY += 20;
 
-    LJS.drawText(
+    LJS.drawTextScreen(
       `Progress: ${this.documentedTiles}/${this.totalTiles}`,
       LJS.vec2(textX, textY),
-      16
+      16,
+      new LJS.Color(1, 1, 1)
     );
-    textY -= 20;
+    textY += 20;
 
     const percentage = ((this.documentedTiles / this.totalTiles) * 100).toFixed(
       1
     );
-    LJS.drawText(
+    LJS.drawTextScreen(
       `${percentage}%`,
       LJS.vec2(textX, textY),
       20,
-      new LJS.Color(0, 1, 1)
+      new LJS.Color(0, 0.5, 0.7)
     );
   }
 
@@ -576,31 +602,31 @@ export class TilesetViewer {
       'Esc - Exit viewer',
     ];
 
-    const panelWidth = 250;
-    const panelHeight = 280;
-    const panelX = 125;
-    const panelY = this.viewportHeight - 140;
+    const panelX = this.panelWidth / 2;
+    const panelY = this.helpPanelHeight / 2 + 10;
 
     // Background (screen space)
     LJS.drawRect(
       LJS.vec2(panelX, panelY),
-      LJS.vec2(panelWidth, panelHeight),
-      new LJS.Color(0, 0, 0, 0.9),
+      LJS.vec2(this.panelWidth, this.helpPanelHeight),
+      new LJS.Color(0, 0, 0, 0.85),
       0,
       true,
       true // Use screen space
     );
 
-    // Text (screen space)
-    let textY = panelY + panelHeight / 2 - 15;
+    // Text (screen space, Y=0 at bottom)
+    let textY = panelY - this.helpPanelHeight / 2 + 15;
+    const textX = panelX;
+
     for (const line of helpText) {
-      LJS.drawText(
+      LJS.drawTextScreen(
         line,
-        LJS.vec2(panelX - panelWidth / 2 + 10, textY),
+        LJS.vec2(textX, textY),
         12,
         new LJS.Color(1, 1, 1)
       );
-      textY -= 18;
+      textY += 18;
     }
   }
 }
