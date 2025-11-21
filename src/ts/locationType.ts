@@ -4,18 +4,15 @@
  * File Created: Thursday, 14th November 2025 12:00:00 am
  * Author: Matthieu LEPERLIER (m.leperlier42@gmail.com)
  * -----
- * Last Modified: Thursday, 14th November 2025 12:00:00 am
+ * Last Modified: Thursday, 21st November 2025 12:00:00 am
  * Modified By: Matthieu LEPERLIER (m.leperlier42@gmail.com>)
  * -----
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 
-import * as LJS from 'littlejsengine';
-
-import { BaseColor, getColor } from './colorPalette';
-
 /**
  * Location types - Different structural types of locations
+ * These define HOW a location is structured, not what it looks like
  */
 export enum LocationType {
   /** Standard dungeon with rooms, corridors, and monsters */
@@ -30,136 +27,6 @@ export enum LocationType {
   WILDERNESS = 'wilderness',
   /** Cave system with organic tunnels */
   CAVE = 'cave',
-}
-
-/**
- * Biome types - Different environmental themes
- */
-export enum BiomeType {
-  /** Temperate forest with trees and vegetation */
-  FOREST = 'forest',
-  /** Rocky mountains with cliffs and caves */
-  MOUNTAIN = 'mountain',
-  /** Snowy tundra with ice and frost */
-  SNOWY = 'snowy',
-  /** Barren wasteland with sparse vegetation */
-  BARREN = 'barren',
-  /** Sandy desert with dunes and oases */
-  DESERT = 'desert',
-  /** Coastal beach area */
-  BEACH = 'beach',
-  /** Water body (sea, lake, or river) */
-  WATER = 'water',
-  /** Volcanic area with lava and ash */
-  VOLCANIC = 'volcanic',
-  /** Swamp with murky water and vegetation */
-  SWAMP = 'swamp',
-}
-
-/**
- * Biome visual properties - Colors and palette for each biome
- */
-export interface BiomePalette {
-  /** Primary floor/ground color */
-  floor: LJS.Color;
-  /** Primary wall/boundary color */
-  wall: LJS.Color;
-  /** Accent color for special tiles */
-  accent: LJS.Color;
-  /** Water color (if applicable) */
-  water?: LJS.Color;
-  /** Vegetation color (if applicable) */
-  vegetation?: LJS.Color;
-}
-
-/**
- * Get color palette for a specific biome
- * @param biome - The biome type
- * @returns Color palette for the biome
- */
-export function getBiomePalette(biome: BiomeType): BiomePalette {
-  switch (biome) {
-    case BiomeType.FOREST:
-      return {
-        floor: getColor(BaseColor.GRASS), // Dark green
-        wall: getColor(BaseColor.BROWN), // Brown
-        accent: getColor(BaseColor.LIME), // Light green
-        water: getColor(BaseColor.WATER), // Blue
-        vegetation: getColor(BaseColor.GREEN), // Bright green
-      };
-
-    case BiomeType.MOUNTAIN:
-      return {
-        floor: getColor(BaseColor.GRAY), // Gray stone
-        wall: getColor(BaseColor.DARK_GRAY), // Dark gray
-        accent: getColor(BaseColor.LIGHT_GRAY), // Light gray
-        water: getColor(BaseColor.CYAN), // Mountain stream blue
-      };
-
-    case BiomeType.SNOWY:
-      return {
-        floor: getColor(BaseColor.WHITE), // White snow
-        wall: getColor(BaseColor.CYAN), // Light blue ice
-        accent: getColor(BaseColor.LIGHT_GRAY), // Pale blue
-        water: getColor(BaseColor.BLUE), // Icy water
-      };
-
-    case BiomeType.BARREN:
-      return {
-        floor: getColor(BaseColor.BROWN), // Brown dirt
-        wall: getColor(BaseColor.DARK_GRAY), // Dark brown
-        accent: getColor(BaseColor.GRAY), // Light brown
-      };
-
-    case BiomeType.DESERT:
-      return {
-        floor: getColor(BaseColor.YELLOW), // Yellow sand
-        wall: getColor(BaseColor.GOLD), // Sandstone
-        accent: getColor(BaseColor.LIGHT_GRAY), // Light sand
-        water: getColor(BaseColor.CYAN), // Oasis water
-      };
-
-    case BiomeType.BEACH:
-      return {
-        floor: getColor(BaseColor.GOLD), // Light sand
-        wall: getColor(BaseColor.GRAY), // Rocks
-        accent: getColor(BaseColor.LIGHT_GRAY), // Pale sand
-        water: getColor(BaseColor.BLUE), // Ocean blue
-      };
-
-    case BiomeType.WATER:
-      return {
-        floor: getColor(BaseColor.BLUE), // Deep water
-        wall: getColor(BaseColor.DARK_GRAY), // Underwater rocks
-        accent: getColor(BaseColor.CYAN), // Light water
-        water: getColor(BaseColor.WATER), // Water
-      };
-
-    case BiomeType.VOLCANIC:
-      return {
-        floor: getColor(BaseColor.DARK_GRAY), // Dark volcanic rock
-        wall: getColor(BaseColor.BLACK), // Black obsidian
-        accent: getColor(BaseColor.ORANGE), // Orange lava glow
-        water: getColor(BaseColor.LAVA), // Lava
-      };
-
-    case BiomeType.SWAMP:
-      return {
-        floor: getColor(BaseColor.BROWN), // Muddy ground
-        wall: getColor(BaseColor.DARK_GRAY), // Dark vegetation
-        accent: getColor(BaseColor.GRASS), // Moss
-        water: getColor(BaseColor.TEAL), // Murky water
-        vegetation: getColor(BaseColor.GREEN), // Swamp vegetation
-      };
-
-    default:
-      // Default to neutral colors
-      return {
-        floor: getColor(BaseColor.GRAY),
-        wall: getColor(BaseColor.DARK_GRAY),
-        accent: getColor(BaseColor.LIGHT_GRAY),
-      };
-  }
 }
 
 /**
@@ -271,15 +138,12 @@ export function getLocationTypeProperties(
 }
 
 /**
- * Complete metadata for a location
+ * @deprecated Use EnvironmentMetadata from environmentMetadata.ts instead
+ * This interface is kept for backward compatibility only
  */
 export interface LocationMetadata {
   /** Type of location structure */
   locationType: LocationType;
-  /** Environmental biome */
-  biome: BiomeType;
-  /** Visual color palette */
-  palette: BiomePalette;
   /** Generation properties */
   properties: LocationTypeProperties;
   /** Optional custom name */
@@ -289,23 +153,20 @@ export interface LocationMetadata {
 }
 
 /**
- * Create location metadata with defaults
+ * Create basic location metadata (structure only, no biome)
  * @param locationType - Type of location
- * @param biome - Biome type
  * @param name - Optional custom name
  * @param difficultyLevel - Optional difficulty level
- * @returns Complete location metadata
+ * @returns Location metadata
+ * @deprecated Use createEnvironmentMetadata from environmentMetadata.ts for full biome support
  */
 export function createLocationMetadata(
   locationType: LocationType,
-  biome: BiomeType,
   name?: string,
   difficultyLevel?: number
 ): LocationMetadata {
   return {
     locationType,
-    biome,
-    palette: getBiomePalette(biome),
     properties: getLocationTypeProperties(locationType),
     name,
     difficultyLevel,

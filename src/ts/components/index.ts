@@ -38,3 +38,4 @@ export * from './viewMode';
 export * from './animation';
 export * from './visualEffect';
 export * from './state';
+export * from './environmental';

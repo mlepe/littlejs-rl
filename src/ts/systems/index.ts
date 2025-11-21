@@ -46,3 +46,5 @@ export * from './inventoryUISystem';
 export * from './basicAnimationSystem';
 export * from './visualEffectSystem';
 export * from './stateSystem';
+export * from './environmentalSystem';
+export * from './biomeTransitionSystem';
