@@ -40,6 +40,7 @@ export class TilesetViewer {
   private cameraX: number = 0;
   private cameraY: number = 0;
   private tileSize: number = 16; // World units per tile
+  private tileScale: number = 1; // Calculated scale to fit entire tileset
   private viewportWidth: number;
   private viewportHeight: number;
 
@@ -59,6 +60,13 @@ export class TilesetViewer {
     this.totalTiles = this.tilesetWidth * this.tilesetHeight;
     this.viewportWidth = LJS.mainCanvasSize.x;
     this.viewportHeight = LJS.mainCanvasSize.y;
+
+    // Calculate scale to fit entire tileset on screen (with padding)
+    const scaleX =
+      (this.viewportWidth * 0.9) / (this.tilesetWidth * this.tileSize);
+    const scaleY =
+      (this.viewportHeight * 0.9) / (this.tilesetHeight * this.tileSize);
+    this.tileScale = Math.min(scaleX, scaleY);
 
     // Load existing data
     this.loadData();
@@ -128,46 +136,38 @@ export class TilesetViewer {
   update(): void {
     if (!this.isActive) return;
 
-    // Navigation (fixed: Up should decrease Y to move up on screen)
+    // Navigation: cursor moves in screen space (Y=0 at top)
     if (LJS.keyWasPressed('ArrowUp') && this.cursorY > 0) {
       this.cursorY--;
-      this.updateCamera();
     }
     if (
       LJS.keyWasPressed('ArrowDown') &&
       this.cursorY < this.tilesetHeight - 1
     ) {
       this.cursorY++;
-      this.updateCamera();
     }
     if (LJS.keyWasPressed('ArrowLeft') && this.cursorX > 0) {
       this.cursorX--;
-      this.updateCamera();
     }
     if (
       LJS.keyWasPressed('ArrowRight') &&
       this.cursorX < this.tilesetWidth - 1
     ) {
       this.cursorX++;
-      this.updateCamera();
     }
 
     // Fast navigation
     if (LJS.keyWasPressed('PageUp')) {
       this.cursorY = Math.max(0, this.cursorY - 5);
-      this.updateCamera();
     }
     if (LJS.keyWasPressed('PageDown')) {
       this.cursorY = Math.min(this.tilesetHeight - 1, this.cursorY + 5);
-      this.updateCamera();
     }
     if (LJS.keyWasPressed('Home')) {
       this.cursorX = 0;
-      this.updateCamera();
     }
     if (LJS.keyWasPressed('End')) {
       this.cursorX = this.tilesetWidth - 1;
-      this.updateCamera();
     }
 
     // Actions
@@ -195,14 +195,16 @@ export class TilesetViewer {
   }
 
   /**
-   * Update camera to follow cursor
+   * Update camera to show entire tileset
    */
   private updateCamera(): void {
-    // Set LittleJS camera to center on cursor (in world units)
-    // Invert Y to fix coordinate system (Y increases upward in LittleJS)
-    const invertedY = this.tilesetHeight - 1 - this.cursorY;
-    LJS.setCameraPos(LJS.vec2(this.cursorX, invertedY));
-    LJS.setCameraScale(16); // Zoom level (pixels per world unit)
+    // Center camera on middle of tileset (in world units)
+    const centerX = (this.tilesetWidth - 1) / 2;
+    const centerY = (this.tilesetHeight - 1) / 2;
+    LJS.setCameraPos(LJS.vec2(centerX, centerY));
+
+    // Set zoom to fit entire tileset on screen
+    LJS.setCameraScale(this.tileSize * this.tileScale);
   }
 
   /**
@@ -387,7 +389,7 @@ export class TilesetViewer {
    * Render the tileset grid
    */
   private renderTileset(): void {
-    // Render all tiles (LittleJS camera handles culling)
+    // Render all tiles in world space (camera centered on tileset)
     for (let y = 0; y < this.tilesetHeight; y++) {
       for (let x = 0; x < this.tilesetWidth; x++) {
         const tileIndex = getTileIndex(x, y, this.tilesetWidth);
@@ -404,7 +406,7 @@ export class TilesetViewer {
         );
 
         // Position in world space (1 unit = 1 tile)
-        // Invert Y to fix coordinate system (Y=0 should be at top)
+        // Invert Y for LittleJS Y-up system (Y=0 at bottom, increases upward)
         const invertedY = this.tilesetHeight - 1 - y;
         const pos = LJS.vec2(x, invertedY);
         const size = LJS.vec2(1, 1);
