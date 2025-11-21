@@ -36,7 +36,7 @@ export class TilesetViewer {
   // Camera/view controls
   private cameraX: number = 0;
   private cameraY: number = 0;
-  private tileSize: number = 32; // Render size (2x zoom by default)
+  private tileSize: number = 16; // World units per tile
   private viewportWidth: number;
   private viewportHeight: number;
 
@@ -66,6 +66,7 @@ export class TilesetViewer {
    */
   activate(): void {
     this.isActive = true;
+    this.updateCamera(); // Set initial camera position
     console.log('[TilesetViewer] Activated');
   }
 
@@ -122,7 +123,7 @@ export class TilesetViewer {
   update(): void {
     if (!this.isActive) return;
 
-    // Navigation
+    // Navigation (fixed: Up should decrease Y to move up on screen)
     if (LJS.keyWasPressed('ArrowUp') && this.cursorY > 0) {
       this.cursorY--;
       this.updateCamera();
@@ -171,7 +172,7 @@ export class TilesetViewer {
     if (LJS.keyWasPressed('Delete')) {
       this.deleteCurrentTile();
     }
-    if (LJS.keyWasPressed('KeyS')) {
+    if (LJS.keyWasPressed('KeyO')) {
       this.saveData();
     }
     if (LJS.keyWasPressed('KeyE')) {
@@ -183,7 +184,7 @@ export class TilesetViewer {
     if (LJS.keyWasPressed('KeyH')) {
       this.showHelp = !this.showHelp;
     }
-    if (LJS.keyWasPressed('F12') || LJS.keyWasPressed('Escape')) {
+    if (LJS.keyWasPressed('Escape')) {
       this.deactivate();
     }
   }
@@ -192,28 +193,11 @@ export class TilesetViewer {
    * Update camera to follow cursor
    */
   private updateCamera(): void {
-    const cursorScreenX = this.cursorX * this.tileSize;
-    const cursorScreenY = this.cursorY * this.tileSize;
-
-    // Center camera on cursor
-    this.cameraX = cursorScreenX - this.viewportWidth / 2;
-    this.cameraY = cursorScreenY - this.viewportHeight / 2;
-
-    // Clamp camera
-    this.cameraX = Math.max(
-      0,
-      Math.min(
-        this.cameraX,
-        this.tilesetWidth * this.tileSize - this.viewportWidth
-      )
-    );
-    this.cameraY = Math.max(
-      0,
-      Math.min(
-        this.cameraY,
-        this.tilesetHeight * this.tileSize - this.viewportHeight
-      )
-    );
+    // Set LittleJS camera to center on cursor (in world units)
+    // Invert Y to fix coordinate system (Y increases upward in LittleJS)
+    const invertedY = this.tilesetHeight - 1 - this.cursorY;
+    LJS.setCameraPos(LJS.vec2(this.cursorX, invertedY));
+    LJS.setCameraScale(16); // Zoom level (pixels per world unit)
   }
 
   /**
@@ -361,17 +345,10 @@ export class TilesetViewer {
   render(): void {
     if (!this.isActive) return;
 
-    // Clear screen
-    LJS.drawRect(
-      LJS.vec2(this.viewportWidth / 2, this.viewportHeight / 2),
-      LJS.vec2(this.viewportWidth, this.viewportHeight),
-      new LJS.Color(0.1, 0.1, 0.1, 1)
-    );
-
-    // Render tileset grid
+    // Render tileset grid (in world space)
     this.renderTileset();
 
-    // Render UI overlays
+    // Render UI overlays (in screen space)
     this.renderInfoPanel();
     if (this.showHelp) {
       this.renderHelp();
@@ -382,97 +359,79 @@ export class TilesetViewer {
    * Render the tileset grid
    */
   private renderTileset(): void {
-    const startX = Math.floor(this.cameraX / this.tileSize);
-    const startY = Math.floor(this.cameraY / this.tileSize);
-    const endX = Math.min(
-      this.tilesetWidth,
-      Math.ceil((this.cameraX + this.viewportWidth) / this.tileSize)
-    );
-    const endY = Math.min(
-      this.tilesetHeight,
-      Math.ceil((this.cameraY + this.viewportHeight) / this.tileSize)
-    );
-
-    for (let y = startY; y < endY; y++) {
-      for (let x = startX; x < endX; x++) {
-        const screenX = x * this.tileSize - this.cameraX;
-        const screenY =
-          this.viewportHeight - (y * this.tileSize - this.cameraY);
-
+    // Render all tiles (LittleJS camera handles culling)
+    for (let y = 0; y < this.tilesetHeight; y++) {
+      for (let x = 0; x < this.tilesetWidth; x++) {
         const tileIndex = getTileIndex(x, y, this.tilesetWidth);
         const isDocumented =
           this.tileData.has(tileIndex) &&
           this.tileData.get(tileIndex)!.isDocumented;
 
-        // Draw tile directly by index
+        // Get tile sprite info
         const coords = getTileCoords(tileIndex, this.tilesetWidth);
         const tileInfo = new LJS.TileInfo(
           LJS.vec2(coords.x * 16, coords.y * 16),
           LJS.vec2(16, 16),
           0
         );
-        const pos = LJS.vec2(
-          screenX + this.tileSize / 2,
-          screenY - this.tileSize / 2
-        );
-        const size = LJS.vec2(this.tileSize / 16, this.tileSize / 16);
 
+        // Position in world space (1 unit = 1 tile)
+        // Invert Y to fix coordinate system (Y=0 should be at top)
+        const invertedY = this.tilesetHeight - 1 - y;
+        const pos = LJS.vec2(x, invertedY);
+        const size = LJS.vec2(1, 1);
+
+        // Draw black background tile first
+        LJS.drawRect(pos, size, new LJS.Color(0, 0, 0, 1));
+
+        // Draw tile with alpha for undocumented
         const alpha = isDocumented ? 1.0 : 0.3;
         LJS.drawTile(pos, size, tileInfo, new LJS.Color(1, 1, 1, alpha));
 
-        // Highlight documented tiles
+        // Green highlight for documented tiles
         if (isDocumented) {
-          LJS.drawRect(
-            pos,
-            LJS.vec2(this.tileSize, this.tileSize),
-            new LJS.Color(0, 1, 0, 0.2)
-          );
+          LJS.drawRect(pos, size, new LJS.Color(0, 1, 0, 0.2));
         }
 
-        // Draw cursor
-        if (x === this.cursorX && y === this.cursorY) {
-          LJS.drawRect(
-            pos,
-            LJS.vec2(this.tileSize, this.tileSize),
-            new LJS.Color(1, 1, 0, 0),
-            0,
-            false
-          );
-        }
-
-        // Draw grid lines
-        LJS.drawRect(
-          pos,
-          LJS.vec2(this.tileSize, this.tileSize),
-          new LJS.Color(0.3, 0.3, 0.3, 0.5),
-          0,
-          false
-        );
+        // Gray grid lines
+        LJS.drawRect(pos, size, new LJS.Color(0.3, 0.3, 0.3, 0.5), 0, false);
       }
     }
+
+    // Draw cursor AFTER all tiles (so it's on top) - filled rect with bright yellow
+    const cursorInvertedY = this.tilesetHeight - 1 - this.cursorY;
+    const cursorPos = LJS.vec2(this.cursorX, cursorInvertedY);
+    // Draw filled semi-transparent yellow background
+    LJS.drawRect(cursorPos, LJS.vec2(1, 1), new LJS.Color(1, 1, 0, 0.4));
+    // Draw bright yellow outline
+    LJS.drawRect(
+      cursorPos,
+      LJS.vec2(1, 1),
+      new LJS.Color(1, 1, 0, 1),
+      0.05,
+      false
+    );
   }
 
   /**
-   * Render info panel
+   * Render info panel (overlay in screen space)
    */
   private renderInfoPanel(): void {
-    const panelX = this.viewportWidth - 300;
-    const panelY = 0;
-    const panelWidth = 300;
-    const panelHeight = 400;
-
-    // Panel background
+    // Use overlay rendering (screen coordinates)
     LJS.drawRect(
-      LJS.vec2(panelX + panelWidth / 2, this.viewportHeight - panelHeight / 2),
-      LJS.vec2(panelWidth, panelHeight),
-      new LJS.Color(0, 0, 0, 0.8)
+      LJS.vec2(this.viewportWidth - 150, this.viewportHeight - 200),
+      LJS.vec2(300, 400),
+      new LJS.Color(0, 0, 0, 0.8),
+      0,
+      true,
+      true // Use screen space
     );
 
     const tileIndex = this.getCurrentTileIndex();
     const metadata = this.tileData.get(tileIndex);
 
-    // Draw text
-    const textX = panelX + 10;
+    // Draw text in screen space
+    const textX = this.viewportWidth - 290;
     let textY = this.viewportHeight - 20;
 
     LJS.drawText(
@@ -559,7 +518,7 @@ export class TilesetViewer {
   }
 
   /**
-   * Render help overlay
+   * Render help overlay (screen space)
    */
   private renderHelp(): void {
     const helpText = [
@@ -569,31 +528,35 @@ export class TilesetViewer {
       'Home/End - Jump horizontal',
       'Enter - Edit tile',
       'Delete - Delete tile',
-      'S - Save to localStorage',
+      'O - Save to localStorage',
       'E - Export data',
       'I - Import from enum',
       'H - Toggle help',
-      'F12/Esc - Exit viewer',
+      'P - Toggle viewer',
+      'Esc - Exit viewer',
     ];
 
     const panelWidth = 250;
-    const panelHeight = 260;
-    const panelX = 10;
-    const panelY = this.viewportHeight - panelHeight - 10;
+    const panelHeight = 280;
+    const panelX = 125;
+    const panelY = this.viewportHeight - 140;
 
-    // Background
+    // Background (screen space)
     LJS.drawRect(
-      LJS.vec2(panelX + panelWidth / 2, panelY + panelHeight / 2),
+      LJS.vec2(panelX, panelY),
       LJS.vec2(panelWidth, panelHeight),
-      new LJS.Color(0, 0, 0, 0.9)
+      new LJS.Color(0, 0, 0, 0.9),
+      0,
+      true,
+      true // Use screen space
     );
 
-    // Text
-    let textY = panelY + panelHeight - 15;
+    // Text (screen space)
+    let textY = panelY + panelHeight / 2 - 15;
     for (const line of helpText) {
       LJS.drawText(
         line,
-        LJS.vec2(panelX + 10, textY),
+        LJS.vec2(panelX - panelWidth / 2 + 10, textY),
         12,
         new LJS.Color(1, 1, 1)
       );

@@ -24,7 +24,7 @@ The Tileset Viewer is a dev-mode-only interactive tool for documenting tiles in 
   - Download as JSON backup
   - Copy to clipboard
 - ✅ **Help overlay** - Keyboard shortcuts reference
-- ✅ **Dev-mode only** - Activated with F12 when `GAME_DEBUG=true`
+- ✅ **Dev-mode only** - Activated with P key when `GAME_DEBUG=true`
 
 ### Future Features (v2.0+)
 
@@ -49,7 +49,7 @@ The Tileset Viewer is a dev-mode-only interactive tool for documenting tiles in 
 **Toggle viewer:**
 
 ```
-Press F12 - Toggle tileset viewer on/off
+Press P - Toggle tileset viewer on/off
 ```
 
 ### Navigation Controls
@@ -65,11 +65,12 @@ Home/End         - Jump to start/end of row
 ```
 Enter            - Edit current tile
 Delete           - Delete current tile data
-S                - Save to localStorage
+O                - Save to localStorage
 E                - Export data (choose format)
 I                - Import from AutoTileSprite enum
 H                - Toggle help overlay
-F12 / Escape     - Exit viewer
+P                - Toggle viewer on/off
+Escape           - Exit viewer
 ```
 
 ### Editing a Tile
@@ -167,7 +168,7 @@ export enum CuratedTileSprite {
 
 Data is automatically saved to localStorage when:
 
-- You press **S** (manual save)
+- You press **O** (manual save)
 - The viewer is closed (auto-save on exit)
 
 **Storage Key**: `littlejs-rl-tileset-viewer-data`
@@ -207,7 +208,7 @@ src/ts/tilesetViewer/
 The viewer integrates with the Game class:
 
 - Initialized in `Game.init()` when `Game.isDebug === true`
-- Toggled with F12 key
+- Toggled with P key
 - Takes over update/render loops when active
 - Returns control to game when inactive
 
@@ -277,7 +278,7 @@ ICON_HEART_FULL       - UI element with state
 1. **Start with obvious tiles** - Floors, walls, characters
 2. **Use import** - Seed with existing AutoTileSprite names
 3. **Review ranges** - Document tile ranges systematically (rows 0-15)
-4. **Save frequently** - Press S after documenting several tiles
+4. **Save frequently** - Press O after documenting several tiles
 5. **Export often** - Back up your work with JSON exports
 
 ---
@@ -332,13 +333,14 @@ console.log(JSON.parse(data));
 │   Delete         Delete tile data          │
 │                                             │
 │ DATA                                        │
-│   S              Save to localStorage      │
+│   O              Save to localStorage      │
 │   E              Export data               │
 │   I              Import from enum          │
 │                                             │
 │ UI                                          │
 │   H              Toggle help               │
-│   F12 / Esc      Exit viewer               │
+│   P              Toggle viewer on/off      │
+│   Esc            Exit viewer               │
 └─────────────────────────────────────────────┘
 ```
 

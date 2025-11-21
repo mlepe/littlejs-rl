@@ -166,7 +166,7 @@ export default class Game {
     // Initialize tileset viewer (dev mode only)
     if (Game.isDebug) {
       this.tilesetViewer = new TilesetViewer();
-      console.log('[Game] Tileset viewer initialized (F12 to toggle)');
+      console.log('Tileset viewer initialized (P key to toggle)');
     }
 
     // Set up initial location (WILDERNESS for open world exploration)
@@ -326,8 +326,8 @@ export default class Game {
 
     // Tileset viewer mode (dev only)
     if (Game.isDebug && this.tilesetViewer) {
-      // Toggle viewer with F12
-      if (LJS.keyWasPressed('F12')) {
+      // Toggle viewer with P key
+      if (LJS.keyWasPressed('KeyP')) {
         if (this.tilesetViewer.isViewerActive()) {
           this.tilesetViewer.deactivate();
         } else {
