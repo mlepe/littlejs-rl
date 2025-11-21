@@ -1,0 +1,191 @@
+{
+  "entities": [
+    {
+      "id": "rat",
+      "name": "Giant Rat",
+      "description": "A diseased rat of unusual size. Common pest in dungeons.",
+      "type": "enemy",
+      "health": { "max": 15 },
+      "stats": { "strength": 3, "defense": 1, "speed": 1.2 },
+      "ai": { "type": "aggressive", "detectionRange": 6 },
+      "render": { "sprite": "ENEMY_RAT", "color": "brown" },
+      "relation": { "baseScore": -20, "minScore": -100, "maxScore": 0 }
+    },
+    {
+      "id": "slime",
+      "name": "Slime",
+      "description": "A gelatinous blob that dissolves organic matter.",
+      "type": "enemy",
+      "health": { "max": 25 },
+      "stats": { "strength": 2, "defense": 1, "speed": 0.5 },
+      "ai": { "type": "aggressive", "detectionRange": 5 },
+      "render": { "sprite": "ENEMY_SLIME", "color": "green" },
+      "relation": { "baseScore": -30, "minScore": -100, "maxScore": 0 }
+    },
+    {
+      "id": "goblin",
+      "name": "Goblin",
+      "description": "A small green humanoid. Cunning and greedy.",
+      "type": "enemy",
+      "health": { "max": 30 },
+      "stats": { "strength": 4, "defense": 2, "speed": 1.3 },
+      "ai": { "type": "aggressive", "detectionRange": 8 },
+      "render": { "sprite": "ENEMY_GOBLIN", "color": "green" },
+      "relation": { "baseScore": -30, "minScore": -100, "maxScore": 20 }
+    },
+    {
+      "id": "spider",
+      "name": "Giant Spider",
+      "description": "A large arachnid with venomous fangs.",
+      "type": "enemy",
+      "health": { "max": 35 },
+      "stats": { "strength": 5, "defense": 3, "speed": 1.4 },
+      "ai": { "type": "aggressive", "detectionRange": 7 },
+      "render": { "sprite": "ENEMY_SPIDER", "color": "black" },
+      "relation": { "baseScore": -40, "minScore": -100, "maxScore": 0 }
+    },
+    {
+      "id": "wolf",
+      "name": "Wolf",
+      "description": "A wild wolf hunting in the forest.",
+      "type": "enemy",
+      "health": { "max": 45 },
+      "stats": { "strength": 7, "defense": 4, "speed": 1.6 },
+      "ai": { "type": "aggressive", "detectionRange": 10 },
+      "render": { "sprite": "ENEMY_WOLF", "color": "gray" },
+      "relation": { "baseScore": -35, "minScore": -100, "maxScore": 10 }
+    },
+    {
+      "id": "bear",
+      "name": "Bear",
+      "description": "A massive bear. Extremely territorial.",
+      "type": "enemy",
+      "health": { "max": 80 },
+      "stats": { "strength": 12, "defense": 7, "speed": 1.0 },
+      "ai": { "type": "defensive", "detectionRange": 8 },
+      "render": { "sprite": "ENEMY_BEAR", "color": "brown" },
+      "relation": { "baseScore": -40, "minScore": -100, "maxScore": 0 }
+    },
+    {
+      "id": "bandit",
+      "name": "Bandit",
+      "description": "A lawless brigand seeking easy prey.",
+      "type": "enemy",
+      "health": { "max": 50 },
+      "stats": { "strength": 6, "defense": 5, "speed": 1.2 },
+      "ai": { "type": "aggressive", "detectionRange": 12 },
+      "render": { "sprite": "PLAYER_ROGUE", "color": "red" },
+      "relation": { "baseScore": -50, "minScore": -100, "maxScore": -10 }
+    },
+    {
+      "id": "ice_wolf",
+      "name": "Ice Wolf",
+      "description": "A frost-covered wolf adapted to the cold.",
+      "type": "enemy",
+      "health": { "max": 55 },
+      "stats": { "strength": 8, "defense": 5, "speed": 1.5 },
+      "ai": { "type": "aggressive", "detectionRange": 11 },
+      "render": { "sprite": "ENEMY_WOLF", "color": "cyan" },
+      "relation": { "baseScore": -40, "minScore": -100, "maxScore": 0 }
+    },
+    {
+      "id": "frost_giant",
+      "name": "Frost Giant",
+      "description": "A towering giant from the frozen north.",
+      "type": "boss",
+      "health": { "max": 150 },
+      "stats": { "strength": 18, "defense": 10, "speed": 0.8 },
+      "ai": { "type": "aggressive", "detectionRange": 15 },
+      "render": { "sprite": "BOSS_GIANT", "color": "cyan" },
+      "relation": { "baseScore": -80, "minScore": -100, "maxScore": -50 }
+    },
+    {
+      "id": "yeti",
+      "name": "Yeti",
+      "description": "The legendary snow creature of the mountains.",
+      "type": "enemy",
+      "health": { "max": 90 },
+      "stats": { "strength": 14, "defense": 8, "speed": 1.1 },
+      "ai": { "type": "aggressive", "detectionRange": 10 },
+      "render": { "sprite": "ENEMY_TROLL", "color": "white" },
+      "relation": { "baseScore": -60, "minScore": -100, "maxScore": -20 }
+    },
+    {
+      "id": "scorpion",
+      "name": "Giant Scorpion",
+      "description": "A venomous scorpion lurking in the desert.",
+      "type": "enemy",
+      "health": { "max": 40 },
+      "stats": { "strength": 6, "defense": 6, "speed": 1.0 },
+      "ai": { "type": "aggressive", "detectionRange": 7 },
+      "render": { "sprite": "ENEMY_SCORPION", "color": "yellow" },
+      "relation": { "baseScore": -35, "minScore": -100, "maxScore": 0 }
+    },
+    {
+      "id": "snake",
+      "name": "Sand Viper",
+      "description": "A deadly desert snake with potent venom.",
+      "type": "enemy",
+      "health": { "max": 30 },
+      "stats": { "strength": 4, "defense": 2, "speed": 1.3 },
+      "ai": { "type": "aggressive", "detectionRange": 6 },
+      "render": { "sprite": "ENEMY_SNAKE", "color": "yellow" },
+      "relation": { "baseScore": -30, "minScore": -100, "maxScore": 0 }
+    },
+    {
+      "id": "bat",
+      "name": "Giant Bat",
+      "description": "A large bat dwelling in caves.",
+      "type": "enemy",
+      "health": { "max": 25 },
+      "stats": { "strength": 3, "defense": 2, "speed": 1.8 },
+      "ai": { "type": "aggressive", "detectionRange": 12 },
+      "render": { "sprite": "ENEMY_BAT", "color": "black" },
+      "relation": { "baseScore": -25, "minScore": -100, "maxScore": 0 }
+    },
+    {
+      "id": "kobold",
+      "name": "Kobold",
+      "description": "A small reptilian humanoid living underground.",
+      "type": "enemy",
+      "health": { "max": 35 },
+      "stats": { "strength": 5, "defense": 3, "speed": 1.2 },
+      "ai": { "type": "aggressive", "detectionRange": 8 },
+      "render": { "sprite": "ENEMY_KOBOLD", "color": "orange" },
+      "relation": { "baseScore": -35, "minScore": -100, "maxScore": 10 }
+    },
+    {
+      "id": "goat",
+      "name": "Mountain Goat",
+      "description": "A sure-footed goat of the high peaks.",
+      "type": "creature",
+      "health": { "max": 30 },
+      "stats": { "strength": 4, "defense": 3, "speed": 1.3 },
+      "ai": { "type": "fleeing", "detectionRange": 10 },
+      "render": { "sprite": "ENEMY_GOAT", "color": "white" },
+      "relation": { "baseScore": 0, "minScore": -50, "maxScore": 50 }
+    },
+    {
+      "id": "deer",
+      "name": "Deer",
+      "description": "A graceful forest dweller.",
+      "type": "creature",
+      "health": { "max": 25 },
+      "stats": { "strength": 2, "defense": 1, "speed": 1.8 },
+      "ai": { "type": "fleeing", "detectionRange": 12 },
+      "render": { "sprite": "ENEMY_DEER", "color": "brown" },
+      "relation": { "baseScore": 10, "minScore": -20, "maxScore": 50 }
+    },
+    {
+      "id": "crab",
+      "name": "Giant Crab",
+      "description": "A large crustacean with powerful claws.",
+      "type": "enemy",
+      "health": { "max": 45 },
+      "stats": { "strength": 7, "defense": 8, "speed": 0.7 },
+      "ai": { "type": "defensive", "detectionRange": 6 },
+      "render": { "sprite": "ENEMY_CRAB", "color": "red" },
+      "relation": { "baseScore": -20, "minScore": -100, "maxScore": 0 }
+    }
+  ]
+}

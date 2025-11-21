@@ -1,6 +1,7 @@
 atlasing
 DOGMAN
 knockback
+merfolk
 overencumbered
 Subcats
 tilesheet

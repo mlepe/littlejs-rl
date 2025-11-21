@@ -14,6 +14,7 @@ import * as LJS from 'littlejsengine';
 
 import { LocationType } from './locationType';
 import { BiomeType } from './biomeConfig';
+import { getRandomBiomeForLocationType } from './environmentMetadata';
 
 import ECS from './ecs';
 import Location from './location';
@@ -86,10 +87,11 @@ export default class World {
 
   /**
    * Get or create a location at the specified world position
+   * If no biome is specified, selects biome based on world position
    * @param worldX - World X coordinate
    * @param worldY - World Y coordinate
-   * @param locationType - Optional location type (default: DUNGEON)
-   * @param biome - Optional biome type (default: FOREST)
+   * @param locationType - Optional location type (default: WILDERNESS)
+   * @param biome - Optional biome type (auto-selected if not provided)
    * @returns The location at the specified position
    * @throws Error if coordinates are out of bounds
    */
@@ -107,13 +109,21 @@ export default class World {
     let location = this.locations.get(key);
 
     if (!location) {
+      // Select appropriate location type if not specified
+      const finalLocationType =
+        locationType || this.selectLocationTypeForPosition(worldX, worldY);
+
+      // Select biome based on world position if not specified
+      const finalBiome =
+        biome || this.selectBiomeForPosition(worldX, worldY, finalLocationType);
+
       location = new Location(
         LJS.vec2(worldX, worldY),
         this.locationWidth,
         this.locationHeight,
         `Location_${worldX}_${worldY}`,
-        locationType,
-        biome
+        finalLocationType,
+        finalBiome
       );
       location.generate();
       this.locations.set(key, location);
@@ -279,6 +289,93 @@ export default class World {
         'relation',
         relationComponent
       );
+    }
+  }
+
+  /**
+   * Select an appropriate biome for a world position
+   * Uses world coordinates to create biome variety
+   * @param worldX - World X coordinate
+   * @param worldY - World Y coordinate
+   * @param locationType - Location type to consider
+   * @returns Appropriate biome for this position
+   * @private
+   */
+  private selectBiomeForPosition(
+    worldX: number,
+    worldY: number,
+    locationType: LocationType
+  ): BiomeType {
+    // Calculate normalized position (0-1)
+    const normX = worldX / this.width;
+    const normY = worldY / this.height;
+
+    // Use simple noise-like function (deterministic based on position)
+    const seed = worldX * 7 + worldY * 13;
+    const random = Math.abs(Math.sin(seed) * 10000) % 1;
+
+    // North (low Y) = colder, South (high Y) = warmer
+    // Use Y axis for temperature zones
+    const temperatureZone = normY;
+
+    // Use X axis + random for variety
+    const varietyFactor = (normX + random) % 1;
+
+    // Select biome based on temperature zone and variety
+    if (temperatureZone < 0.2) {
+      // Far north - very cold
+      return varietyFactor < 0.5 ? BiomeType.TUNDRA : BiomeType.SNOWY;
+    } else if (temperatureZone < 0.35) {
+      // North - cold
+      return varietyFactor < 0.6 ? BiomeType.SNOWY : BiomeType.MOUNTAIN;
+    } else if (temperatureZone < 0.65) {
+      // Central - temperate
+      if (varietyFactor < 0.3) return BiomeType.FOREST;
+      if (varietyFactor < 0.5) return BiomeType.MOUNTAIN;
+      if (varietyFactor < 0.7) return BiomeType.SWAMP;
+      if (varietyFactor < 0.9) return BiomeType.JUNGLE;
+      return BiomeType.BEACH;
+    } else if (temperatureZone < 0.85) {
+      // South - warm
+      if (varietyFactor < 0.4) return BiomeType.DESERT;
+      if (varietyFactor < 0.6) return BiomeType.BARREN;
+      if (varietyFactor < 0.8) return BiomeType.VOLCANIC;
+      return BiomeType.JUNGLE;
+    } else {
+      // Far south - hot
+      return varietyFactor < 0.7 ? BiomeType.DESERT : BiomeType.VOLCANIC;
+    }
+  }
+
+  /**
+   * Select an appropriate location type for a world position
+   * Creates variety with more wilderness, occasional dungeons/towns
+   * @param worldX - World X coordinate
+   * @param worldY - World Y coordinate
+   * @returns Location type for this position
+   * @private
+   */
+  private selectLocationTypeForPosition(
+    worldX: number,
+    worldY: number
+  ): LocationType {
+    // Use deterministic random based on position
+    const seed = worldX * 11 + worldY * 17;
+    const random = Math.abs(Math.sin(seed) * 10000) % 1;
+
+    // Mostly wilderness (70%), with points of interest
+    if (random < 0.7) {
+      return LocationType.WILDERNESS;
+    } else if (random < 0.8) {
+      return LocationType.CAVE;
+    } else if (random < 0.88) {
+      return LocationType.RUINS;
+    } else if (random < 0.94) {
+      return LocationType.DUNGEON;
+    } else if (random < 0.97) {
+      return LocationType.TOWN;
+    } else {
+      return LocationType.FACTION_BASE;
     }
   }
 }

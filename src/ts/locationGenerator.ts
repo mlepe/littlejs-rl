@@ -12,7 +12,7 @@
 
 import Location from './location';
 import { LocationType } from './locationType';
-import { TileType } from './tile';
+import { TileType, createTile } from './tile';
 import {
   getBiomeConfig,
   getRandomFloorTile,
@@ -231,11 +231,13 @@ export class LocationGenerator {
    * Fill entire location with walls (using biome-specific tiles)
    */
   private static fillWithWalls(location: Location): void {
-    const biomeConfig = getBiomeConfig(location.metadata.biome);
+    const biomeType = location.metadata.biome;
     for (let x = 0; x < location.width; x++) {
       for (let y = 0; y < location.height; y++) {
-        const wallTile = getRandomWallTile(biomeConfig);
-        location.setTileType(x, y, wallTile);
+        const wallSprite = getRandomWallTile(biomeType);
+        const wallTile = createTile(TileType.WALL);
+        wallTile.spriteIndex = wallSprite;
+        location.setTile(x, y, wallTile);
       }
     }
   }
@@ -244,11 +246,13 @@ export class LocationGenerator {
    * Fill entire location with floor (using biome-specific tiles)
    */
   private static fillWithFloor(location: Location): void {
-    const biomeConfig = getBiomeConfig(location.metadata.biome);
+    const biomeType = location.metadata.biome;
     for (let x = 0; x < location.width; x++) {
       for (let y = 0; y < location.height; y++) {
-        const floorTile = getRandomFloorTile(biomeConfig);
-        location.setTileType(x, y, floorTile);
+        const floorSprite = getRandomFloorTile(biomeType);
+        const floorTile = createTile(TileType.FLOOR);
+        floorTile.spriteIndex = floorSprite;
+        location.setTile(x, y, floorTile);
       }
     }
   }
@@ -348,11 +352,13 @@ export class LocationGenerator {
    * Carve out a room (using biome-specific floor tiles)
    */
   private static carveRoom(location: Location, room: Room): void {
-    const biomeConfig = getBiomeConfig(location.metadata.biome);
+    const biomeType = location.metadata.biome;
     for (let x = room.x; x < room.x + room.width; x++) {
       for (let y = room.y; y < room.y + room.height; y++) {
-        const floorTile = getRandomFloorTile(biomeConfig);
-        location.setTileType(x, y, floorTile);
+        const floorSprite = getRandomFloorTile(biomeType);
+        const floorTile = createTile(TileType.FLOOR);
+        floorTile.spriteIndex = floorSprite;
+        location.setTile(x, y, floorTile);
       }
     }
   }
@@ -361,27 +367,39 @@ export class LocationGenerator {
    * Carve out a building (room with walls, using biome-specific tiles)
    */
   private static carveBuilding(location: Location, building: Room): void {
-    const biomeConfig = getBiomeConfig(location.metadata.biome);
+    const biomeType = location.metadata.biome;
 
     // Build walls
     for (let x = building.x; x < building.x + building.width; x++) {
-      const wallTile1 = getRandomWallTile(biomeConfig);
-      const wallTile2 = getRandomWallTile(biomeConfig);
-      location.setTileType(x, building.y, wallTile1);
-      location.setTileType(x, building.y + building.height - 1, wallTile2);
+      const wallSprite1 = getRandomWallTile(biomeType);
+      const wallTile1 = createTile(TileType.WALL);
+      wallTile1.spriteIndex = wallSprite1;
+      location.setTile(x, building.y, wallTile1);
+
+      const wallSprite2 = getRandomWallTile(biomeType);
+      const wallTile2 = createTile(TileType.WALL);
+      wallTile2.spriteIndex = wallSprite2;
+      location.setTile(x, building.y + building.height - 1, wallTile2);
     }
     for (let y = building.y; y < building.y + building.height; y++) {
-      const wallTile1 = getRandomWallTile(biomeConfig);
-      const wallTile2 = getRandomWallTile(biomeConfig);
-      location.setTileType(building.x, y, wallTile1);
-      location.setTileType(building.x + building.width - 1, y, wallTile2);
+      const wallSprite1 = getRandomWallTile(biomeType);
+      const wallTile1 = createTile(TileType.WALL);
+      wallTile1.spriteIndex = wallSprite1;
+      location.setTile(building.x, y, wallTile1);
+
+      const wallSprite2 = getRandomWallTile(biomeType);
+      const wallTile2 = createTile(TileType.WALL);
+      wallTile2.spriteIndex = wallSprite2;
+      location.setTile(building.x + building.width - 1, y, wallTile2);
     }
 
     // Fill interior with floor
     for (let x = building.x + 1; x < building.x + building.width - 1; x++) {
       for (let y = building.y + 1; y < building.y + building.height - 1; y++) {
-        const floorTile = getRandomFloorTile(biomeConfig);
-        location.setTileType(x, y, floorTile);
+        const floorSprite = getRandomFloorTile(biomeType);
+        const floorTile = createTile(TileType.FLOOR);
+        floorTile.spriteIndex = floorSprite;
+        location.setTile(x, y, floorTile);
       }
     }
   }
@@ -390,7 +408,7 @@ export class LocationGenerator {
    * Carve out a ruined room (some walls missing, using biome-specific tiles)
    */
   private static carveRuinedRoom(location: Location, room: Room): void {
-    const biomeConfig = getBiomeConfig(location.metadata.biome);
+    const biomeType = location.metadata.biome;
     for (let x = room.x; x < room.x + room.width; x++) {
       for (let y = room.y; y < room.y + room.height; y++) {
         // Randomly keep some walls
@@ -401,11 +419,15 @@ export class LocationGenerator {
             y === room.y + room.height - 1) &&
           Math.random() > 0.4
         ) {
-          const wallTile = getRandomWallTile(biomeConfig);
-          location.setTileType(x, y, wallTile);
+          const wallSprite = getRandomWallTile(biomeType);
+          const wallTile = createTile(TileType.WALL);
+          wallTile.spriteIndex = wallSprite;
+          location.setTile(x, y, wallTile);
         } else {
-          const floorTile = getRandomFloorTile(biomeConfig);
-          location.setTileType(x, y, floorTile);
+          const floorSprite = getRandomFloorTile(biomeType);
+          const floorTile = createTile(TileType.FLOOR);
+          floorTile.spriteIndex = floorSprite;
+          location.setTile(x, y, floorTile);
         }
       }
     }
@@ -443,12 +465,14 @@ export class LocationGenerator {
     x2: number,
     y: number
   ): void {
-    const biomeConfig = getBiomeConfig(location.metadata.biome);
+    const biomeType = location.metadata.biome;
     const startX = Math.min(x1, x2);
     const endX = Math.max(x1, x2);
     for (let x = startX; x <= endX; x++) {
-      const floorTile = getRandomFloorTile(biomeConfig);
-      location.setTileType(x, y, floorTile);
+      const floorSprite = getRandomFloorTile(biomeType);
+      const floorTile = createTile(TileType.FLOOR);
+      floorTile.spriteIndex = floorSprite;
+      location.setTile(x, y, floorTile);
     }
   }
 
@@ -461,12 +485,14 @@ export class LocationGenerator {
     y2: number,
     x: number
   ): void {
-    const biomeConfig = getBiomeConfig(location.metadata.biome);
+    const biomeType = location.metadata.biome;
     const startY = Math.min(y1, y2);
     const endY = Math.max(y1, y2);
     for (let y = startY; y <= endY; y++) {
-      const floorTile = getRandomFloorTile(biomeConfig);
-      location.setTileType(x, y, floorTile);
+      const floorSprite = getRandomFloorTile(biomeType);
+      const floorTile = createTile(TileType.FLOOR);
+      floorTile.spriteIndex = floorSprite;
+      location.setTile(x, y, floorTile);
     }
   }
 
@@ -598,13 +624,20 @@ export class LocationGenerator {
     }
 
     // Apply to location (using biome-specific tiles)
-    const biomeConfig = getBiomeConfig(location.metadata.biome);
+    const biomeType = location.metadata.biome;
     for (let x = 0; x < location.width; x++) {
       for (let y = 0; y < location.height; y++) {
-        const tileType = grid[x][y]
-          ? getRandomWallTile(biomeConfig)
-          : getRandomFloorTile(biomeConfig);
-        location.setTileType(x, y, tileType);
+        if (grid[x][y]) {
+          const wallSprite = getRandomWallTile(biomeType);
+          const wallTile = createTile(TileType.WALL);
+          wallTile.spriteIndex = wallSprite;
+          location.setTile(x, y, wallTile);
+        } else {
+          const floorSprite = getRandomFloorTile(biomeType);
+          const floorTile = createTile(TileType.FLOOR);
+          floorTile.spriteIndex = floorSprite;
+          location.setTile(x, y, floorTile);
+        }
       }
     }
   }
