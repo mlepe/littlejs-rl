@@ -139,26 +139,30 @@ export interface BiomeEnvironment {
 
 /**
  * Weather types that can occur in biomes
- * (For future implementation)
  */
 export enum WeatherType {
   CLEAR = 'clear',
+  CLOUDY = 'cloudy',
   RAIN = 'rain',
+  HEAVY_RAIN = 'heavy_rain',
   SNOW = 'snow',
+  BLIZZARD = 'blizzard',
   FOG = 'fog',
   STORM = 'storm',
   SANDSTORM = 'sandstorm',
+  HEATWAVE = 'heatwave',
   ASH_FALL = 'ash_fall',
-  BLIZZARD = 'blizzard',
+  TOXIC_RAIN = 'toxic_rain',
 }
 
 /**
  * Weather configuration for a biome
- * (Prepared for future weather system)
  */
 export interface BiomeWeather {
-  /** Possible weather types */
-  possibleWeather: WeatherType[];
+  /** Common weather types (80% chance) */
+  common: WeatherType[];
+  /** Rare weather types (20% chance) */
+  rare: WeatherType[];
   /** Default weather */
   defaultWeather: WeatherType;
   /** Weather change frequency (lower = more frequent) */
@@ -229,7 +233,8 @@ BIOME_CONFIGS.set(BiomeType.DEFAULT, {
     fireResistanceModifier: 0,
   },
   weather: {
-    possibleWeather: [WeatherType.CLEAR],
+    common: [WeatherType.CLEAR, WeatherType.CLOUDY],
+    rare: [],
     defaultWeather: WeatherType.CLEAR,
     changeFrequency: 1000,
   },
@@ -264,9 +269,10 @@ BIOME_CONFIGS.set(BiomeType.FOREST, {
     fireResistanceModifier: 0,
   },
   weather: {
-    possibleWeather: [WeatherType.CLEAR, WeatherType.RAIN, WeatherType.FOG],
+    common: [WeatherType.CLEAR, WeatherType.CLOUDY, WeatherType.RAIN],
+    rare: [WeatherType.FOG, WeatherType.STORM],
     defaultWeather: WeatherType.CLEAR,
-    changeFrequency: 500,
+    changeFrequency: 300,
   },
   compatibleTransitions: [
     BiomeType.MOUNTAIN,
@@ -302,9 +308,10 @@ BIOME_CONFIGS.set(BiomeType.MOUNTAIN, {
     fireResistanceModifier: 0.1,
   },
   weather: {
-    possibleWeather: [WeatherType.CLEAR, WeatherType.SNOW, WeatherType.FOG],
+    common: [WeatherType.CLEAR, WeatherType.CLOUDY, WeatherType.FOG],
+    rare: [WeatherType.SNOW, WeatherType.STORM],
     defaultWeather: WeatherType.CLEAR,
-    changeFrequency: 600,
+    changeFrequency: 400,
   },
   compatibleTransitions: [
     BiomeType.FOREST,
@@ -341,11 +348,8 @@ BIOME_CONFIGS.set(BiomeType.SNOWY, {
     fireResistanceModifier: 0.2,
   },
   weather: {
-    possibleWeather: [
-      WeatherType.CLEAR,
-      WeatherType.SNOW,
-      WeatherType.BLIZZARD,
-    ],
+    common: [WeatherType.SNOW, WeatherType.CLOUDY],
+    rare: [WeatherType.CLEAR, WeatherType.BLIZZARD],
     defaultWeather: WeatherType.SNOW,
     changeFrequency: 400,
   },
@@ -381,7 +385,8 @@ BIOME_CONFIGS.set(BiomeType.TUNDRA, {
     fireResistanceModifier: 0.3,
   },
   weather: {
-    possibleWeather: [WeatherType.SNOW, WeatherType.BLIZZARD],
+    common: [WeatherType.SNOW, WeatherType.BLIZZARD],
+    rare: [WeatherType.CLEAR],
     defaultWeather: WeatherType.BLIZZARD,
     changeFrequency: 300,
   },
@@ -412,9 +417,10 @@ BIOME_CONFIGS.set(BiomeType.BARREN, {
     fireResistanceModifier: -0.1,
   },
   weather: {
-    possibleWeather: [WeatherType.CLEAR, WeatherType.STORM],
+    common: [WeatherType.CLEAR, WeatherType.STORM],
+    rare: [WeatherType.SANDSTORM],
     defaultWeather: WeatherType.CLEAR,
-    changeFrequency: 800,
+    changeFrequency: 500,
   },
   compatibleTransitions: [
     BiomeType.DESERT,
@@ -448,9 +454,10 @@ BIOME_CONFIGS.set(BiomeType.DESERT, {
     fireResistanceModifier: -0.3,
   },
   weather: {
-    possibleWeather: [WeatherType.CLEAR, WeatherType.SANDSTORM],
+    common: [WeatherType.CLEAR, WeatherType.HEATWAVE],
+    rare: [WeatherType.SANDSTORM],
     defaultWeather: WeatherType.CLEAR,
-    changeFrequency: 700,
+    changeFrequency: 600,
   },
   compatibleTransitions: [BiomeType.BARREN, BiomeType.BEACH, BiomeType.DEFAULT],
 });
@@ -480,9 +487,10 @@ BIOME_CONFIGS.set(BiomeType.BEACH, {
     fireResistanceModifier: 0,
   },
   weather: {
-    possibleWeather: [WeatherType.CLEAR, WeatherType.RAIN, WeatherType.STORM],
+    common: [WeatherType.CLEAR, WeatherType.CLOUDY, WeatherType.RAIN],
+    rare: [WeatherType.STORM, WeatherType.FOG],
     defaultWeather: WeatherType.CLEAR,
-    changeFrequency: 600,
+    changeFrequency: 300,
   },
   compatibleTransitions: [BiomeType.WATER, BiomeType.DESERT, BiomeType.DEFAULT],
 });
@@ -512,9 +520,10 @@ BIOME_CONFIGS.set(BiomeType.WATER, {
     fireResistanceModifier: 0.4,
   },
   weather: {
-    possibleWeather: [WeatherType.CLEAR, WeatherType.RAIN, WeatherType.STORM],
+    common: [WeatherType.CLEAR, WeatherType.CLOUDY, WeatherType.RAIN],
+    rare: [WeatherType.STORM, WeatherType.FOG],
     defaultWeather: WeatherType.CLEAR,
-    changeFrequency: 500,
+    changeFrequency: 250,
   },
   compatibleTransitions: [BiomeType.BEACH, BiomeType.SWAMP, BiomeType.DEFAULT],
 });
@@ -545,9 +554,10 @@ BIOME_CONFIGS.set(BiomeType.VOLCANIC, {
     fireResistanceModifier: -0.5,
   },
   weather: {
-    possibleWeather: [WeatherType.CLEAR, WeatherType.ASH_FALL],
+    common: [WeatherType.CLEAR, WeatherType.ASH_FALL],
+    rare: [WeatherType.HEATWAVE],
     defaultWeather: WeatherType.ASH_FALL,
-    changeFrequency: 900,
+    changeFrequency: 250,
   },
   compatibleTransitions: [
     BiomeType.UNDERGROUND,
@@ -584,9 +594,10 @@ BIOME_CONFIGS.set(BiomeType.SWAMP, {
     fireResistanceModifier: 0.1,
   },
   weather: {
-    possibleWeather: [WeatherType.CLEAR, WeatherType.RAIN, WeatherType.FOG],
+    common: [WeatherType.CLOUDY, WeatherType.FOG, WeatherType.RAIN],
+    rare: [WeatherType.CLEAR],
     defaultWeather: WeatherType.FOG,
-    changeFrequency: 400,
+    changeFrequency: 200,
   },
   compatibleTransitions: [
     BiomeType.FOREST,
@@ -624,9 +635,10 @@ BIOME_CONFIGS.set(BiomeType.JUNGLE, {
     fireResistanceModifier: 0,
   },
   weather: {
-    possibleWeather: [WeatherType.CLEAR, WeatherType.RAIN, WeatherType.STORM],
+    common: [WeatherType.CLOUDY, WeatherType.RAIN, WeatherType.HEAVY_RAIN],
+    rare: [WeatherType.CLEAR, WeatherType.STORM],
     defaultWeather: WeatherType.RAIN,
-    changeFrequency: 300,
+    changeFrequency: 180,
   },
   compatibleTransitions: [BiomeType.FOREST, BiomeType.SWAMP, BiomeType.DEFAULT],
 });
@@ -657,9 +669,10 @@ BIOME_CONFIGS.set(BiomeType.UNDERGROUND, {
     fireResistanceModifier: 0,
   },
   weather: {
-    possibleWeather: [WeatherType.CLEAR],
+    common: [WeatherType.CLEAR],
+    rare: [],
     defaultWeather: WeatherType.CLEAR,
-    changeFrequency: 9999,
+    changeFrequency: 1000,
   },
   compatibleTransitions: [
     BiomeType.MOUNTAIN,
@@ -696,9 +709,10 @@ BIOME_CONFIGS.set(BiomeType.CORRUPTED, {
     fireResistanceModifier: -0.2,
   },
   weather: {
-    possibleWeather: [WeatherType.CLEAR, WeatherType.FOG],
+    common: [WeatherType.FOG, WeatherType.TOXIC_RAIN],
+    rare: [WeatherType.CLEAR, WeatherType.STORM],
     defaultWeather: WeatherType.FOG,
-    changeFrequency: 600,
+    changeFrequency: 250,
   },
   compatibleTransitions: [
     BiomeType.BARREN,

@@ -71,13 +71,14 @@ This is the central index for all documentation in the LittleJS Roguelike projec
 
 ### World & Navigation
 
-| Document                                                                   | Purpose                                | Read When                        |
-| -------------------------------------------------------------------------- | -------------------------------------- | -------------------------------- |
-| [LOCATION-TYPES-BIOMES.md](./LOCATION-TYPES-BIOMES.md)                     | Location types, biomes, and generation | Creating new location types      |
-| [LOCATION-TRANSITIONS.md](./LOCATION-TRANSITIONS.md)                       | Moving between locations               | Implementing world navigation    |
-| [WORLD-MAP.md](./WORLD-MAP.md)                                             | World map navigation system            | Adding world map features        |
-| [WORLD-MAP-QUICKREF.md](./WORLD-MAP-QUICKREF.md)                           | Quick reference for world map          | Looking up world map details     |
-| [LOCATION-IMPLEMENTATION-SUMMARY.md](./LOCATION-IMPLEMENTATION-SUMMARY.md) | Location system implementation summary | Understanding location internals |
+| Document                                                                   | Purpose                                         | Read When                        |
+| -------------------------------------------------------------------------- | ----------------------------------------------- | -------------------------------- |
+| [BIOME-SYSTEM.md](./BIOME-SYSTEM.md)                                       | **Complete biome system guide**                 | **Working with biomes or tiles** |
+| [LOCATION-TYPES-BIOMES.md](./LOCATION-TYPES-BIOMES.md)                     | Location types, biomes, and generation (legacy) | Creating new location types      |
+| [LOCATION-TRANSITIONS.md](./LOCATION-TRANSITIONS.md)                       | Moving between locations                        | Implementing world navigation    |
+| [WORLD-MAP.md](./WORLD-MAP.md)                                             | World map navigation system                     | Adding world map features        |
+| [WORLD-MAP-QUICKREF.md](./WORLD-MAP-QUICKREF.md)                           | Quick reference for world map                   | Looking up world map details     |
+| [LOCATION-IMPLEMENTATION-SUMMARY.md](./LOCATION-IMPLEMENTATION-SUMMARY.md) | Location system implementation summary          | Understanding location internals |
 
 ### Input & UI
 
