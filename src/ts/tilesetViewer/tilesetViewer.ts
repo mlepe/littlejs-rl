@@ -53,6 +53,13 @@ export class TilesetViewer {
   private showHelp: boolean = true;
   private isActive: boolean = false;
 
+  // Clipboard for copy/paste metadata
+  private clipboardMetadata: {
+    categories: number[];
+    subcategories: number[];
+    notes?: string;
+  } | null = null;
+
   // Stats
   private totalTiles: number;
   private documentedTiles: number = 0;
@@ -181,6 +188,12 @@ export class TilesetViewer {
     }
     if (LJS.keyWasPressed('Delete')) {
       this.deleteCurrentTile();
+    }
+    if (LJS.keyWasPressed('KeyC')) {
+      this.copyMetadata();
+    }
+    if (LJS.keyWasPressed('KeyV')) {
+      this.pasteMetadata();
     }
     if (LJS.keyWasPressed('KeyO')) {
       this.saveData();
@@ -313,6 +326,58 @@ export class TilesetViewer {
         console.log(`[TilesetViewer] Deleted tile ${tileIndex}`);
       }
     }
+  }
+
+  /**
+   * Copy metadata from current tile to clipboard
+   */
+  private copyMetadata(): void {
+    const tileIndex = this.getCurrentTileIndex();
+    const metadata = this.tileData.get(tileIndex);
+
+    if (metadata && metadata.isDocumented) {
+      this.clipboardMetadata = {
+        categories: [...metadata.categories],
+        subcategories: [...metadata.subcategories],
+        notes: metadata.notes,
+      };
+      console.log(`[TilesetViewer] Copied metadata from tile ${tileIndex}`);
+      alert('Metadata copied to clipboard!');
+    } else {
+      alert('No metadata to copy from this tile.');
+    }
+  }
+
+  /**
+   * Paste metadata from clipboard to current tile
+   */
+  private pasteMetadata(): void {
+    if (!this.clipboardMetadata) {
+      alert('No metadata in clipboard. Copy a tile first with C key.');
+      return;
+    }
+
+    const tileIndex = this.getCurrentTileIndex();
+    const existing = this.tileData.get(tileIndex);
+
+    if (!existing || !existing.isDocumented) {
+      alert(
+        'Cannot paste to an undocumented tile. Please name the tile first (Enter key).'
+      );
+      return;
+    }
+
+    // Paste metadata, preserving name and alternate names
+    this.tileData.set(tileIndex, {
+      ...existing,
+      categories: [...this.clipboardMetadata.categories],
+      subcategories: [...this.clipboardMetadata.subcategories],
+      notes: this.clipboardMetadata.notes,
+    });
+
+    this.updateStats();
+    console.log(`[TilesetViewer] Pasted metadata to tile ${tileIndex}`);
+    alert('Metadata pasted!');
   }
 
   /**
@@ -594,6 +659,8 @@ export class TilesetViewer {
       'Home/End - Jump horizontal',
       'Enter - Edit tile',
       'Delete - Delete tile',
+      'C - Copy metadata',
+      'V - Paste metadata',
       'O - Save to localStorage',
       'E - Export data',
       'I - Import from enum',
