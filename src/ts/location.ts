@@ -12,13 +12,13 @@
 
 import * as LJS from 'littlejsengine';
 
-import {
-  BiomeType,
-  LocationMetadata,
-  LocationType,
-  createLocationMetadata,
-} from './locationType';
+import { LocationType } from './locationType';
 import { Tile, TileType, createTile } from './tile';
+import {
+  EnvironmentMetadata,
+  createEnvironmentMetadata,
+} from './environmentMetadata';
+import { BiomeType } from './biomeConfig';
 
 import Global from './global';
 import { LocationGenerator } from './locationGenerator';
@@ -57,7 +57,7 @@ export default class Location {
   readonly width: number;
   readonly height: number;
   readonly worldPosition: LJS.Vector2;
-  readonly metadata: LocationMetadata;
+  readonly metadata: EnvironmentMetadata;
 
   private readonly tiles: Map<string, Tile>; // "x,y" -> Tile (without entity tracking)
   private readonly tileLayer: LJS.TileLayer;
@@ -69,13 +69,13 @@ export default class Location {
     height: number,
     name?: string,
     locationType: LocationType = LocationType.DUNGEON,
-    biome: BiomeType = BiomeType.FOREST
+    biome: BiomeType = BiomeType.DEFAULT
   ) {
     this.name = name || `Location_${worldPosition.x}_${worldPosition.y}`;
     this.worldPosition = worldPosition;
     this.width = width;
     this.height = height;
-    this.metadata = createLocationMetadata(locationType, biome, this.name);
+    this.metadata = createEnvironmentMetadata(locationType, biome, this.name);
     this.tiles = new Map();
 
     // Initialize LittleJS tile layers

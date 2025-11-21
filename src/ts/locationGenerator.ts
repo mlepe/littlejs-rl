@@ -13,6 +13,11 @@
 import Location from './location';
 import { LocationType } from './locationType';
 import { TileType } from './tile';
+import {
+  getBiomeConfig,
+  getRandomFloorTile,
+  getRandomWallTile,
+} from './biomeConfig';
 
 /**
  * Room structure for procedural generation
@@ -223,23 +228,27 @@ export class LocationGenerator {
   // ============================================================================
 
   /**
-   * Fill entire location with walls
+   * Fill entire location with walls (using biome-specific tiles)
    */
   private static fillWithWalls(location: Location): void {
+    const biomeConfig = getBiomeConfig(location.metadata.biome);
     for (let x = 0; x < location.width; x++) {
       for (let y = 0; y < location.height; y++) {
-        location.setTileType(x, y, TileType.WALL);
+        const wallTile = getRandomWallTile(biomeConfig);
+        location.setTileType(x, y, wallTile);
       }
     }
   }
 
   /**
-   * Fill entire location with floor
+   * Fill entire location with floor (using biome-specific tiles)
    */
   private static fillWithFloor(location: Location): void {
+    const biomeConfig = getBiomeConfig(location.metadata.biome);
     for (let x = 0; x < location.width; x++) {
       for (let y = 0; y < location.height; y++) {
-        location.setTileType(x, y, TileType.FLOOR);
+        const floorTile = getRandomFloorTile(biomeConfig);
+        location.setTileType(x, y, floorTile);
       }
     }
   }
@@ -336,42 +345,52 @@ export class LocationGenerator {
   }
 
   /**
-   * Carve out a room
+   * Carve out a room (using biome-specific floor tiles)
    */
   private static carveRoom(location: Location, room: Room): void {
+    const biomeConfig = getBiomeConfig(location.metadata.biome);
     for (let x = room.x; x < room.x + room.width; x++) {
       for (let y = room.y; y < room.y + room.height; y++) {
-        location.setTileType(x, y, TileType.FLOOR);
+        const floorTile = getRandomFloorTile(biomeConfig);
+        location.setTileType(x, y, floorTile);
       }
     }
   }
 
   /**
-   * Carve out a building (room with walls)
+   * Carve out a building (room with walls, using biome-specific tiles)
    */
   private static carveBuilding(location: Location, building: Room): void {
+    const biomeConfig = getBiomeConfig(location.metadata.biome);
+
     // Build walls
     for (let x = building.x; x < building.x + building.width; x++) {
-      location.setTileType(x, building.y, TileType.WALL);
-      location.setTileType(x, building.y + building.height - 1, TileType.WALL);
+      const wallTile1 = getRandomWallTile(biomeConfig);
+      const wallTile2 = getRandomWallTile(biomeConfig);
+      location.setTileType(x, building.y, wallTile1);
+      location.setTileType(x, building.y + building.height - 1, wallTile2);
     }
     for (let y = building.y; y < building.y + building.height; y++) {
-      location.setTileType(building.x, y, TileType.WALL);
-      location.setTileType(building.x + building.width - 1, y, TileType.WALL);
+      const wallTile1 = getRandomWallTile(biomeConfig);
+      const wallTile2 = getRandomWallTile(biomeConfig);
+      location.setTileType(building.x, y, wallTile1);
+      location.setTileType(building.x + building.width - 1, y, wallTile2);
     }
 
     // Fill interior with floor
     for (let x = building.x + 1; x < building.x + building.width - 1; x++) {
       for (let y = building.y + 1; y < building.y + building.height - 1; y++) {
-        location.setTileType(x, y, TileType.FLOOR);
+        const floorTile = getRandomFloorTile(biomeConfig);
+        location.setTileType(x, y, floorTile);
       }
     }
   }
 
   /**
-   * Carve out a ruined room (some walls missing)
+   * Carve out a ruined room (some walls missing, using biome-specific tiles)
    */
   private static carveRuinedRoom(location: Location, room: Room): void {
+    const biomeConfig = getBiomeConfig(location.metadata.biome);
     for (let x = room.x; x < room.x + room.width; x++) {
       for (let y = room.y; y < room.y + room.height; y++) {
         // Randomly keep some walls
@@ -382,9 +401,11 @@ export class LocationGenerator {
             y === room.y + room.height - 1) &&
           Math.random() > 0.4
         ) {
-          location.setTileType(x, y, TileType.WALL);
+          const wallTile = getRandomWallTile(biomeConfig);
+          location.setTileType(x, y, wallTile);
         } else {
-          location.setTileType(x, y, TileType.FLOOR);
+          const floorTile = getRandomFloorTile(biomeConfig);
+          location.setTileType(x, y, floorTile);
         }
       }
     }
@@ -414,7 +435,7 @@ export class LocationGenerator {
   }
 
   /**
-   * Carve horizontal corridor
+   * Carve horizontal corridor (using biome-specific floor tiles)
    */
   private static carveHorizontalCorridor(
     location: Location,
@@ -422,15 +443,17 @@ export class LocationGenerator {
     x2: number,
     y: number
   ): void {
+    const biomeConfig = getBiomeConfig(location.metadata.biome);
     const startX = Math.min(x1, x2);
     const endX = Math.max(x1, x2);
     for (let x = startX; x <= endX; x++) {
-      location.setTileType(x, y, TileType.FLOOR);
+      const floorTile = getRandomFloorTile(biomeConfig);
+      location.setTileType(x, y, floorTile);
     }
   }
 
   /**
-   * Carve vertical corridor
+   * Carve vertical corridor (using biome-specific floor tiles)
    */
   private static carveVerticalCorridor(
     location: Location,
@@ -438,10 +461,12 @@ export class LocationGenerator {
     y2: number,
     x: number
   ): void {
+    const biomeConfig = getBiomeConfig(location.metadata.biome);
     const startY = Math.min(y1, y2);
     const endY = Math.max(y1, y2);
     for (let y = startY; y <= endY; y++) {
-      location.setTileType(x, y, TileType.FLOOR);
+      const floorTile = getRandomFloorTile(biomeConfig);
+      location.setTileType(x, y, floorTile);
     }
   }
 
@@ -572,10 +597,14 @@ export class LocationGenerator {
       grid.splice(0, grid.length, ...newGrid);
     }
 
-    // Apply to location
+    // Apply to location (using biome-specific tiles)
+    const biomeConfig = getBiomeConfig(location.metadata.biome);
     for (let x = 0; x < location.width; x++) {
       for (let y = 0; y < location.height; y++) {
-        location.setTileType(x, y, grid[x][y] ? TileType.WALL : TileType.FLOOR);
+        const tileType = grid[x][y]
+          ? getRandomWallTile(biomeConfig)
+          : getRandomFloorTile(biomeConfig);
+        location.setTileType(x, y, tileType);
       }
     }
   }

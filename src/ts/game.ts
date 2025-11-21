@@ -12,7 +12,8 @@
 
 import * as LJS from 'littlejsengine';
 
-import { BiomeType, LocationType } from './locationType';
+import { LocationType } from './locationType';
+import { BiomeType } from './biomeConfig';
 import {
   addCharges,
   addConsumable,
