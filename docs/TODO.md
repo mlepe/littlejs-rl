@@ -22,6 +22,7 @@ This document tracks ongoing tasks, features to implement, and technical debt fo
 
 ### Immediate Tasks
 
+- [ ] **Fix: TileLayers stay rendered when changing location/moving to the world map, each new layer rendering over the precedent ones**. 
 - [ ] **Integrate biome system with world/location generation** - Use biome features in world and location generation
 - [ ] **Fix LocationGenerator bugs** - Address biome tile resolution issues
 - [ ] **Define missing entities** - Create entity definitions for biome spawn tables (rat, spider, goblin, wolf, etc.)
