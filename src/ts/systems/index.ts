@@ -50,3 +50,4 @@ export * from './environmentalSystem';
 export * from './biomeTransitionSystem';
 export * from './weatherSystem';
 export * from './chargesSystem';
+export * from './factionSystem';

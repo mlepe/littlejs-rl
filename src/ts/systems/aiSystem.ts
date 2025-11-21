@@ -21,6 +21,7 @@ import ECS from '../ecs';
 import { collisionSystem } from './collisionSystem';
 import { combatSystem } from './combatSystem';
 import { getRelationScore } from './relationSystem';
+import { shouldAttackFaction } from './factionSystem';
 
 /**
  * AI System - Controls entity behavior based on disposition and relations
@@ -68,30 +69,43 @@ export function aiSystem(ecs: ECS, playerEntityId: number): void {
     // Get relation score to determine if entity should attack
     const relationScore = getRelationScore(ecs, entityId, playerEntityId) ?? 0;
 
+    // Check faction relations first (overrides disposition for faction members)
+    const factionAttack = shouldAttackFaction(ecs, entityId, playerEntityId);
+
     // Determine if entity should be hostile based on disposition and relation
     let shouldAttack = false;
-    switch (ai.disposition) {
-      case 'peaceful':
-        shouldAttack = false; // Never attacks
-        break;
-      case 'neutral':
-        shouldAttack = relationScore < -20; // Attack if significantly negative
-        break;
-      case 'defensive':
-        shouldAttack = relationScore < -40; // Attack if very negative
-        break;
-      case 'aggressive':
-        shouldAttack = relationScore < 0; // Attack if any negativity
-        break;
-      case 'hostile':
-        shouldAttack = relationScore <= 10; // Attack unless positive relation
-        break;
-      case 'patrol':
-        shouldAttack = relationScore < -10; // Attack threats during patrol
-        break;
-      case 'fleeing':
-        shouldAttack = false; // Never attacks, only flees
-        break;
+
+    // Faction relations take priority if both entities have factions
+    if (
+      ecs.getComponent(entityId, 'faction') &&
+      ecs.getComponent(playerEntityId, 'faction')
+    ) {
+      shouldAttack = factionAttack;
+    } else {
+      // Fall back to disposition-based behavior
+      switch (ai.disposition) {
+        case 'peaceful':
+          shouldAttack = false; // Never attacks
+          break;
+        case 'neutral':
+          shouldAttack = relationScore < -20; // Attack if significantly negative
+          break;
+        case 'defensive':
+          shouldAttack = relationScore < -40; // Attack if very negative
+          break;
+        case 'aggressive':
+          shouldAttack = relationScore < 0; // Attack if any negativity
+          break;
+        case 'hostile':
+          shouldAttack = relationScore <= 10; // Attack unless positive relation
+          break;
+        case 'patrol':
+          shouldAttack = relationScore < -10; // Attack threats during patrol
+          break;
+        case 'fleeing':
+          shouldAttack = false; // Never attacks, only flees
+          break;
+      }
     }
 
     // Behavior execution

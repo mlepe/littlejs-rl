@@ -40,3 +40,4 @@ export * from './visualEffect';
 export * from './state';
 export * from './environmental';
 export * from './weather';
+export * from './faction';

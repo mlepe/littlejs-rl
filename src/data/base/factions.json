@@ -1,0 +1,115 @@
+{
+  "$schema": "../../types/dataSchemas.ts#/definitions/FactionData",
+  "factions": [
+    {
+      "id": "player",
+      "name": "Adventurers",
+      "description": "Independent explorers and heroes.",
+      "allies": ["townsfolk", "merchants"],
+      "enemies": ["bandits", "undead", "demons", "corrupted"],
+      "neutral": ["wildlife", "jungle_tribes"],
+      "defaultReputation": 50,
+      "color": "blue"
+    },
+    {
+      "id": "townsfolk",
+      "name": "Townsfolk",
+      "description": "Peaceful villagers and town citizens.",
+      "allies": ["player", "merchants"],
+      "enemies": ["bandits", "undead", "demons"],
+      "neutral": ["wildlife"],
+      "defaultReputation": 60,
+      "color": "green"
+    },
+    {
+      "id": "merchants",
+      "name": "Merchant Guild",
+      "description": "Traders and craftsmen.",
+      "allies": ["player", "townsfolk"],
+      "enemies": ["bandits"],
+      "neutral": ["wildlife", "jungle_tribes"],
+      "defaultReputation": 50,
+      "color": "gold"
+    },
+    {
+      "id": "bandits",
+      "name": "Bandit Clans",
+      "description": "Lawless raiders and thieves.",
+      "allies": [],
+      "enemies": ["player", "townsfolk", "merchants"],
+      "neutral": ["wildlife"],
+      "defaultReputation": -50,
+      "color": "red"
+    },
+    {
+      "id": "undead",
+      "name": "Undead Legion",
+      "description": "Mindless servants of dark necromancy.",
+      "allies": ["demons", "corrupted"],
+      "enemies": ["player", "townsfolk", "wildlife"],
+      "neutral": [],
+      "defaultReputation": -100,
+      "color": "gray"
+    },
+    {
+      "id": "demons",
+      "name": "Demon Horde",
+      "description": "Fiendish entities from other realms.",
+      "allies": ["undead", "corrupted"],
+      "enemies": ["player", "townsfolk", "wildlife"],
+      "neutral": [],
+      "defaultReputation": -100,
+      "color": "purple"
+    },
+    {
+      "id": "corrupted",
+      "name": "Corrupted",
+      "description": "Beings twisted by dark magic.",
+      "allies": ["undead", "demons"],
+      "enemies": ["player", "townsfolk", "wildlife"],
+      "neutral": [],
+      "defaultReputation": -100,
+      "color": "violet"
+    },
+    {
+      "id": "wildlife",
+      "name": "Wildlife",
+      "description": "Natural creatures of the world.",
+      "allies": [],
+      "enemies": ["undead", "demons", "corrupted"],
+      "neutral": ["player", "townsfolk", "bandits", "jungle_tribes"],
+      "defaultReputation": 0,
+      "color": "brown"
+    },
+    {
+      "id": "jungle_tribes",
+      "name": "Jungle Tribes",
+      "description": "Indigenous warriors of the deep jungle.",
+      "allies": [],
+      "enemies": ["corrupted"],
+      "neutral": ["player", "townsfolk", "wildlife", "bandits"],
+      "defaultReputation": 0,
+      "color": "lime"
+    },
+    {
+      "id": "frost_clans",
+      "name": "Frost Clans",
+      "description": "Nomadic hunters of the frozen north.",
+      "allies": [],
+      "enemies": ["corrupted", "undead"],
+      "neutral": ["player", "wildlife"],
+      "defaultReputation": 0,
+      "color": "cyan"
+    },
+    {
+      "id": "desert_nomads",
+      "name": "Desert Nomads",
+      "description": "Wandering tribes of the arid wastes.",
+      "allies": [],
+      "enemies": ["bandits"],
+      "neutral": ["player", "merchants", "wildlife"],
+      "defaultReputation": 0,
+      "color": "tan"
+    }
+  ]
+}
