@@ -22,6 +22,10 @@ This document tracks ongoing tasks, features to implement, and technical debt fo
 
 ### Immediate Tasks
 
+- [ ] **Integrate biome system with world/location generation** - Use biome features in world and location generation
+- [ ] **Fix LocationGenerator bugs** - Address biome tile resolution issues
+- [ ] **Define missing entities** - Create entity definitions for biome spawn tables (rat, spider, goblin, wolf, etc.)
+- [ ] **Implement faction system** - Add faction support for entity relationships and world building
 - [ ] **Implement tile zones** - Add TileZones functionality for region-based sprite management
 - [ ] **Player death handling** - Implement game over, respawn, or permadeath mechanics
 - [ ] **Update data usage examples** - Update `src/ts/examples/dataUsageExample.ts` to use new Location API
@@ -33,7 +37,7 @@ This document tracks ongoing tasks, features to implement, and technical debt fo
 - [ ] **Proper use of tile resolver and color palette** - Review data and code for proper use of tile resolver and color palette
 - [ ] **Tile zones** - Implement TileZones for better tile categorization
 - [ ] **Biome management** - Implement biome-specific tile and entity configurations
-- [X] **Tileset viewer and editor** - Implement tileset viewer in-game to view and edit tile names, and properties.
+- [x] **Tileset viewer and editor** - Implement tileset viewer in-game to view and edit tile names, and properties.
 - [ ] **Tileset viewer fixes** - Fix help not displaying, weird rendering
 - [ ] **Tileset viewer improvements** - Add more properties, like biome, variants, zones, and JSON import.
 
