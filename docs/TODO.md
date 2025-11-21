@@ -33,7 +33,9 @@ This document tracks ongoing tasks, features to implement, and technical debt fo
 - [ ] **Proper use of tile resolver and color palette** - Review data and code for proper use of tile resolver and color palette
 - [ ] **Tile zones** - Implement TileZones for better tile categorization
 - [ ] **Biome management** - Implement biome-specific tile and entity configurations
-- [ ] **Tileset viewer and editor** - Implement tileset viewer in-game to view and edit tile names, and properties. [IN PROGRESS]
+- [X] **Tileset viewer and editor** - Implement tileset viewer in-game to view and edit tile names, and properties.
+- [ ] **Tileset viewer fixes** - Fix help not displaying, weird rendering
+- [ ] **Tileset viewer improvements** - Add more properties, like biome, variants, zones, and JSON import.
 
 ### Critical Systems
 

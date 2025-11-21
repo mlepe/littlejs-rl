@@ -24,6 +24,9 @@ import {
 /**
  * Interactive tileset viewer for documenting tiles
  * Dev-mode only tool for completing tile configuration
+ *
+ * @todo Set display to fit screen
+ * @todo Add batch editing (ie. to define tile zones)
  */
 export class TilesetViewer {
   private cursorX: number = 0;
@@ -119,6 +122,8 @@ export class TilesetViewer {
 
   /**
    * Handle input for navigation and actions
+   *
+   * @todo Move input handling in dedicated handleInput() function?
    */
   update(): void {
     if (!this.isActive) return;
@@ -242,6 +247,13 @@ export class TilesetViewer {
     );
     if (subcategoryStr === null) return;
 
+    const alternateNamesStr = prompt(
+      `Tile ${tileIndex} - Alternate names (comma-separated, optional):\n` +
+        'e.g., "GROUND, FLOOR_STONE" - creates multiple enum keys for same tile',
+      existing.alternateNames?.join(', ') || ''
+    );
+    if (alternateNamesStr === null) return;
+
     const notes = prompt(
       `Tile ${tileIndex} - Notes (optional):`,
       existing.notes || ''
@@ -258,10 +270,16 @@ export class TilesetViewer {
       .map((s) => parseInt(s.trim()))
       .filter((n) => !isNaN(n) && n >= 0 && n <= 34);
 
+    const alternateNames = alternateNamesStr
+      .split(',')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
     // Save
     this.tileData.set(tileIndex, {
       index: tileIndex,
       name: name.trim(),
+      alternateNames: alternateNames.length > 0 ? alternateNames : undefined,
       categories,
       subcategories,
       notes: notes || undefined,
@@ -344,6 +362,16 @@ export class TilesetViewer {
    */
   render(): void {
     if (!this.isActive) return;
+
+    // Render fullscreen black background first (screen space)
+    LJS.drawRect(
+      LJS.vec2(this.viewportWidth / 2, this.viewportHeight / 2),
+      LJS.vec2(this.viewportWidth, this.viewportHeight),
+      new LJS.Color(0, 0, 0, 1),
+      0,
+      true,
+      true // Use screen space
+    );
 
     // Render tileset grid (in world space)
     this.renderTileset();
@@ -459,6 +487,16 @@ export class TilesetViewer {
         new LJS.Color(0, 1, 0)
       );
       textY -= 20;
+
+      if (metadata.alternateNames && metadata.alternateNames.length > 0) {
+        LJS.drawText(
+          `Alts: ${metadata.alternateNames.join(', ')}`,
+          LJS.vec2(textX, textY),
+          12,
+          new LJS.Color(0.5, 1, 0.5)
+        );
+        textY -= 20;
+      }
 
       if (metadata.categories.length > 0) {
         LJS.drawText(

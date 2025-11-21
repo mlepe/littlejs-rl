@@ -14,13 +14,18 @@ import { TileCategory, TileSubcategory } from '../tileConfig';
 
 /**
  * Metadata for a single tile in the tileset
+ *
+ * @todo Add biome metadata, and maybe tile variants
  */
 export interface TileMetadata {
   /** Tile index in the tileset */
   index: number;
 
-  /** Enum-style name (e.g., "FLOOR_COBBLESTONE") */
+  /** Primary enum-style name (e.g., "FLOOR_COBBLESTONE") */
   name: string;
+
+  /** Alternate enum names for the same tile (e.g., ["GROUND", "FLOOR_STONE"]) */
+  alternateNames?: string[];
 
   /** Category flags for this tile */
   categories: TileCategory[];

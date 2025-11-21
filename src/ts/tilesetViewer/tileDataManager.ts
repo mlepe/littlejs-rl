@@ -18,6 +18,8 @@ const DATA_VERSION = '1.0.0';
 
 /**
  * Manages saving, loading, and exporting tile metadata
+ *
+ * @todo Add actual use of JSON import
  */
 export class TileDataManager {
   private tilesetWidth: number;
@@ -88,6 +90,8 @@ export class TileDataManager {
   /**
    * Import tile data from existing AutoTileSprite enum
    * This seeds the database with already-documented tiles
+   *
+   * @todo Change enum to import from to TileSprite
    */
   importFromEnum(): Map<number, TileMetadata> {
     const tileMap = new Map<number, TileMetadata>();
@@ -133,11 +137,19 @@ export class TileDataManager {
     output += 'export enum CuratedTileSprite {\n';
     for (const tile of sortedTiles) {
       if (tile.isDocumented && tile.name) {
+        // Primary name
         output += `  ${tile.name} = ${tile.index},`;
         if (tile.notes) {
           output += ` // ${tile.notes}`;
         }
         output += '\n';
+
+        // Alternate names (all point to same index)
+        if (tile.alternateNames && tile.alternateNames.length > 0) {
+          for (const altName of tile.alternateNames) {
+            output += `  ${altName} = ${tile.index}, // Alias for ${tile.name}\n`;
+          }
+        }
       }
     }
     output += '}\n\n';

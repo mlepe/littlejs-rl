@@ -14,7 +14,7 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": null,
     "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": "explicit",
+      //"source.fixAll.eslint": "explicit",
     },
 
     "[javascript]": {
@@ -31,8 +31,7 @@
     "typescript.suggest.enabled": true,
     "typescript.suggest.completeJSDocs": true,
     "typescript.suggest.jsdoc.generateReturns": true,
-    "typescript.updateImportsOnPaste.enabled": false,   
-
+    "typescript.updateImportsOnPaste.enabled": false,
 
     // File associations
     "files.associations": {
