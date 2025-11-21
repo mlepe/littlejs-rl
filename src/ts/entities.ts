@@ -175,7 +175,7 @@ export function createPlayer(
   // Render component - using resolver for dynamic tileset support
   // resolveTileInfo automatically falls back to AutoTileSprite if needed
   ecs.addComponent<RenderComponent>(playerId, 'render', {
-    tileInfo: resolveTileInfo('PLAYER_WARRIOR'),
+    tileInfo: resolveTileInfo('ENEMY_GOBLIN'),
     color: getColor(BaseColor.WHITE), // White
     size: new LJS.Vector2(1, 1),
   });

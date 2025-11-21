@@ -3,11 +3,11 @@
     {
       "id": "default",
       "name": "Default Tileset",
-      "description": "Original 48x21 tileset with standard sprite mappings matching AutoTileSprite enum",
+      "description": "Original 49x22 tileset with standard sprite mappings matching AutoTileSprite enum",
       "image": "tileset.png",
       "tileSize": 16,
-      "gridWidth": 48,
-      "gridHeight": 21,
+      "gridWidth": 49,
+      "gridHeight": 22,
       "mappings": {
         "VOID": 0,
         "FLOOR_STONE": 1,
@@ -271,7 +271,7 @@
         "NPC_PRIEST": 493,
         "COMPANION_DOG": 494,
         "COMPANION_CAT": 495,
-        "ENEMY_GOBLIN": 121,
+        "ENEMY_GOBLIN": 123,
         "ENEMY_ORC": 529,
         "ENEMY_KOBOLD": 530,
         "ENEMY_SKELETON": 531,

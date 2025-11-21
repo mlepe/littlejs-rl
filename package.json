@@ -14,7 +14,8 @@
     "clean": "rm -rf node_modules && rm dist/bundle.js",
     "reinstall": "npm run clean && npm install",
     "rebuild": "npm run clean && npm install && npm run build",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts",
+    "tile-helper": "ts-node scripts/tileHelper.ts"
   },
   "dependencies": {
     "@eslint/create-config": "^1.11.0",

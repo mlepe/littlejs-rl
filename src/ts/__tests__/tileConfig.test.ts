@@ -49,21 +49,21 @@ describe('Tile Configuration Helpers', () => {
       expect(getTileIndex(24, 0)).toBe(24);
 
       // WALL_STONE at (0, 1)
-      expect(getTileIndex(0, 1)).toBe(48);
+      expect(getTileIndex(0, 1)).toBe(49);
 
       // Second row, sixth tile (5, 2)
-      expect(getTileIndex(5, 2)).toBe(101);
+      expect(getTileIndex(5, 2)).toBe(103);
 
       // End of first row
       expect(getTileIndex(47, 0)).toBe(47);
 
       // Start of second row
-      expect(getTileIndex(0, 1)).toBe(48);
+      expect(getTileIndex(0, 1)).toBe(49);
     });
 
     test('handles different tileset widths', () => {
-      // Default width (48)
-      expect(getTileIndex(1, 1)).toBe(49);
+      // Default width (49)
+      expect(getTileIndex(1, 1)).toBe(50);
 
       // Custom width (32)
       expect(getTileIndex(1, 1, 32)).toBe(33);
@@ -73,7 +73,7 @@ describe('Tile Configuration Helpers', () => {
     });
 
     test('handles large coordinates', () => {
-      expect(getTileIndex(47, 15)).toBe(767); // Last tile in 48x16 tileset
+      expect(getTileIndex(48, 21)).toBe(1077); // Last tile in 49x22 tileset
     });
 
     test('handles zero coordinates', () => {

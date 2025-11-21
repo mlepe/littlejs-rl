@@ -30,10 +30,10 @@ describe('TileSpriteResolver', () => {
     name: 'Test Default',
     image: 'test-tileset.png',
     tileSize: 16,
-    gridWidth: 48,
+    gridWidth: 49,
     mappings: {
       PLAYER_WARRIOR: 24,
-      ENEMY_GOBLIN: 528,
+      ENEMY_GOBLIN: 123,
       FLOOR_STONE: 1,
       WALL_STONE: 48,
     },
@@ -156,7 +156,7 @@ describe('TileSpriteResolver', () => {
 
     test('resolveTileSprite helper function works', () => {
       const index = resolveTileSprite('ENEMY_GOBLIN');
-      expect(index).toBe(528);
+      expect(index).toBe(123);
     });
   });
 
@@ -180,8 +180,8 @@ describe('TileSpriteResolver', () => {
     });
 
     test('resolveTileSpriteCoords helper function works', () => {
-      const coords = resolveTileSpriteCoords('WALL_STONE');
-      expect(coords).toEqual({ x: 0, y: 1 }); // 48 % 48 = 0, floor(48/48) = 1
+      const coords = resolveTileSpriteCoords('ENEMY_GOBLIN');
+      expect(coords).toEqual({ x: 25, y: 2 }); // 123 % 49 = 25, floor(123/49) = 2
     });
   });
 
@@ -244,12 +244,12 @@ describe('TileSpriteResolver', () => {
     });
 
     test('getGridWidth returns correct width', () => {
-      expect(resolver.getGridWidth()).toBe(48);
+      expect(resolver.getGridWidth()).toBe(49);
     });
 
     test('getGridWidth returns default when no config', () => {
       resolver.reset();
-      expect(resolver.getGridWidth()).toBe(48);
+      expect(resolver.getGridWidth()).toBe(49);
     });
 
     test('getGridHeight returns height when specified', () => {
@@ -331,8 +331,8 @@ describe('TileSpriteResolver', () => {
     test('resolveToCoords handles large indices', () => {
       resolver.registerConfiguration(defaultConfig);
       const coords = resolver.resolveToCoords('ENEMY_GOBLIN');
-      // 528 % 48 = 0, floor(528/48) = 11
-      expect(coords).toEqual({ x: 0, y: 11 });
+      // 123 % 49 = 25, floor(123/49) = 2
+      expect(coords).toEqual({ x: 25, y: 2 });
     });
 
     test('multiple configurations can coexist', () => {

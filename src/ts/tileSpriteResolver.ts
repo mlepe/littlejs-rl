@@ -198,7 +198,7 @@ export class TileSpriteResolver {
    */
   public resolveToCoords(spriteName: string): { x: number; y: number } {
     const index = this.resolve(spriteName);
-    const gridWidth = this.activeConfig?.gridWidth ?? 48; // Default to 48 if no config
+    const gridWidth = this.activeConfig?.gridWidth ?? 49; // Default to 49 if no config
 
     return {
       x: index % gridWidth,
@@ -246,7 +246,7 @@ export class TileSpriteResolver {
    * @returns Grid width in tiles (default: 48)
    */
   public getGridWidth(): number {
-    return this.activeConfig?.gridWidth ?? 48;
+    return this.activeConfig?.gridWidth ?? 49;
   }
 
   /**
