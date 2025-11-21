@@ -335,7 +335,10 @@ export default class Location {
    * @returns Floor tile with biome-appropriate color
    */
   private createBiomeFloor(): Tile {
-    const tile = createTile(TileType.FLOOR, this.metadata.palette.floor);
+    const tile = createTile(
+      TileType.FLOOR,
+      this.metadata.biomeConfig.tint?.floor
+    );
     return tile;
   }
 
@@ -344,7 +347,10 @@ export default class Location {
    * @returns Wall tile with biome-appropriate color
    */
   private createBiomeWall(): Tile {
-    const tile = createTile(TileType.WALL, this.metadata.palette.wall);
+    const tile = createTile(
+      TileType.WALL,
+      this.metadata.biomeConfig.tint?.wall
+    );
     return tile;
   }
 
@@ -354,7 +360,8 @@ export default class Location {
    */
   private createBiomeGrass(): Tile {
     const color =
-      this.metadata.palette.vegetation || this.metadata.palette.accent;
+      this.metadata.biomeConfig.tint?.vegetation ||
+      this.metadata.biomeConfig.tint?.accent;
     const tile = createTile(TileType.GRASS, color);
     return tile;
   }
@@ -364,7 +371,8 @@ export default class Location {
    * @returns Water tile with biome-appropriate color
    */
   private createBiomeWater(): Tile {
-    const color = this.metadata.palette.water || LJS.rgb(0.2, 0.4, 0.8);
+    const color =
+      this.metadata.biomeConfig.tint?.water || LJS.rgb(0.2, 0.4, 0.8);
     const tile = createTile(TileType.WATER, color);
     return tile;
   }

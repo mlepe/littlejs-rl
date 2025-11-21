@@ -46,6 +46,8 @@ This document tracks ongoing tasks, features to implement, and technical debt fo
 - [ ] **Mana system** - Create `ManaComponent` and integrate with consumable effects (restore_mana)
 - [ ] **Summoning system** - Implement summon_ally consumable effect
 - [ ] **Map reveal system** - Implement map_reveal consumable effect
+- [ ] **Charges system** - Implement `chargesSystem` for passive charge regeneration for rods/wands
+- [ ] **Biome transition system** - Implement `biomeTransitionSystem` ECS function to handle biome changes between locations
 
 ---
 

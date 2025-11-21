@@ -14,6 +14,7 @@ import * as LJS from 'littlejsengine';
 
 import { LocationType } from './locationType';
 import { BiomeType, getBiomeConfig } from './biomeConfig';
+import { getColor, BaseColor } from './colorPalette';
 
 import Global from './global';
 import { AutoTileSprite } from './tileConfig';
@@ -210,7 +211,7 @@ export default class WorldMap {
 
     // Get biome config color (floor color represents the biome)
     const biomeConfig = getBiomeConfig(tile.biome);
-    const baseColor = biomeConfig.tint;
+    const baseColor = biomeConfig.tint?.floor || getColor(BaseColor.GRAY);
 
     // Modify alpha based on discovery state
     let color: LJS.Color;

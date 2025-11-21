@@ -22,9 +22,7 @@ import {
 import {
   aiSystem,
   basicAnimationSystem,
-  biomeTransitionSystem,
   cameraSystem,
-  chargesSystem,
   collisionDamageSystem,
   deathSystem,
   environmentalSystem,
@@ -405,13 +403,14 @@ export default class Game {
         locationTransitionSystem(this.ecs); // Handle location transitions at edges
 
         // Item systems
-        chargesSystem(this.ecs); // Passive charge regeneration for rods/wands
         identificationSystem(this.ecs); // Auto-identify items based on intelligence
 
         // Environmental systems (biome-based effects)
-        biomeTransitionSystem(this.ecs); // Handle biome changes between locations
-        weatherSystem(this.ecs); // Update weather based on biome
-        environmentalSystem(this.ecs); // Apply environmental hazards (cold, heat, etc.)
+        const currentLocation = this.world.getCurrentLocation();
+        if (currentLocation) {
+          weatherSystem(this.ecs, currentLocation, LJS.timeDelta); // Update weather based on biome
+          environmentalSystem(this.ecs, currentLocation.metadata.biome); // Apply environmental hazards (cold, heat, etc.)
+        }
 
         // Combat (simple collision-based for testing)
         collisionDamageSystem(this.ecs); // Apply damage when entities collide
