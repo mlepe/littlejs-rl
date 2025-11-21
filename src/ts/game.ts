@@ -50,6 +50,7 @@ import { ViewModeComponent } from './components';
 import World from './world';
 import WorldMap from './worldMap';
 import { dropItemAtPosition } from './systems/lootSystem';
+import { TilesetViewer } from './tilesetViewer/tilesetViewer';
 
 /**
  * Main Game class - Singleton pattern
@@ -98,6 +99,9 @@ export default class Game {
   private playerId: number;
   private currentWorldPos: LJS.Vector2;
   private initialized = false;
+
+  // Dev tools (debug mode only)
+  private tilesetViewer: TilesetViewer | null = null;
 
   /**
    * Private constructor for singleton pattern
@@ -158,6 +162,12 @@ export default class Game {
     // Initialize UI System
     new LJS.UISystemPlugin();
     console.log('[Game] UI System initialized');
+
+    // Initialize tileset viewer (dev mode only)
+    if (Game.isDebug) {
+      this.tilesetViewer = new TilesetViewer();
+      console.log('[Game] Tileset viewer initialized (F12 to toggle)');
+    }
 
     // Set up initial location (WILDERNESS for open world exploration)
     this.world.setCurrentLocation(
@@ -314,6 +324,24 @@ export default class Game {
   update(): void {
     if (!this.initialized) return;
 
+    // Tileset viewer mode (dev only)
+    if (Game.isDebug && this.tilesetViewer) {
+      // Toggle viewer with F12
+      if (LJS.keyWasPressed('F12')) {
+        if (this.tilesetViewer.isViewerActive()) {
+          this.tilesetViewer.deactivate();
+        } else {
+          this.tilesetViewer.activate();
+        }
+      }
+
+      // If viewer is active, handle its update and skip game update
+      if (this.tilesetViewer.isViewerActive()) {
+        this.tilesetViewer.update();
+        return;
+      }
+    }
+
     // Accumulate turn timer
     this.turnTimer += LJS.timeDelta;
 
@@ -412,6 +440,12 @@ export default class Game {
    */
   renderPost(): void {
     if (!this.initialized) return;
+
+    // Tileset viewer rendering (dev only) - takes over entire screen
+    if (Game.isDebug && this.tilesetViewer?.isViewerActive()) {
+      this.tilesetViewer.render();
+      return;
+    }
 
     // Render all entities (AFTER tile layers, so they appear on top)
     renderSystem(this.ecs);
