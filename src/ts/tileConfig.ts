@@ -180,6 +180,142 @@ export enum TileSprite {
   CHAR_81 = 424,
 }
 
+// SECTION[epic=TileConfig] CuratedTileSprite
+
+// ============================================
+// AUTO-GENERATED TILE DEFINITIONS
+// Generated: 2025-11-21T19:04:47.804Z
+// Total tiles documented: 58
+// ============================================
+
+export enum CuratedTileSprite {
+  VOID = 0,
+  NULL = 0, // Alias for VOID
+  NOTHING = 0, // Alias for VOID
+  FLOOR_ROCK = 1,
+  FLOOR_STONE = 2,
+  FLOOR = 2, // Alias for FLOOR_STONE
+  GROUND = 2, // Alias for FLOOR_STONE
+  FLOOR_STONE_2 = 3,
+  FLOOR_STONE_3 = 4,
+  FLOOR_GRASS = 5,
+  FLOOR_FLOWERS = 6,
+  FLOOR_LEAVES = 7,
+  CHAR_1 = 24,
+  CHAR_2 = 25,
+  CHAR_3 = 26,
+  CHAR_4 = 27,
+  CHAR_5 = 28,
+  CHAR_6 = 29,
+  CHAR_7 = 30,
+  CHAR_8 = 31,
+  PROP_TREE = 49,
+  PROP_TREE_1 = 49, // Alias for PROP_TREE
+  PROP_TREE_2 = 50,
+  PROP_TREE_3 = 51,
+  PROP_TREES = 52,
+  PROP_TREE_4 = 53,
+  PROP_TREE_5 = 54,
+  PROP_CACTUS = 55,
+  PROP_CACTI = 56,
+  PROP_TALL_GRASS = 98,
+  PROP_VINE = 99,
+  PROP_VINE_2 = 100,
+  PROP_TREES_2 = 101,
+  PROP_TREE_6 = 102,
+  FLOOR_PUDDLE = 103,
+  PROP_VINE_3 = 104,
+  PROP_PALM_TREE = 105,
+  FLOOR_BRIDGE_ARCHED = 202,
+  FLOOR_STONE_BRIDGE = 203,
+  FLOOR_BRIDGE = 203, // Alias for FLOOR_STONE_BRIDGE
+  FLOOR_BRIDGE_WOODEN_ARCHED = 251,
+  FLOOR_WOODEN_BRIDGE = 252,
+  STAIRS_UP = 296,
+  STAIRS_DOWN = 297,
+  OBJ_BOOKCASE = 299,
+  CHEST_CLOSED = 302,
+  CHEST_OPEN = 303,
+  CHEST_EMPTY = 304,
+  CHEST_OPEN_2 = 305,
+  OBJ_SIGN = 343,
+  OBJ_SIGN_2 = 344,
+  OBJ_SIGN_3 = 345,
+  PROP_MIRROR_TABLE = 392,
+  DOOR_LOCKED = 441,
+  DOOR_UNLOCKED = 442,
+  DOOR_OPEN = 443,
+  DOOR_CLOSED = 444,
+  DOOR_CLOSED_2 = 445,
+  DOOR_CLOSED_3 = 446,
+  DOOR_OPEN_2 = 447,
+  DOOR_CLOSED_4 = 448,
+  DOOR_CLOSED_5 = 449,
+  DOOR_OPEN_3 = 450,
+  DOOR_CLOSED_6 = 451,
+}
+
+// ============================================
+// CATEGORY MAPPINGS
+// ============================================
+
+// ENVIRONMENT: 11 tiles
+// Indices: 1, 2, 3, 4, 5, 6, 7, 202, 203, 251, 252
+
+// CHARACTER: 8 tiles
+// Indices: 24, 25, 26, 27, 28, 29, 30, 31
+
+// OBJECT: 37 tiles
+// Indices: 49, 50, 51, 52, 53, 54, 55, 56, 98, 99, 100, 101, 102, 104, 105, 296, 297, 299, 302, 303, 304, 305, 343, 344, 345, 392, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451
+
+// OTHER: 1 tiles
+// Indices: 0
+
+// ============================================
+// SUBCATEGORY MAPPINGS
+// ============================================
+
+// FLOOR: 12 tiles
+// Indices: 1, 2, 3, 4, 5, 6, 7, 103, 202, 203, 251, 252
+
+// DOOR: 11 tiles
+// Indices: 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451
+
+// PASSAGE: 2 tiles
+// Indices: 296, 297
+
+// LIQUID: 1 tiles
+// Indices: 103
+
+// CONTAINER: 5 tiles
+// Indices: 299, 302, 303, 304, 305
+
+// FURNITURE: 2 tiles
+// Indices: 299, 392
+
+// PROP: 15 tiles
+// Indices: 49, 50, 51, 52, 53, 54, 55, 56, 98, 99, 100, 101, 102, 104, 105
+
+// INTERACTIVE: 3 tiles
+// Indices: 343, 344, 345
+
+// PLAYER: 8 tiles
+// Indices: 24, 25, 26, 27, 28, 29, 30, 31
+
+// NPC: 8 tiles
+// Indices: 24, 25, 26, 27, 28, 29, 30, 31
+
+// COMPANION: 8 tiles
+// Indices: 24, 25, 26, 27, 28, 29, 30, 31
+
+// ENEMY_COMMON: 8 tiles
+// Indices: 24, 25, 26, 27, 28, 29, 30, 31
+
+// OTHER: 1 tiles
+// Indices: 0
+
+// !SECTION
+
 /** AutoTileSprite
  * AI-generated comprehensive enum of all tiles in the tileset
  * Each value represents the linear index of a 16x16 pixel tile in the tileset image
