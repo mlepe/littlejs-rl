@@ -597,6 +597,6 @@ See individual file documentation for detailed API:
 
 - **v0.14.0** - Initial biome system implementation (Phase 1)
 - **v0.15.0** - LocationGenerator integration (Phase 2)
-- **v0.16.0** - Weather system (Phase 3, planned)
-- **v0.17.0** - Biome hazards (Phase 4, planned)
-- **v0.18.0** - JSON data loading (Phase 5, planned)
+- **v0.16.0** - Weather system (Phase 3)
+- **TBD** - Biome hazards (Phase 4, planned)
+- **TBD** - JSON data loading (Phase 5, planned)
