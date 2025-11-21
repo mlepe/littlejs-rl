@@ -204,6 +204,9 @@ export class TilesetViewer {
     if (LJS.keyWasPressed('KeyI')) {
       this.importFromEnum();
     }
+    if (LJS.keyWasPressed('KeyJ')) {
+      this.importFromJSONFile();
+    }
     if (LJS.keyWasPressed('KeyH')) {
       this.showHelp = !this.showHelp;
     }
@@ -400,7 +403,7 @@ export class TilesetViewer {
    */
   private exportData(): void {
     const choice = prompt(
-      'Export options:\n1 = Download TypeScript\n2 = Download JSON\n3 = Copy TypeScript to clipboard',
+      'Export options:\n1 = Download TypeScript\n2 = Download JSON\n3 = Copy TypeScript to clipboard\n4 = Import from JSON file',
       '1'
     );
 
@@ -419,6 +422,9 @@ export class TilesetViewer {
           .then((success) => {
             alert(success ? 'Copied to clipboard!' : 'Failed to copy');
           });
+        break;
+      case '4':
+        this.importFromJSONFile();
         break;
       default:
         break;
@@ -446,6 +452,62 @@ export class TilesetViewer {
       this.updateStats();
       alert(`Imported ${imported.size} tiles from enum`);
     }
+  }
+
+  /**
+   * Import from JSON file
+   */
+  private importFromJSONFile(): void {
+    // Create file input element
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+
+    input.onchange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const file = target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        try {
+          const jsonString = e.target?.result as string;
+          const imported = this.dataManager.importFromJSON(jsonString);
+
+          if (imported) {
+            const mergeChoice = confirm(
+              `Import ${imported.size} tiles from JSON?\n\nOK = Merge (keep existing)\nCancel = Replace all data`
+            );
+
+            if (mergeChoice) {
+              // Merge: don't overwrite existing tiles
+              for (const [index, tile] of imported) {
+                if (!this.tileData.has(index)) {
+                  this.tileData.set(index, tile);
+                }
+              }
+              this.updateStats();
+              alert(`Merged ${imported.size} tiles from JSON`);
+            } else {
+              // Replace: overwrite all data
+              this.tileData = imported;
+              this.updateStats();
+              alert(`Replaced all data with ${imported.size} tiles from JSON`);
+            }
+          } else {
+            alert('Failed to import JSON file. Check console for errors.');
+          }
+        } catch (error) {
+          console.error('[TilesetViewer] Failed to read JSON file:', error);
+          alert('Failed to read JSON file.');
+        }
+      };
+
+      reader.readAsText(file);
+    };
+
+    // Trigger file picker
+    input.click();
   }
 
   /**
@@ -679,6 +741,7 @@ export class TilesetViewer {
       'O - Save to localStorage',
       'E - Export data',
       'I - Import from enum',
+      'J - Import from JSON file',
       'H - Toggle help',
       'P - Toggle viewer',
       'Esc - Exit viewer',
