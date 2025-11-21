@@ -172,6 +172,24 @@ export class TileDataManager {
       }
     }
 
+    // Generate category mapping comments
+    output += '// ============================================\n';
+    output += '// SUBCATEGORY MAPPINGS\n';
+    output += '// ============================================\n\n';
+
+    for (const category of Object.values(TileSubcategory).filter(
+      (v) => typeof v === 'number'
+    )) {
+      const tilesInSubcategory = sortedTiles.filter((t) =>
+        t.subcategories.includes(category as TileSubcategory)
+      );
+
+      if (tilesInSubcategory.length > 0) {
+        output += `// ${TileSubcategory[category as number]}: ${tilesInSubcategory.length} tiles\n`;
+        output += `// Indices: ${tilesInSubcategory.map((t) => t.index).join(', ')}\n\n`;
+      }
+    }
+
     return output;
   }
 
