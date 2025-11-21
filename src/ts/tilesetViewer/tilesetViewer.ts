@@ -60,6 +60,9 @@ export class TilesetViewer {
     notes?: string;
   } | null = null;
 
+  // Undo state - stores previous tile data for restore
+  private previousState: Map<number, TileMetadata> | null = null;
+
   // Stats
   private totalTiles: number;
   private documentedTiles: number = 0;
@@ -67,7 +70,7 @@ export class TilesetViewer {
   constructor() {
     this.dataManager = new TileDataManager(
       this.tilesetWidth,
-      this.tilesetHeight
+      this.tilesetHeight,
     );
     this.totalTiles = this.tilesetWidth * this.tilesetHeight;
     this.viewportWidth = LJS.mainCanvasSize.x;
@@ -207,6 +210,9 @@ export class TilesetViewer {
     if (LJS.keyWasPressed('KeyJ')) {
       this.importFromJSONFile();
     }
+    if (LJS.keyWasPressed('KeyZ')) {
+      this.restorePreviousState();
+    }
     if (LJS.keyWasPressed('KeyH')) {
       this.showHelp = !this.showHelp;
     }
@@ -324,6 +330,8 @@ export class TilesetViewer {
     const tileIndex = this.getCurrentTileIndex();
     if (this.tileData.has(tileIndex)) {
       if (confirm(`Delete data for tile ${tileIndex}?`)) {
+        // Create snapshot before destructive operation
+        this.createSnapshot();
         this.tileData.delete(tileIndex);
         this.updateStats();
         console.log(`[TilesetViewer] Deleted tile ${tileIndex}`);
@@ -479,6 +487,9 @@ export class TilesetViewer {
               `Import ${imported.size} tiles from JSON?\n\nOK = Merge (keep existing)\nCancel = Replace all data`
             );
 
+            // Create snapshot before import
+            this.createSnapshot();
+
             if (mergeChoice) {
               // Merge: don't overwrite existing tiles
               for (const [index, tile] of imported) {
@@ -508,6 +519,44 @@ export class TilesetViewer {
 
     // Trigger file picker
     input.click();
+  }
+
+  /**
+   * Create a snapshot of current state for undo
+   */
+  private createSnapshot(): void {
+    // Deep clone the tile data map
+    this.previousState = new Map(
+      Array.from(this.tileData.entries()).map(([key, value]) => [
+        key,
+        {
+          ...value,
+          categories: [...value.categories],
+          subcategories: [...value.subcategories],
+        },
+      ])
+    );
+    console.log('[TilesetViewer] Created snapshot of current state');
+  }
+
+  /**
+   * Restore previous state (undo last operation)
+   */
+  private restorePreviousState(): void {
+    if (!this.previousState) {
+      alert('No previous state available to restore.');
+      return;
+    }
+
+    if (
+      confirm('Restore previous state? This will undo your last operation.')
+    ) {
+      this.tileData = this.previousState;
+      this.previousState = null; // Clear after restore (can only undo once)
+      this.updateStats();
+      console.log('[TilesetViewer] Restored previous state');
+      alert('Previous state restored!');
+    }
   }
 
   /**
@@ -738,6 +787,7 @@ export class TilesetViewer {
       'Delete - Delete tile',
       'C - Copy metadata',
       'V - Paste metadata',
+      'Z - Undo (restore prev state)',
       'O - Save to localStorage',
       'E - Export data',
       'I - Import from enum',
