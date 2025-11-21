@@ -11,8 +11,9 @@ The biome system provides a comprehensive framework for creating diverse, visual
 1. **biomeConfig.ts** - Central biome configuration system
 2. **environmentMetadata.ts** - Unified environment system combining location types with biomes
 3. **Environmental Components & Systems** - Entity-level environmental effects
-4. **Biome Transition System** - Smooth transitions between adjacent biomes
-5. **Spawn Tables** - Biome-specific entity and item spawning
+4. **Weather System** - Dynamic weather with biome-specific patterns (v0.16.0)
+5. **Biome Transition System** - Smooth transitions between adjacent biomes
+6. **Spawn Tables** - Biome-specific entity and item spawning
 
 ### File Structure
 
@@ -22,10 +23,12 @@ src/ts/
 ├── environmentMetadata.ts      # Environment metadata management
 ├── biomeSpawnTables.ts        # Spawn weight tables per biome
 ├── components/
-│   └── environmental.ts       # Environmental resistance component
+│   ├── environmental.ts       # Environmental resistance component
+│   └── weather.ts             # Weather state component
 ├── systems/
 │   ├── environmentalSystem.ts      # Apply biome effects to entities
-│   └── biomeTransitionSystem.ts    # Handle biome transitions
+│   ├── biomeTransitionSystem.ts    # Handle biome transitions
+│   └── weatherSystem.ts            # Dynamic weather management
 └── locationType.ts            # Location structural types (refactored)
 ```
 
