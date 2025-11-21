@@ -11,7 +11,7 @@
  */
 
 import { TileMetadata, SerializedTileData } from './tileMetadata';
-import { TileCategory, TileSubcategory, AutoTileSprite } from '../tileConfig';
+import { TileCategory, TileSubcategory, TileSprite } from '../tileConfig';
 
 const STORAGE_KEY = 'littlejs-rl-tileset-viewer-data';
 const DATA_VERSION = '1.0.0';
@@ -97,21 +97,21 @@ export class TileDataManager {
     const tileMap = new Map<number, TileMetadata>();
 
     // Import all named sprites from AutoTileSprite enum
-    for (const [name, index] of Object.entries(AutoTileSprite)) {
+    for (const [name, index] of Object.entries(TileSprite)) {
       if (typeof index === 'number') {
         tileMap.set(index, {
           index,
           name,
           categories: [],
           subcategories: [],
-          notes: 'Imported from AutoTileSprite',
+          notes: 'Imported from TileSprite',
           isDocumented: true,
         });
       }
     }
 
     console.log(
-      `[TileDataManager] Imported ${tileMap.size} tiles from AutoTileSprite enum`
+      `[TileDataManager] Imported ${tileMap.size} tiles from TileSprite enum`
     );
     return tileMap;
   }
