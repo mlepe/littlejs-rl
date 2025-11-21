@@ -81,7 +81,17 @@ export function renderSystem(ecs: ECS): void {
         );
 
         // Draw outline rectangle behind sprite
-        LJS.drawRect(position, outlineSize, render.outlineColor, angle);
+        //LJS.drawRect(position, outlineSize, render.outlineColor, angle);
+
+        // Draw outline behind sprite
+        LJS.drawTile(
+          position,
+          outlineSize,
+          render.tileInfo,
+          render.outlineColor,
+          angle,
+          render.mirror || false
+        );
       }
 
       // Determine sprite color
