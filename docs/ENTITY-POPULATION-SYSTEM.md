@@ -8,11 +8,12 @@ The entity population system automatically spawns enemies, NPCs, and creatures i
 
 ### Core Components
 
-1. **LocationGenerator** - Updated with entity spawning methods
-2. **EntityRegistry** - Spawns entities from templates
-3. **Spatial System** - Validates spawn positions
-4. **Location** - Passes ECS instance to generator
-5. **Game** - Provides ECS to location generation
+1. **World** - Stores ECS reference and passes it to location generation
+2. **LocationGenerator** - Updated with entity spawning methods
+3. **EntityRegistry** - Spawns entities from templates
+4. **Spatial System** - Validates spawn positions
+5. **Location** - Receives ECS from World during generation
+6. **Game** - Provides ECS to World via `setECS()`
 
 ### Population Methods
 
@@ -104,10 +105,20 @@ const y = Math.floor(Math.random() * location.height);
 
 ## Integration
 
+### World ECS Integration
+
+```typescript
+// Game passes ECS to World
+this.world.setECS(this.ecs);
+
+// World automatically passes ECS to locations during generation
+location.generate(this.ecs || undefined);
+```
+
 ### Location Generation
 
 ```typescript
-// Location.generate() now accepts ECS parameter
+// Location.generate() accepts optional ECS parameter (provided by World)
 location.generate(ecs);
 
 // LocationGenerator uses ECS for spawning
@@ -117,8 +128,9 @@ LocationGenerator.generate(location, ecs);
 ### Game Initialization
 
 ```typescript
-// game.ts - Initialize location with entities
-startLocation.generate(this.ecs);
+// game.ts - World handles ECS distribution automatically
+this.world.setECS(this.ecs);
+startLocation.generate(); // World passes ECS automatically
 ```
 
 ## Configuration

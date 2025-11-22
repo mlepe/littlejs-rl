@@ -45,6 +45,7 @@ export default class World {
 
   private readonly locations: Map<string, Location>;
   private currentLocation: Location | null;
+  private ecs: ECS | null;
 
   /**
    * Create a new world
@@ -65,6 +66,15 @@ export default class World {
     this.locationHeight = locationHeight;
     this.locations = new Map();
     this.currentLocation = null;
+    this.ecs = null;
+  }
+
+  /**
+   * Set the ECS instance for entity spawning
+   * @param ecs - ECS instance
+   */
+  setECS(ecs: ECS): void {
+    this.ecs = ecs;
   }
 
   /**
@@ -125,7 +135,7 @@ export default class World {
         finalLocationType,
         finalBiome
       );
-      location.generate();
+      location.generate(this.ecs || undefined);
       this.locations.set(key, location);
     }
 

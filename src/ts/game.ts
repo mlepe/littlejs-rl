@@ -126,6 +126,7 @@ export default class Game {
       locationSize.x,
       locationSize.y
     );
+    this.world.setECS(this.ecs); // Pass ECS to World for entity spawning
     this.worldMap = new WorldMap(this.world);
     this.currentWorldPos = LJS.vec2(
       Math.floor(worldSize.x / 2),
@@ -189,8 +190,8 @@ export default class Game {
     const startLocation = this.world.getCurrentLocation();
 
     if (startLocation) {
-      // Generate the starting location with entity spawning
-      startLocation.generate(this.ecs);
+      // Generate the starting location (World passes ECS automatically)
+      startLocation.generate();
 
       // Find walkable spawn position (search from center outward)
       let spawnX = Math.floor(startLocation.width / 2);
