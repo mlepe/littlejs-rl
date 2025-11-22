@@ -22,8 +22,6 @@ This document tracks ongoing tasks, features to implement, and technical debt fo
 
 ### Immediate Tasks
 
-- [x] **Fix: Going to the edge of a location doesn't transition to the next location** - Fixed by allowing movement beyond bounds in playerMovementSystem
-- [x] **Fix: TileLayers stay rendered when changing location/moving to the world map** - Fixed by destroying old location layers in `changeLocation()` method
 - [ ] **Implement location loading screen** - Show loading screen when changing locations if necessary
 - [ ] **Integrate biome system with world/location generation** - Use biome features in world and location generation
 - [ ] **Fix LocationGenerator bugs** - Address biome tile resolution issues
