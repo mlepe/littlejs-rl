@@ -112,8 +112,8 @@ export default class Game {
    * @param locationSize - Size of each location (default: 70x40 tiles)
    */
   private constructor(
-    worldSize: LJS.Vector2 = LJS.vec2(50, 30),
-    locationSize: LJS.Vector2 = LJS.vec2(70, 40)
+    worldSize: LJS.Vector2 = LJS.vec2(20, 20),
+    locationSize: LJS.Vector2 = LJS.vec2(20, 20)
   ) {
     this.ecs = new ECS();
     this.world = new World(
@@ -123,7 +123,10 @@ export default class Game {
       locationSize.y
     );
     this.worldMap = new WorldMap(this.world);
-    this.currentWorldPos = LJS.vec2(5, 5); // Start in center
+    this.currentWorldPos = LJS.vec2(
+      Math.floor(worldSize.x / 2),
+      Math.floor(worldSize.y / 2)
+    ); // Start in center
     this.playerId = -1; // Will be set in init
   }
 
