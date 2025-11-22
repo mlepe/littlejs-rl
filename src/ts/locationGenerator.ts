@@ -18,6 +18,9 @@ import {
   getRandomFloorTile,
   getRandomWallTile,
 } from './biomeConfig';
+import { BiomeType } from './biomeConfig';
+import ECS from './ecs';
+import { EntityRegistry } from './data/entityRegistry';
 
 /**
  * Room structure for procedural generation
@@ -36,39 +39,41 @@ export class LocationGenerator {
   /**
    * Generate location based on its type
    * @param location - The location to generate
+   * @param ecs - ECS instance for spawning entities (optional)
    */
-  static generate(location: Location): void {
+  static generate(location: Location, ecs?: ECS): void {
     const type = location.metadata.locationType;
 
     switch (type) {
       case LocationType.DUNGEON:
-        this.generateDungeon(location);
+        this.generateDungeon(location, ecs);
         break;
       case LocationType.TOWN:
-        this.generateTown(location);
+        this.generateTown(location, ecs);
         break;
       case LocationType.RUINS:
-        this.generateRuins(location);
+        this.generateRuins(location, ecs);
         break;
       case LocationType.FACTION_BASE:
-        this.generateFactionBase(location);
+        this.generateFactionBase(location, ecs);
         break;
       case LocationType.WILDERNESS:
-        this.generateWilderness(location);
+        this.generateWilderness(location, ecs);
         break;
       case LocationType.CAVE:
-        this.generateCave(location);
+        this.generateCave(location, ecs);
         break;
       default:
-        this.generateDungeon(location);
+        this.generateDungeon(location, ecs);
     }
   }
 
   /**
    * Generate a dungeon with rooms and corridors
    * @param location - The location to generate
+   * @param ecs - ECS instance for spawning entities
    */
-  private static generateDungeon(location: Location): void {
+  private static generateDungeon(location: Location, ecs?: ECS): void {
     // Fill with walls
     this.fillWithWalls(location);
 
@@ -105,13 +110,19 @@ export class LocationGenerator {
 
     // Add some doors
     this.addDoors(location, rooms, 0.3);
+
+    // Populate with enemies (if ECS provided)
+    if (ecs && rooms.length > 0) {
+      this.populateDungeon(location, ecs, rooms);
+    }
   }
 
   /**
    * Generate a town with buildings and streets
    * @param location - The location to generate
+   * @param ecs - ECS instance for spawning entities
    */
-  private static generateTown(location: Location): void {
+  private static generateTown(location: Location, ecs?: ECS): void {
     // Fill with floor (streets)
     this.fillWithFloor(location);
 
@@ -128,13 +139,19 @@ export class LocationGenerator {
 
     // Add some grass/decoration in open areas
     this.addVegetation(location, 0.1);
+
+    // Populate with NPCs and guards (if ECS provided)
+    if (ecs && buildings.length > 0) {
+      this.populateTown(location, ecs, buildings);
+    }
   }
 
   /**
    * Generate ruins with broken structures
    * @param location - The location to generate
+   * @param ecs - ECS instance for spawning entities
    */
-  private static generateRuins(location: Location): void {
+  private static generateRuins(location: Location, ecs?: ECS): void {
     // Fill with floor
     this.fillWithFloor(location);
 
@@ -151,13 +168,19 @@ export class LocationGenerator {
 
     // Add some water (collapsed areas)
     this.addRandomWater(location, 0.1);
+
+    // Populate with undead and creatures (if ECS provided)
+    if (ecs && rooms.length > 0) {
+      this.populateRuins(location, ecs, rooms);
+    }
   }
 
   /**
    * Generate faction base with organized layout
    * @param location - The location to generate
+   * @param ecs - ECS instance for spawning entities
    */
-  private static generateFactionBase(location: Location): void {
+  private static generateFactionBase(location: Location, ecs?: ECS): void {
     // Fill with walls
     this.fillWithWalls(location);
 
@@ -185,13 +208,19 @@ export class LocationGenerator {
     const entranceX = Math.floor(location.width / 2);
     const entranceY = 2;
     location.setTileType(entranceX, entranceY, TileType.DOOR_OPEN);
+
+    // Populate with guards and NPCs (if ECS provided)
+    if (ecs && rooms.length > 0) {
+      this.populateFactionBase(location, ecs, rooms);
+    }
   }
 
   /**
    * Generate wilderness with natural features
    * @param location - The location to generate
+   * @param ecs - ECS instance for spawning entities
    */
-  private static generateWilderness(location: Location): void {
+  private static generateWilderness(location: Location, ecs?: ECS): void {
     // Fill with floor
     this.fillWithFloor(location);
 
@@ -203,13 +232,19 @@ export class LocationGenerator {
 
     // Add some rocky areas (walls)
     this.addRandomWalls(location, 0.1);
+
+    // Populate with wildlife and occasional enemies (if ECS provided)
+    if (ecs) {
+      this.populateWilderness(location, ecs);
+    }
   }
 
   /**
    * Generate cave with organic tunnels
    * @param location - The location to generate
+   * @param ecs - ECS instance for spawning entities
    */
-  private static generateCave(location: Location): void {
+  private static generateCave(location: Location, ecs?: ECS): void {
     // Fill with walls
     this.fillWithWalls(location);
 
@@ -221,6 +256,11 @@ export class LocationGenerator {
 
     // Add some water pools
     this.addRandomWater(location, 0.05);
+
+    // Populate with cave creatures (if ECS provided)
+    if (ecs) {
+      this.populateCave(location, ecs);
+    }
   }
 
   // ============================================================================
@@ -725,6 +765,372 @@ export class LocationGenerator {
           !visited.has(`${x},${y}`)
         ) {
           location.setTileType(x, y, TileType.WALL);
+        }
+      }
+    }
+  }
+
+  /**
+   * Get enemy types appropriate for the location and biome
+   * @param locationType - Type of location
+   * @param biome - Biome type
+   * @returns Array of enemy entity IDs
+   */
+  private static getEnemyTypes(
+    locationType: LocationType,
+    biome: BiomeType
+  ): string[] {
+    // Base enemy types by location
+    const baseEnemies: { [key in LocationType]: string[] } = {
+      [LocationType.DUNGEON]: [
+        'orc_warrior',
+        'goblin_scout',
+        'skeleton_warrior',
+      ],
+      [LocationType.TOWN]: [], // Towns have few enemies
+      [LocationType.RUINS]: ['skeleton_warrior', 'rat', 'spider'],
+      [LocationType.FACTION_BASE]: ['orc_warrior', 'goblin_scout'], // Guards
+      [LocationType.WILDERNESS]: ['wolf', 'bear', 'bandit'],
+      [LocationType.CAVE]: ['spider', 'rat', 'slime'],
+    };
+
+    // Biome-specific additions
+    const biomeEnemies: { [key in BiomeType]?: string[] } = {
+      [BiomeType.SNOWY]: ['ice_wolf', 'frost_giant', 'yeti'],
+      [BiomeType.SWAMP]: ['slime', 'spider'],
+      [BiomeType.MOUNTAIN]: ['troll_brute'],
+    };
+
+    const enemies = [...baseEnemies[locationType]];
+
+    // Add biome-specific enemies
+    if (biomeEnemies[biome]) {
+      enemies.push(...(biomeEnemies[biome] || []));
+    }
+
+    return enemies;
+  }
+
+  /**
+   * Get NPC types appropriate for the location
+   * @param locationType - Type of location
+   * @returns Array of NPC entity IDs
+   */
+  private static getNPCTypes(locationType: LocationType): string[] {
+    const npcsByLocation: { [key in LocationType]: string[] } = {
+      [LocationType.DUNGEON]: [], // No NPCs in dungeons
+      [LocationType.TOWN]: ['friendly_villager', 'merchant', 'guard'],
+      [LocationType.RUINS]: [], // No NPCs in ruins
+      [LocationType.FACTION_BASE]: ['guard'], // Only guards
+      [LocationType.WILDERNESS]: ['wandering_minstrel'], // Rare travelers
+      [LocationType.CAVE]: [], // No NPCs in caves
+    };
+
+    return npcsByLocation[locationType];
+  }
+
+  /**
+   * Spawn enemies in a room
+   * @param location - The location
+   * @param ecs - ECS instance
+   * @param room - Room to spawn in
+   * @param enemyTypes - Available enemy types
+   * @param count - Number of enemies to spawn
+   */
+  private static spawnEnemiesInRoom(
+    location: Location,
+    ecs: ECS,
+    room: Room,
+    enemyTypes: string[],
+    count: number
+  ): void {
+    if (enemyTypes.length === 0) return;
+
+    const registry = EntityRegistry.getInstance();
+    const attempts = count * 10; // Try up to 10x count to find valid positions
+    const worldX = location.worldPosition.x;
+    const worldY = location.worldPosition.y;
+
+    for (let i = 0; i < attempts && count > 0; i++) {
+      // Random position in room (avoid edges)
+      const x = Math.floor(room.x + 2 + Math.random() * (room.width - 4));
+      const y = Math.floor(room.y + 2 + Math.random() * (room.height - 4));
+
+      // Check if walkable and unoccupied
+      if (location.isWalkable(x, y)) {
+        // Check if position has no entity using ECS spatial queries
+        const existingEntities = ecs.query('position', 'location');
+        let occupied = false;
+        for (const id of existingEntities) {
+          const pos = ecs.getComponent<any>(id, 'position');
+          const loc = ecs.getComponent<any>(id, 'location');
+          if (
+            pos &&
+            loc &&
+            Math.floor(pos.x) === x &&
+            Math.floor(pos.y) === y &&
+            loc.worldX === worldX &&
+            loc.worldY === worldY
+          ) {
+            occupied = true;
+            break;
+          }
+        }
+
+        if (!occupied) {
+          const enemyType =
+            enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+          registry.spawn(ecs, enemyType, x, y, worldX, worldY);
+          count--;
+        }
+      }
+    }
+  }
+
+  /**
+   * Spawn NPCs in a room
+   * @param location - The location
+   * @param ecs - ECS instance
+   * @param room - Room to spawn in
+   * @param npcTypes - Available NPC types
+   * @param count - Number of NPCs to spawn
+   */
+  private static spawnNPCsInRoom(
+    location: Location,
+    ecs: ECS,
+    room: Room,
+    npcTypes: string[],
+    count: number
+  ): void {
+    if (npcTypes.length === 0) return;
+
+    const registry = EntityRegistry.getInstance();
+    const attempts = count * 10;
+    const worldX = location.worldPosition.x;
+    const worldY = location.worldPosition.y;
+
+    for (let i = 0; i < attempts && count > 0; i++) {
+      const x = Math.floor(room.x + 2 + Math.random() * (room.width - 4));
+      const y = Math.floor(room.y + 2 + Math.random() * (room.height - 4));
+
+      if (location.isWalkable(x, y)) {
+        // Check if position has no entity
+        const existingEntities = ecs.query('position', 'location');
+        let occupied = false;
+        for (const id of existingEntities) {
+          const pos = ecs.getComponent<any>(id, 'position');
+          const loc = ecs.getComponent<any>(id, 'location');
+          if (
+            pos &&
+            loc &&
+            Math.floor(pos.x) === x &&
+            Math.floor(pos.y) === y &&
+            loc.worldX === worldX &&
+            loc.worldY === worldY
+          ) {
+            occupied = true;
+            break;
+          }
+        }
+
+        if (!occupied) {
+          const npcType = npcTypes[Math.floor(Math.random() * npcTypes.length)];
+          registry.spawn(ecs, npcType, x, y, worldX, worldY);
+          count--;
+        }
+      }
+    }
+  }
+
+  /**
+   * Populate dungeon with enemies
+   * @param location - The location
+   * @param ecs - ECS instance
+   * @param rooms - Generated rooms
+   */
+  private static populateDungeon(
+    location: Location,
+    ecs: ECS,
+    rooms: Room[]
+  ): void {
+    const enemyTypes = this.getEnemyTypes(
+      LocationType.DUNGEON,
+      location.metadata.biomeConfig.id
+    );
+
+    // Skip first room (player spawn)
+    for (let i = 1; i < rooms.length; i++) {
+      const room = rooms[i];
+      // 2-4 enemies per room
+      const enemyCount = Math.floor(2 + Math.random() * 3);
+      this.spawnEnemiesInRoom(location, ecs, room, enemyTypes, enemyCount);
+    }
+  }
+
+  /**
+   * Populate town with NPCs
+   * @param location - The location
+   * @param ecs - ECS instance
+   * @param buildings - Generated buildings
+   */
+  private static populateTown(
+    location: Location,
+    ecs: ECS,
+    buildings: Room[]
+  ): void {
+    const npcTypes = this.getNPCTypes(LocationType.TOWN);
+
+    // 1-2 NPCs per building
+    for (const building of buildings) {
+      const npcCount = Math.floor(1 + Math.random() * 2);
+      this.spawnNPCsInRoom(location, ecs, building, npcTypes, npcCount);
+    }
+  }
+
+  /**
+   * Populate ruins with enemies
+   * @param location - The location
+   * @param ecs - ECS instance
+   * @param rooms - Generated rooms
+   */
+  private static populateRuins(
+    location: Location,
+    ecs: ECS,
+    rooms: Room[]
+  ): void {
+    const enemyTypes = this.getEnemyTypes(
+      LocationType.RUINS,
+      location.metadata.biomeConfig.id
+    );
+
+    // Medium density - 1-3 enemies per room
+    for (const room of rooms) {
+      const enemyCount = Math.floor(1 + Math.random() * 3);
+      this.spawnEnemiesInRoom(location, ecs, room, enemyTypes, enemyCount);
+    }
+  }
+
+  /**
+   * Populate faction base with guards
+   * @param location - The location
+   * @param ecs - ECS instance
+   * @param rooms - Generated rooms
+   */
+  private static populateFactionBase(
+    location: Location,
+    ecs: ECS,
+    rooms: Room[]
+  ): void {
+    const npcTypes = this.getNPCTypes(LocationType.FACTION_BASE);
+
+    // 1-2 guards per room
+    for (const room of rooms) {
+      const guardCount = Math.floor(1 + Math.random() * 2);
+      this.spawnNPCsInRoom(location, ecs, room, npcTypes, guardCount);
+    }
+  }
+
+  /**
+   * Populate wilderness with scattered creatures
+   * @param location - The location
+   * @param ecs - ECS instance
+   */
+  private static populateWilderness(location: Location, ecs: ECS): void {
+    const enemyTypes = this.getEnemyTypes(
+      LocationType.WILDERNESS,
+      location.metadata.biomeConfig.id
+    );
+    const registry = EntityRegistry.getInstance();
+    const worldX = location.worldPosition.x;
+    const worldY = location.worldPosition.y;
+
+    // Low density - ~10-15 creatures scattered across map
+    const creatureCount = Math.floor(10 + Math.random() * 6);
+    const attempts = creatureCount * 20;
+    let spawned = 0;
+
+    for (let i = 0; i < attempts && spawned < creatureCount; i++) {
+      const x = Math.floor(Math.random() * location.width);
+      const y = Math.floor(Math.random() * location.height);
+
+      if (location.isWalkable(x, y)) {
+        // Check if position has no entity
+        const existingEntities = ecs.query('position', 'location');
+        let occupied = false;
+        for (const id of existingEntities) {
+          const pos = ecs.getComponent<any>(id, 'position');
+          const loc = ecs.getComponent<any>(id, 'location');
+          if (
+            pos &&
+            loc &&
+            Math.floor(pos.x) === x &&
+            Math.floor(pos.y) === y &&
+            loc.worldX === worldX &&
+            loc.worldY === worldY
+          ) {
+            occupied = true;
+            break;
+          }
+        }
+
+        if (!occupied) {
+          const enemyType =
+            enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+          registry.spawn(ecs, enemyType, x, y, worldX, worldY);
+          spawned++;
+        }
+      }
+    }
+  }
+
+  /**
+   * Populate cave with creatures
+   * @param location - The location
+   * @param ecs - ECS instance
+   */
+  private static populateCave(location: Location, ecs: ECS): void {
+    const enemyTypes = this.getEnemyTypes(
+      LocationType.CAVE,
+      location.metadata.biomeConfig.id
+    );
+    const registry = EntityRegistry.getInstance();
+    const worldX = location.worldPosition.x;
+    const worldY = location.worldPosition.y;
+
+    // Medium density - ~15-25 creatures scattered
+    const creatureCount = Math.floor(15 + Math.random() * 11);
+    const attempts = creatureCount * 20;
+    let spawned = 0;
+
+    for (let i = 0; i < attempts && spawned < creatureCount; i++) {
+      const x = Math.floor(Math.random() * location.width);
+      const y = Math.floor(Math.random() * location.height);
+
+      if (location.isWalkable(x, y)) {
+        // Check if position has no entity
+        const existingEntities = ecs.query('position', 'location');
+        let occupied = false;
+        for (const id of existingEntities) {
+          const pos = ecs.getComponent<any>(id, 'position');
+          const loc = ecs.getComponent<any>(id, 'location');
+          if (
+            pos &&
+            loc &&
+            Math.floor(pos.x) === x &&
+            Math.floor(pos.y) === y &&
+            loc.worldX === worldX &&
+            loc.worldY === worldY
+          ) {
+            occupied = true;
+            break;
+          }
+        }
+
+        if (!occupied) {
+          const enemyType =
+            enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+          registry.spawn(ecs, enemyType, x, y, worldX, worldY);
+          spawned++;
         }
       }
     }

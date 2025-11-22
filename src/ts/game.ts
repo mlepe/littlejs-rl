@@ -189,8 +189,8 @@ export default class Game {
     const startLocation = this.world.getCurrentLocation();
 
     if (startLocation) {
-      // Generate the starting location
-      startLocation.generate();
+      // Generate the starting location with entity spawning
+      startLocation.generate(this.ecs);
 
       // Find walkable spawn position (search from center outward)
       let spawnX = Math.floor(startLocation.width / 2);

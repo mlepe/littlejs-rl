@@ -183,9 +183,10 @@ export default class Location {
   /**
    * Generate procedural location content
    * Uses LocationGenerator to create layout based on location type and biome
+   * @param ecs - Optional ECS instance for spawning entities
    */
-  generate(): void {
-    LocationGenerator.generate(this);
+  generate(ecs?: import('./ecs').default): void {
+    LocationGenerator.generate(this, ecs);
     // Redraw tile layers after generation to make tiles visible
     this.tileLayer.redraw();
     this.collisionLayer.redraw();
