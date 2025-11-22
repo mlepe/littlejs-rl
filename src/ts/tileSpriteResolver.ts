@@ -13,7 +13,8 @@
 import * as LJS from 'littlejsengine';
 
 import { TilesetConfig } from './types/dataSchemas';
-import { AutoTileSprite, TileSprite } from './tileConfig';
+import { CuratedTileSprite } from './tileConfig_generated';
+import { TileSprite } from './tileConfig';
 
 /**
  * TileSpriteResolver - Singleton manager for tileset configurations
@@ -25,7 +26,7 @@ import { AutoTileSprite, TileSprite } from './tileConfig';
  * Features:
  * - Multiple tileset configurations with different sprite mappings
  * - Runtime configuration switching
- * - Fallback to AutoTileSprite values when no mapping exists
+ * - Fallback to CuratedTileSprite values when no mapping exists
  * - Manages tileset image paths and grid dimensions
  *
  * @example
@@ -153,10 +154,10 @@ export class TileSpriteResolver {
   /**
    * Resolve a sprite name to its index in the active tileset
    *
-   * Falls back to AutoTileSprite value if:
+   * Falls back to CuratedTileSprite value if:
    * - No active configuration
    * - Sprite name not in configuration mappings
-   * - AutoTileSprite enum has this value
+   * - CuratedTileSprite enum has this value
    *
    * @param spriteName - Name of the sprite (e.g., 'PLAYER_WARRIOR')
    * @returns The sprite index in the active tileset
@@ -168,25 +169,28 @@ export class TileSpriteResolver {
       return this.activeConfig.mappings[spriteName];
     }
 
-    // Fall back to TileSprite enum
-    if (spriteName in TileSprite) {
-      const fallbackValue = TileSprite[spriteName as keyof typeof TileSprite];
+    // Fall back to CuratedTileSprite enum (primary fallback)
+    if (spriteName in CuratedTileSprite) {
+      const fallbackValue =
+        CuratedTileSprite[spriteName as keyof typeof CuratedTileSprite];
       if (typeof fallbackValue === 'number') {
         return fallbackValue;
       }
     }
 
-    // Fall back to AutoTileSprite enum
-    if (spriteName in AutoTileSprite) {
-      const fallbackValue =
-        AutoTileSprite[spriteName as keyof typeof AutoTileSprite];
+    // Fall back to legacy TileSprite enum (deprecated)
+    if (spriteName in TileSprite) {
+      const fallbackValue = TileSprite[spriteName as keyof typeof TileSprite];
       if (typeof fallbackValue === 'number') {
+        console.warn(
+          `Using deprecated TileSprite.${spriteName}, please update to CuratedTileSprite`
+        );
         return fallbackValue;
       }
     }
 
     throw new Error(
-      `Sprite '${spriteName}' not found in active tileset configuration or AutoTileSprite enum`
+      `Sprite '${spriteName}' not found in active tileset configuration or CuratedTileSprite enum`
     );
   }
 
@@ -259,7 +263,7 @@ export class TileSpriteResolver {
   }
 
   /**
-   * Check if a sprite name exists in the active configuration or AutoTileSprite
+   * Check if a sprite name exists in the active configuration or CuratedTileSprite
    *
    * @param spriteName - Name of the sprite to check
    * @returns True if sprite can be resolved
@@ -270,15 +274,16 @@ export class TileSpriteResolver {
       return true;
     }
 
-    // Check TileSprite enum
-    if (spriteName in TileSprite) {
-      const value = TileSprite[spriteName as keyof typeof TileSprite];
+    // Check CuratedTileSprite enum (primary)
+    if (spriteName in CuratedTileSprite) {
+      const value =
+        CuratedTileSprite[spriteName as keyof typeof CuratedTileSprite];
       return typeof value === 'number';
     }
 
-    // Check AutoTileSprite enum
-    if (spriteName in AutoTileSprite) {
-      const value = AutoTileSprite[spriteName as keyof typeof AutoTileSprite];
+    // Check legacy TileSprite enum (deprecated)
+    if (spriteName in TileSprite) {
+      const value = TileSprite[spriteName as keyof typeof TileSprite];
       return typeof value === 'number';
     }
 

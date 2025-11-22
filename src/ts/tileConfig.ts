@@ -10,6 +10,7 @@
  * Copyright 2025 - 2025 Matthieu LEPERLIER
  */
 import * as LJS from 'littlejsengine';
+import { CuratedTileSprite } from './tileConfig_generated';
 
 /**
  * Tileset Configuration - Sprite index mappings
@@ -107,238 +108,6 @@ export enum TileSprite {
   CHAR_8 = 31,
   CHAR_9 = 73,
 }
-
-// SECTION[epic=TileConfig] CuratedTileSprite
-// ============================================
-// AUTO-GENERATED TILE DEFINITIONS
-// Generated: 2025-11-21T20:38:54.713Z
-// Total tiles documented: 115
-// ============================================
-
-export enum CuratedTileSprite {
-  VOID = 0,
-  NULL = 0, // Alias for VOID
-  NOTHING = 0, // Alias for VOID
-  FLOOR_ROCK = 1,
-  FLOOR_STONE = 2,
-  FLOOR = 2, // Alias for FLOOR_STONE
-  GROUND = 2, // Alias for FLOOR_STONE
-  FLOOR_STONE_2 = 3,
-  FLOOR_STONE_3 = 4,
-  FLOOR_GRASS = 5,
-  FLOOR_FLOWERS = 6,
-  FLOOR_LEAVES = 7,
-  CHAR_1 = 24,
-  CHAR_2 = 25,
-  CHAR_3 = 26,
-  CHAR_4 = 27,
-  CHAR_5 = 28,
-  CHAR_6 = 29,
-  CHAR_7 = 30,
-  CHAR_8 = 31,
-  ARMOR_HELMET = 32,
-  ARMOR_HELMET_2 = 33,
-  ARMOR_HELMET_3 = 34,
-  ARMOR_HELMET_4 = 35,
-  ARMOR_HELMET_5 = 36,
-  ARMOR_HELMET_6 = 37,
-  ARMOR_HELMET_7 = 38,
-  ARMOR_FEET = 39,
-  ARMOR_FEET_2 = 40,
-  ARMOR_HANDS = 41,
-  ARMOR_HANDS_1 = 42,
-  PROP_TREE = 49,
-  PROP_TREE_1 = 49, // Alias for PROP_TREE
-  PROP_TREE_2 = 50,
-  PROP_TREE_3 = 51,
-  PROP_TREES = 52,
-  PROP_TREE_4 = 53,
-  PROP_TREE_5 = 54,
-  PROP_CACTUS = 55,
-  PROP_CACTI = 56,
-  CHAR_9 = 73,
-  CHAR_10 = 74,
-  CHAR_11 = 75,
-  CHAR_12 = 76,
-  CHAR_13 = 77,
-  CHAR_14 = 78,
-  CHAR_15 = 79,
-  CHAR_16 = 80,
-  ARMOR_BODY = 81,
-  ARMOR_BODY_2 = 82,
-  ARMOR_BODY_3 = 83,
-  ARMOR_BODY_4 = 84,
-  ARMOR_BODY_5 = 85,
-  ARMOR_BODY_6 = 86,
-  ARMOR_BODY_7 = 87,
-  ARMOR_FEET_3 = 88,
-  ARMOR_FEET_4 = 89,
-  ARMOR_HANDS_3 = 90,
-  ARMOR_HANDS_4 = 91,
-  PROP_TALL_GRASS = 98,
-  PROP_VINE = 99,
-  PROP_VINE_2 = 100,
-  PROP_TREES_2 = 101,
-  PROP_TREE_6 = 102,
-  FLOOR_PUDDLE = 103,
-  PROP_VINE_3 = 104,
-  PROP_PALM_TREE = 105,
-  CHAR_17 = 122,
-  CHAR_18 = 123,
-  CHAR_GOBLIN = 123, // Alias for CHAR_18
-  ENEMY_GOBLIN = 123, // Alias for CHAR_18
-  CHAR_19 = 124,
-  CHAR_20 = 125,
-  CHAR_DOGMAN = 125, // Alias for CHAR_20
-  ENEMY_DOGMAN = 125, // Alias for CHAR_20
-  CHAR_21 = 126,
-  CHAR_4EYES = 126, // Alias for CHAR_21
-  ENEMY_4EYES = 126, // Alias for CHAR_21
-  CHAR_22 = 127,
-  CHAR_23 = 128,
-  CHAR_24 = 129,
-  CHAR_26 = 171,
-  FLOOR_BRIDGE_ARCHED = 202,
-  FLOOR_STONE_BRIDGE = 203,
-  FLOOR_BRIDGE = 203, // Alias for FLOOR_STONE_BRIDGE
-  CHAR_35 = 220,
-  FLOOR_BRIDGE_WOODEN_ARCHED = 251,
-  FLOOR_WOODEN_BRIDGE = 252,
-  CHAR_44 = 269,
-  CHAR_LOBSTER = 269, // Alias for CHAR_44
-  MONSTER_LOBSTER = 269, // Alias for CHAR_44
-  CHAR_45 = 270,
-  CHAR_CRAB = 270, // Alias for CHAR_45
-  MONSTER_CRAB = 270, // Alias for CHAR_45
-  CHAR_46 = 271,
-  CHAR_WASP = 271, // Alias for CHAR_46
-  MONSTER_WASP = 271, // Alias for CHAR_46
-  CHAR_47 = 272,
-  CHAR_TURTLE = 272, // Alias for CHAR_47
-  MONSTER_TURTLE = 272, // Alias for CHAR_47
-  CHAR_48 = 273,
-  CHAR_SPIDER = 273, // Alias for CHAR_48
-  MONSTER_SPIDER = 273, // Alias for CHAR_48
-  CHAR_49 = 274,
-  CHAR_SPIDER_2 = 274, // Alias for CHAR_49
-  MONSTER_SPIDER_2 = 274, // Alias for CHAR_49
-  CHAR_50 = 275,
-  CHAR_SPIDER_3 = 275, // Alias for CHAR_50
-  MONSTER_SPIDER_3 = 275, // Alias for CHAR_50
-  CHAR_51 = 276,
-  CHAR_FLY = 276, // Alias for CHAR_51
-  MONSTER_FLY = 276, // Alias for CHAR_51
-  STAIRS_UP = 296,
-  STAIRS_DOWN = 297,
-  OBJ_BOOKCASE = 299,
-  CHEST_CLOSED = 302,
-  CHEST_OPEN = 303,
-  CHEST_EMPTY = 304,
-  CHEST_OPEN_2 = 305,
-  CHAR_53 = 318,
-  CHAR_54 = 319,
-  CHAR_55 = 320,
-  CHAR_GHOST = 320, // Alias for CHAR_55
-  MONSTER_GHOST = 320, // Alias for CHAR_55
-  CHAR_56 = 321,
-  CHAR_GHOST_2 = 321, // Alias for CHAR_56
-  MONSTER_GHOST_2 = 321, // Alias for CHAR_56
-  CHAR_57 = 322,
-  CHAR_58 = 323,
-  CHAR_SKELETON = 323, // Alias for CHAR_58
-  MONSTER_SKELETON = 323, // Alias for CHAR_58
-  OBJ_SIGN = 343,
-  OBJ_SIGN_2 = 344,
-  OBJ_SIGN_3 = 345,
-  CHAR_62 = 367,
-  PROP_MIRROR_TABLE = 392,
-  CHAR_71 = 416,
-  DOOR_LOCKED = 441,
-  DOOR_UNLOCKED = 442,
-  DOOR_OPEN = 443,
-  DOOR_CLOSED = 444,
-  DOOR_CLOSED_2 = 445,
-  DOOR_CLOSED_3 = 446,
-  DOOR_OPEN_2 = 447,
-  DOOR_CLOSED_4 = 448,
-  DOOR_CLOSED_5 = 449,
-  DOOR_OPEN_3 = 450,
-  DOOR_CLOSED_6 = 451,
-  CHAR_80 = 465,
-}
-
-// ============================================
-// CATEGORY MAPPINGS
-// ============================================
-
-// ENVIRONMENT: 11 tiles
-// Indices: 1, 2, 3, 4, 5, 6, 7, 202, 203, 251, 252
-
-// CHARACTER: 43 tiles
-// Indices: 24, 25, 26, 27, 28, 29, 30, 31, 73, 74, 75, 76, 77, 78, 79, 80, 122, 123, 124, 125, 126, 127, 128, 129, 171, 220, 269, 270, 271, 272, 273, 274, 275, 276, 318, 319, 320, 321, 322, 323, 367, 416, 465
-
-// ITEM: 22 tiles
-// Indices: 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91
-
-// OBJECT: 37 tiles
-// Indices: 49, 50, 51, 52, 53, 54, 55, 56, 98, 99, 100, 101, 102, 104, 105, 296, 297, 299, 302, 303, 304, 305, 343, 344, 345, 392, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451
-
-// OTHER: 1 tiles
-// Indices: 0
-
-// ============================================
-// SUBCATEGORY MAPPINGS
-// ============================================
-
-// FLOOR: 12 tiles
-// Indices: 1, 2, 3, 4, 5, 6, 7, 103, 202, 203, 251, 252
-
-// DOOR: 11 tiles
-// Indices: 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451
-
-// PASSAGE: 2 tiles
-// Indices: 296, 297
-
-// LIQUID: 1 tiles
-// Indices: 103
-
-// CONTAINER: 5 tiles
-// Indices: 299, 302, 303, 304, 305
-
-// FURNITURE: 2 tiles
-// Indices: 299, 392
-
-// PROP: 15 tiles
-// Indices: 49, 50, 51, 52, 53, 54, 55, 56, 98, 99, 100, 101, 102, 104, 105
-
-// INTERACTIVE: 3 tiles
-// Indices: 343, 344, 345
-
-// ARMOR: 22 tiles
-// Indices: 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91
-
-// PLAYER: 43 tiles
-// Indices: 24, 25, 26, 27, 28, 29, 30, 31, 73, 74, 75, 76, 77, 78, 79, 80, 122, 123, 124, 125, 126, 127, 128, 129, 171, 220, 269, 270, 271, 272, 273, 274, 275, 276, 318, 319, 320, 321, 322, 323, 367, 416, 465
-
-// NPC: 43 tiles
-// Indices: 24, 25, 26, 27, 28, 29, 30, 31, 73, 74, 75, 76, 77, 78, 79, 80, 122, 123, 124, 125, 126, 127, 128, 129, 171, 220, 269, 270, 271, 272, 273, 274, 275, 276, 318, 319, 320, 321, 322, 323, 367, 416, 465
-
-// COMPANION: 43 tiles
-// Indices: 24, 25, 26, 27, 28, 29, 30, 31, 73, 74, 75, 76, 77, 78, 79, 80, 122, 123, 124, 125, 126, 127, 128, 129, 171, 220, 269, 270, 271, 272, 273, 274, 275, 276, 318, 319, 320, 321, 322, 323, 367, 416, 465
-
-// ENEMY_COMMON: 43 tiles
-// Indices: 24, 25, 26, 27, 28, 29, 30, 31, 73, 74, 75, 76, 77, 78, 79, 80, 122, 123, 124, 125, 126, 127, 128, 129, 171, 220, 269, 270, 271, 272, 273, 274, 275, 276, 318, 319, 320, 321, 322, 323, 367, 416, 465
-
-// ENEMY_UNDEAD: 3 tiles
-// Indices: 320, 321, 323
-
-// ENEMY_CREATURE: 8 tiles
-// Indices: 269, 270, 271, 272, 273, 274, 275, 276
-
-// OTHER: 1 tiles
-// Indices: 0
-
-// !SECTION
 
 /** AutoTileSprite
  * AI-generated comprehensive enum of all tiles in the tileset
@@ -1081,74 +850,74 @@ export function getTileCategorization(sprite: number): TileCategorization {
 // LEGACY CONSTANTS (for backward compatibility)
 // ============================================================================
 
-/** @deprecated Use AutoTileSprite.PLAYER_WARRIOR instead */
-export const SPRITE_PLAYER = AutoTileSprite.PLAYER_WARRIOR;
+/** @deprecated Use CuratedTileSprite.CHAR_1 instead */
+export const SPRITE_PLAYER = CuratedTileSprite.CHAR_1;
 
-/** @deprecated Use AutoTileSprite.ENEMY_GOBLIN instead */
-export const SPRITE_ENEMY = AutoTileSprite.ENEMY_GOBLIN;
+/** @deprecated Use CuratedTileSprite.ENEMY_GOBLIN instead */
+export const SPRITE_ENEMY = CuratedTileSprite.ENEMY_GOBLIN;
 
-/** @deprecated Use AutoTileSprite.NPC_MERCHANT instead */
-export const SPRITE_NPC = AutoTileSprite.NPC_MERCHANT;
+/** @deprecated Use CuratedTileSprite.CHAR_2 instead (NPC merchant not documented in curated set) */
+export const SPRITE_NPC = CuratedTileSprite.CHAR_2;
 
-/** @deprecated Use AutoTileSprite.BOSS_DRAGON_RED instead (not defined yet, using placeholder) */
-export const SPRITE_BOSS = AutoTileSprite.CHAR_DRAGON_1;
+/** @deprecated Use resolveTileInfo('BOSS_DRAGON') instead (not documented in curated set, using placeholder) */
+export const SPRITE_BOSS = CuratedTileSprite.CHAR_9; // Placeholder
 
-/** @deprecated Use AutoTileSprite.ENEMY_RAT_GIANT instead */
-export const SPRITE_FLEEING_CREATURE = AutoTileSprite.ENEMY_RAT_GIANT;
+/** @deprecated Use CuratedTileSprite.MONSTER_SPIDER instead */
+export const SPRITE_FLEEING_CREATURE = CuratedTileSprite.MONSTER_SPIDER;
 
-/** @deprecated Use AutoTileSprite.FLOOR_STONE instead */
-export const SPRITE_FLOOR = AutoTileSprite.FLOOR_STONE;
+/** @deprecated Use CuratedTileSprite.FLOOR_STONE instead */
+export const SPRITE_FLOOR = CuratedTileSprite.FLOOR_STONE;
 
-/** @deprecated Use AutoTileSprite.WALL_STONE instead */
-export const SPRITE_WALL = AutoTileSprite.WALL_STONE;
+/** @deprecated Use resolveTileInfo('WALL_STONE') instead (not documented in curated set) */
+export const SPRITE_WALL = 48; // Fallback to numeric index
 
-/** @deprecated Use AutoTileSprite.DOOR_OPEN_WOOD instead */
-export const SPRITE_DOOR_OPEN = AutoTileSprite.DOOR_OPEN_WOOD;
+/** @deprecated Use CuratedTileSprite.DOOR_OPEN instead */
+export const SPRITE_DOOR_OPEN = CuratedTileSprite.DOOR_OPEN;
 
-/** @deprecated Use AutoTileSprite.DOOR_CLOSED_WOOD instead */
-export const SPRITE_DOOR_CLOSED = AutoTileSprite.DOOR_CLOSED_WOOD;
+/** @deprecated Use CuratedTileSprite.DOOR_CLOSED instead */
+export const SPRITE_DOOR_CLOSED = CuratedTileSprite.DOOR_CLOSED;
 
-/** @deprecated Use AutoTileSprite.STAIRS_UP instead */
-export const SPRITE_STAIRS_UP = AutoTileSprite.STAIRS_UP;
+/** @deprecated Use CuratedTileSprite.STAIRS_UP instead */
+export const SPRITE_STAIRS_UP = CuratedTileSprite.STAIRS_UP;
 
-/** @deprecated Use AutoTileSprite.STAIRS_DOWN instead */
-export const SPRITE_STAIRS_DOWN = AutoTileSprite.STAIRS_DOWN;
+/** @deprecated Use CuratedTileSprite.STAIRS_DOWN instead */
+export const SPRITE_STAIRS_DOWN = CuratedTileSprite.STAIRS_DOWN;
 
-/** @deprecated Use AutoTileSprite.WATER_DEEP instead */
-export const SPRITE_WATER = AutoTileSprite.WATER_DEEP;
+/** @deprecated Use resolveTileInfo('WATER') instead (not documented in curated set) */
+export const SPRITE_WATER = CuratedTileSprite.FLOOR_PUDDLE; // Closest match
 
-/** @deprecated Use AutoTileSprite.FLOOR_GRASS instead */
-export const SPRITE_GRASS = AutoTileSprite.FLOOR_GRASS;
+/** @deprecated Use CuratedTileSprite.FLOOR_GRASS instead */
+export const SPRITE_GRASS = CuratedTileSprite.FLOOR_GRASS;
 
-/** @deprecated Use AutoTileSprite.VOID instead */
-export const SPRITE_VOID = AutoTileSprite.VOID;
+/** @deprecated Use CuratedTileSprite.VOID instead */
+export const SPRITE_VOID = CuratedTileSprite.VOID;
 
-/** @deprecated Use AutoTileSprite.SWORD_SHORT instead */
-export const SPRITE_SWORD = AutoTileSprite.SWORD_SHORT;
+/** @deprecated Use resolveTileInfo('SWORD') instead (not documented in curated set) */
+export const SPRITE_SWORD = 575; // Fallback to numeric index
 
-/** @deprecated Use AutoTileSprite.SHIELD_WOOD instead */
-export const SPRITE_SHIELD = AutoTileSprite.SHIELD_WOOD;
+/** @deprecated Use resolveTileInfo('SHIELD') instead (not documented in curated set) */
+export const SPRITE_SHIELD = 624; // Fallback to numeric index
 
-/** @deprecated Use AutoTileSprite.POTION_RED instead */
-export const SPRITE_POTION_HEALTH = AutoTileSprite.POTION_RED;
+/** @deprecated Use resolveTileInfo('POTION_RED') instead (not documented in curated set) */
+export const SPRITE_POTION_HEALTH = 657; // Fallback to numeric index
 
-/** @deprecated Use AutoTileSprite.POTION_BLUE instead */
-export const SPRITE_POTION_MANA = AutoTileSprite.POTION_BLUE;
+/** @deprecated Use resolveTileInfo('POTION_BLUE') instead (not documented in curated set) */
+export const SPRITE_POTION_MANA = 658; // Fallback to numeric index
 
-/** @deprecated Use AutoTileSprite.COIN_GOLD instead */
-export const SPRITE_COIN = AutoTileSprite.COIN_GOLD;
+/** @deprecated Use resolveTileInfo('COIN') instead (not documented in curated set) */
+export const SPRITE_COIN = 721; // Fallback to numeric index
 
-/** @deprecated Use AutoTileSprite.CHEST_CLOSED instead */
-export const SPRITE_CHEST = AutoTileSprite.CHEST_CLOSED;
+/** @deprecated Use CuratedTileSprite.CHEST_CLOSED instead */
+export const SPRITE_CHEST = CuratedTileSprite.CHEST_CLOSED;
 
-/** @deprecated Use AutoTileSprite.ICON_HEART_FULL instead (not defined yet, using placeholder) */
-export const SPRITE_HEART = 560; // Placeholder value
+/** @deprecated Use resolveTileInfo('ICON_HEART_FULL') instead (not documented in curated set) */
+export const SPRITE_HEART = 560; // Fallback to numeric index
 
-/** @deprecated Use AutoTileSprite.ICON_STAR instead (not defined yet, using placeholder) */
-export const SPRITE_STAR = 561; // Placeholder value
+/** @deprecated Use resolveTileInfo('ICON_STAR') instead (not documented in curated set) */
+export const SPRITE_STAR = 561; // Fallback to numeric index
 
-/** @deprecated Use AutoTileSprite.ICON_SKULL instead (not defined yet, using placeholder) */
-export const SPRITE_SKULL = 562; // Placeholder value
+/** @deprecated Use resolveTileInfo('ICON_SKULL') instead (not documented in curated set) */
+export const SPRITE_SKULL = 562; // Fallback to numeric index
 
 // ============================================================================
 // HELPER FUNCTION
@@ -1212,6 +981,19 @@ export function getTileIndex(
 // ============================================================================
 // TILESET RESOLVER INTEGRATION
 // ============================================================================
+
+/**
+ * Export CuratedTileSprite - The curated, hand-documented tileset
+ * This is the primary tile sprite enum to use in your game code.
+ *
+ * CuratedTileSprite replaces AutoTileSprite and provides:
+ * - Manually documented tiles with meaningful names
+ * - Alias support (e.g., ENEMY_GOBLIN, MONSTER_SPIDER)
+ * - Category and subcategory mappings
+ *
+ * @see tileConfig_generated.ts for the full enum and documentation
+ */
+export { CuratedTileSprite } from './tileConfig_generated';
 
 /**
  * Re-export TileSpriteResolver utilities for convenient access

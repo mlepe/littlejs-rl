@@ -21,6 +21,7 @@ import { RaceRegistry } from './raceRegistry';
 import { RenderTemplateRegistry } from './renderTemplateRegistry';
 import { StatsTemplateRegistry } from './statsTemplateRegistry';
 import { TileSpriteResolver } from '../tileSpriteResolver';
+import { TilesetConfig } from '../types/dataSchemas';
 
 /**
  * Central data loading system
@@ -223,6 +224,7 @@ export class DataLoader {
     const tilesetFiles = [
       'src/data/base/tilesets/default.json',
       'src/data/base/tilesets/pixel-art.json',
+      'src/data/base/tilesets/tileset_data.json', // Curated tileset data
     ];
 
     for (const path of tilesetFiles) {
@@ -242,6 +244,44 @@ export class DataLoader {
           throw new ParseError(path, parseError as Error);
         }
 
+        // Handle tileset_data.json format (from tileset viewer)
+        if (path.includes('tileset_data.json')) {
+          // Convert tileset_data.json to tileset configuration format
+          const curatedConfig: TilesetConfig = {
+            id: 'curated',
+            name: 'Curated Tileset',
+            image: 'tileset.png',
+            tileSize: 16,
+            gridWidth: data.tilesetWidth || 49,
+            gridHeight: data.tilesetHeight || 22,
+            mappings: {},
+          };
+
+          // Convert tiles object to mappings
+          if (data.tiles && typeof data.tiles === 'object') {
+            for (const [indexStr, tileData] of Object.entries(data.tiles)) {
+              const tile = tileData as any;
+              if (tile.name && tile.isDocumented) {
+                curatedConfig.mappings[tile.name] = parseInt(indexStr);
+
+                // Add alternate names as aliases
+                if (tile.alternateNames && Array.isArray(tile.alternateNames)) {
+                  for (const altName of tile.alternateNames) {
+                    curatedConfig.mappings[altName] = parseInt(indexStr);
+                  }
+                }
+              }
+            }
+          }
+
+          resolver.registerConfiguration(curatedConfig);
+          console.log(
+            `[DataLoader] Registered curated tileset: ${curatedConfig.name} (${curatedConfig.id}) with ${Object.keys(curatedConfig.mappings).length} sprite mappings`
+          );
+          continue;
+        }
+
+        // Handle standard tileset configuration format
         if (!data.tilesets || !Array.isArray(data.tilesets)) {
           throw new Error(
             `Invalid data format in ${path}: expected 'tilesets' array`
@@ -264,12 +304,14 @@ export class DataLoader {
       }
     }
 
-    // Set default configuration if available
+    // Set curated configuration as default if available, otherwise use default
     const availableConfigs = resolver.getAvailableConfigurations();
     if (availableConfigs.length > 0 && !resolver.getActiveConfigurationId()) {
-      const defaultConfig = availableConfigs.includes('default')
-        ? 'default'
-        : availableConfigs[0];
+      const defaultConfig = availableConfigs.includes('curated')
+        ? 'curated'
+        : availableConfigs.includes('default')
+          ? 'default'
+          : availableConfigs[0];
       resolver.setConfiguration(defaultConfig);
       console.log(
         `[DataLoader] Set default tileset configuration: ${defaultConfig}`
