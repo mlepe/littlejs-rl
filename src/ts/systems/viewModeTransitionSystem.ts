@@ -148,8 +148,7 @@ export function viewModeTransitionSystem(ecs: ECS): void {
       // CRITICAL: Destroy location layers first
       const location = game.getCurrentLocation();
       if (location) {
-        location.getTileLayer().destroy();
-        location.getCollisionLayer().destroy();
+        location.destroyLayers();
       }
 
       // Recreate world map layer (it may have been destroyed on previous transition)
@@ -248,8 +247,10 @@ export function viewModeTransitionSystem(ecs: ECS): void {
         // CRITICAL: Destroy world map layer and recreate location layers
         worldMap.getTileLayer().destroy();
 
-        // Recreate location layers (they were destroyed when entering world map)
-        location.recreateLayers();
+        // Recreate location layers ONLY if they were destroyed
+        if (location.areLayersDestroyed()) {
+          location.recreateLayers();
+        }
 
         // Update camera for location view
         LJS.setCameraPos(LJS.vec2(spawnX, spawnY));

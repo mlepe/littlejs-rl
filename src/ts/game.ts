@@ -582,11 +582,23 @@ export default class Game {
    * Change to a different location
    */
   changeLocation(worldX: number, worldY: number): void {
-    // Change to new location
+    const oldLocation = this.world.getCurrentLocation();
+
+    // CRITICAL: Destroy old location's layers to prevent rendering accumulation
+    if (oldLocation) {
+      oldLocation.destroyLayers();
+    }
+
+    // Change to new location (getOrCreateLocation handles creation)
     this.world.setCurrentLocation(worldX, worldY);
     this.currentWorldPos = LJS.vec2(worldX, worldY);
 
     const newLocation = this.world.getCurrentLocation();
+
+    // Recreate layers if they were previously destroyed
+    if (newLocation && newLocation.areLayersDestroyed()) {
+      newLocation.recreateLayers();
+    }
 
     if (Game.isDebug) {
       console.log(`Changed to location: ${newLocation?.name}`);

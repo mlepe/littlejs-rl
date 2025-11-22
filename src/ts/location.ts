@@ -62,6 +62,7 @@ export default class Location {
   private readonly tiles: Map<string, Tile>; // "x,y" -> Tile (without entity tracking)
   private readonly tileLayer: LJS.TileLayer;
   private readonly collisionLayer: LJS.TileCollisionLayer;
+  private layersDestroyed: boolean = false;
 
   constructor(
     worldPosition: LJS.Vector2,
@@ -282,6 +283,25 @@ export default class Location {
   }
 
   /**
+   * Destroy tile layers and mark them as destroyed
+   * Call this before switching away from this location
+   */
+  destroyLayers(): void {
+    if (!this.layersDestroyed) {
+      this.tileLayer.destroy();
+      this.collisionLayer.destroy();
+      this.layersDestroyed = true;
+    }
+  }
+
+  /**
+   * Check if layers have been destroyed
+   */
+  areLayersDestroyed(): boolean {
+    return this.layersDestroyed;
+  }
+
+  /**
    * Recreate the tile layers (needed after destroy())
    * Call this when switching back to location view
    */
@@ -319,6 +339,9 @@ export default class Location {
 
     // Redraw to make visible
     this.tileLayer.redraw();
+
+    // Mark layers as active again
+    this.layersDestroyed = false;
   }
 
   /**
