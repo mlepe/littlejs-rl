@@ -70,7 +70,7 @@ export class TilesetViewer {
   constructor() {
     this.dataManager = new TileDataManager(
       this.tilesetWidth,
-      this.tilesetHeight,
+      this.tilesetHeight
     );
     this.totalTiles = this.tilesetWidth * this.tilesetHeight;
     this.viewportWidth = LJS.mainCanvasSize.x;
@@ -411,7 +411,14 @@ export class TilesetViewer {
    */
   private exportData(): void {
     const choice = prompt(
-      'Export options:\n1 = Download TypeScript\n2 = Download JSON\n3 = Copy TypeScript to clipboard\n4 = Import from JSON file',
+      'Export options:\n' +
+        '1 = Download TypeScript\n' +
+        '2 = Download JSON\n' +
+        '3 = Copy TypeScript to clipboard\n' +
+        '4 = Import from JSON file\n' +
+        '5 = Save TypeScript to project\n' +
+        '6 = Save JSON to project\n' +
+        '7 = Save both to project',
       '1'
     );
 
@@ -433,6 +440,15 @@ export class TilesetViewer {
         break;
       case '4':
         this.importFromJSONFile();
+        break;
+      case '5':
+        this.saveTypeScriptToProject();
+        break;
+      case '6':
+        this.saveJSONToProject();
+        break;
+      case '7':
+        this.saveBothToProject();
         break;
       default:
         break;
@@ -537,6 +553,74 @@ export class TilesetViewer {
       ])
     );
     console.log('[TilesetViewer] Created snapshot of current state');
+  }
+
+  /**
+   * Save TypeScript to project folder
+   */
+  private async saveTypeScriptToProject(): Promise<void> {
+    try {
+      const success = await this.dataManager.saveTypeScriptToProject(
+        this.tileData
+      );
+      if (success) {
+        alert(
+          'TypeScript saved to project!\nLocation: src/ts/tileConfig_generated.ts'
+        );
+      }
+    } catch (error) {
+      console.error('[TilesetViewer] Failed to save TypeScript:', error);
+      alert('Failed to save TypeScript to project. See console for details.');
+    }
+  }
+
+  /**
+   * Save JSON to project folder
+   */
+  private async saveJSONToProject(): Promise<void> {
+    try {
+      const success = await this.dataManager.saveJSONToProject(this.tileData);
+      if (success) {
+        alert(
+          'JSON saved to project!\nLocation: src/data/base/tilesets/tileset_data.json'
+        );
+      }
+    } catch (error) {
+      console.error('[TilesetViewer] Failed to save JSON:', error);
+      alert('Failed to save JSON to project. See console for details.');
+    }
+  }
+
+  /**
+   * Save both TypeScript and JSON to project folder
+   */
+  private async saveBothToProject(): Promise<void> {
+    try {
+      const results = await this.dataManager.saveBothToProject(this.tileData);
+
+      if (results.typescript && results.json) {
+        alert(
+          'Both files saved to project!\n' +
+            'TypeScript: src/ts/tileConfig_generated.ts\n' +
+            'JSON: src/data/base/tilesets/tileset_data.json'
+        );
+      } else if (results.typescript) {
+        alert(
+          'TypeScript saved, but JSON failed.\n' +
+            'Location: src/ts/tileConfig_generated.ts'
+        );
+      } else if (results.json) {
+        alert(
+          'JSON saved, but TypeScript failed.\n' +
+            'Location: src/data/base/tilesets/tileset_data.json'
+        );
+      } else {
+        alert('Failed to save both files. See console for details.');
+      }
+    } catch (error) {
+      console.error('[TilesetViewer] Failed to save both files:', error);
+      alert('Failed to save to project. See console for details.');
+    }
   }
 
   /**
@@ -789,7 +873,14 @@ export class TilesetViewer {
       'V - Paste metadata',
       'Z - Undo (restore prev state)',
       'O - Save to localStorage',
-      'E - Export data',
+      'E - Export/Save data',
+      '    1: Download TypeScript',
+      '    2: Download JSON',
+      '    3: Copy to clipboard',
+      '    4: Import from JSON',
+      '    5: Save TS to project',
+      '    6: Save JSON to project',
+      '    7: Save both to project',
       'I - Import from enum',
       'J - Import from JSON file',
       'H - Toggle help',

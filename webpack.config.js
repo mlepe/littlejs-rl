@@ -11,6 +11,7 @@
  */
 
 const path = require('node:path');
+const fs = require('node:fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
@@ -42,6 +43,65 @@ module.exports = (env, argv) => {
       hot: true,
       port: process.env.PORT || 8080,
       host: process.env.HOST || 'localhost',
+      setupMiddlewares: (middlewares, devServer) => {
+        if (!devServer) {
+          throw new Error('webpack-dev-server is not defined');
+        }
+
+        // API endpoint to save tileset data to project folder
+        devServer.app.post('/api/save-tileset', async (req, res) => {
+          try {
+            let body = '';
+            req.on('data', (chunk) => {
+              body += chunk.toString();
+            });
+
+            req.on('end', () => {
+              const { fileType, content, filename } = JSON.parse(body);
+
+              // Determine target directory based on file type
+              let targetDir;
+              if (fileType === 'json') {
+                targetDir = path.join(
+                  __dirname,
+                  'src',
+                  'data',
+                  'base',
+                  'tilesets'
+                );
+              } else if (fileType === 'typescript') {
+                targetDir = path.join(__dirname, 'src', 'ts');
+              } else {
+                return res.status(400).json({ error: 'Invalid file type' });
+              }
+
+              // Ensure directory exists
+              if (!fs.existsSync(targetDir)) {
+                fs.mkdirSync(targetDir, { recursive: true });
+              }
+
+              // Write file
+              const filePath = path.join(targetDir, filename);
+              fs.writeFileSync(filePath, content, 'utf8');
+
+              console.log(`[TilesetViewer] Saved ${filename} to ${targetDir}`);
+              res.json({
+                success: true,
+                path: filePath,
+                message: `Saved to ${filePath}`,
+              });
+            });
+          } catch (error) {
+            console.error('[TilesetViewer] Save error:', error);
+            res.status(500).json({
+              error: 'Failed to save file',
+              details: error.message,
+            });
+          }
+        });
+
+        return middlewares;
+      },
     },
     plugins: [
       new HtmlWebpackPlugin({

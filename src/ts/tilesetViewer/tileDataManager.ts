@@ -282,4 +282,97 @@ export class TileDataManager {
     localStorage.removeItem(STORAGE_KEY);
     console.log('[TileDataManager] Cleared all saved data');
   }
+
+  /**
+   * Save TypeScript file to project folder via dev server API
+   */
+  async saveTypeScriptToProject(
+    tileData: Map<number, TileMetadata>
+  ): Promise<boolean> {
+    try {
+      const code = this.exportAsTypeScript(tileData);
+
+      const response = await fetch('/api/save-tileset', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fileType: 'typescript',
+          content: code,
+          filename: 'tileConfig_generated.ts',
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        console.log(
+          '[TileDataManager] Saved TypeScript to project:',
+          result.path
+        );
+        return true;
+      } else {
+        console.error('[TileDataManager] Failed to save:', result.error);
+        alert(`Failed to save TypeScript: ${result.error}`);
+        return false;
+      }
+    } catch (error) {
+      console.error('[TileDataManager] API error:', error);
+      alert(`Failed to save TypeScript: ${error}`);
+      return false;
+    }
+  }
+
+  /**
+   * Save JSON file to project folder via dev server API
+   */
+  async saveJSONToProject(
+    tileData: Map<number, TileMetadata>
+  ): Promise<boolean> {
+    try {
+      const json = this.exportAsJSON(tileData);
+
+      const response = await fetch('/api/save-tileset', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fileType: 'json',
+          content: json,
+          filename: 'tileset_data.json',
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        console.log('[TileDataManager] Saved JSON to project:', result.path);
+        return true;
+      } else {
+        console.error('[TileDataManager] Failed to save:', result.error);
+        alert(`Failed to save JSON: ${result.error}`);
+        return false;
+      }
+    } catch (error) {
+      console.error('[TileDataManager] API error:', error);
+      alert(`Failed to save JSON: ${error}`);
+      return false;
+    }
+  }
+
+  /**
+   * Save both TypeScript and JSON to project folder
+   */
+  async saveBothToProject(
+    tileData: Map<number, TileMetadata>
+  ): Promise<{ typescript: boolean; json: boolean }> {
+    const [typescript, json] = await Promise.all([
+      this.saveTypeScriptToProject(tileData),
+      this.saveJSONToProject(tileData),
+    ]);
+
+    return { typescript, json };
+  }
 }
