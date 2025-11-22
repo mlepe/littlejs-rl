@@ -23,9 +23,7 @@ This document tracks ongoing tasks, features to implement, and technical debt fo
 ### Immediate Tasks
 
 - [ ] **Implement location loading screen** - Show loading screen when changing locations if necessary
-- [ ] **Integrate biome system with world/location generation** - Use biome features in world and location generation
-- [ ] **Fix LocationGenerator bugs** - Address biome tile resolution issues
-- [ ] **Define missing entities** - Create entity definitions for biome spawn tables (rat, spider, goblin, wolf, etc.)
+- [ ] **Carefully create data content for entities, etc.**
 - [ ] **Implement faction system** - Add faction support for entity relationships and world building
 - [ ] **Implement tile zones** - Add TileZones functionality for region-based sprite management
 - [ ] **Player death handling** - Implement game over, respawn, or permadeath mechanics
