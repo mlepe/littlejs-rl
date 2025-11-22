@@ -48,48 +48,61 @@ module.exports = (env, argv) => {
           throw new Error('webpack-dev-server is not defined');
         }
 
-        // API endpoint to save tileset data to project folder
-        devServer.app.post('/api/save-tileset', async (req, res) => {
-          try {
+        // Add body parser middleware for JSON
+        devServer.app.use((req, res, next) => {
+          if (req.method === 'POST' && req.url === '/api/save-tileset') {
             let body = '';
             req.on('data', (chunk) => {
               body += chunk.toString();
             });
-
             req.on('end', () => {
-              const { fileType, content, filename } = JSON.parse(body);
-
-              // Determine target directory based on file type
-              let targetDir;
-              if (fileType === 'json') {
-                targetDir = path.join(
-                  __dirname,
-                  'src',
-                  'data',
-                  'base',
-                  'tilesets'
-                );
-              } else if (fileType === 'typescript') {
-                targetDir = path.join(__dirname, 'src', 'ts');
-              } else {
-                return res.status(400).json({ error: 'Invalid file type' });
+              try {
+                req.body = JSON.parse(body);
+                next();
+              } catch (error) {
+                res.status(400).json({ error: 'Invalid JSON' });
               }
+            });
+          } else {
+            next();
+          }
+        });
 
-              // Ensure directory exists
-              if (!fs.existsSync(targetDir)) {
-                fs.mkdirSync(targetDir, { recursive: true });
-              }
+        // API endpoint to save tileset data to project folder
+        devServer.app.post('/api/save-tileset', (req, res) => {
+          try {
+            const { fileType, content, filename } = req.body;
 
-              // Write file
-              const filePath = path.join(targetDir, filename);
-              fs.writeFileSync(filePath, content, 'utf8');
+            // Determine target directory based on file type
+            let targetDir;
+            if (fileType === 'json') {
+              targetDir = path.join(
+                __dirname,
+                'src',
+                'data',
+                'base',
+                'tilesets'
+              );
+            } else if (fileType === 'typescript') {
+              targetDir = path.join(__dirname, 'src', 'ts');
+            } else {
+              return res.status(400).json({ error: 'Invalid file type' });
+            }
 
-              console.log(`[TilesetViewer] Saved ${filename} to ${targetDir}`);
-              res.json({
-                success: true,
-                path: filePath,
-                message: `Saved to ${filePath}`,
-              });
+            // Ensure directory exists
+            if (!fs.existsSync(targetDir)) {
+              fs.mkdirSync(targetDir, { recursive: true });
+            }
+
+            // Write file
+            const filePath = path.join(targetDir, filename);
+            fs.writeFileSync(filePath, content, 'utf8');
+
+            console.log(`[TilesetViewer] Saved ${filename} to ${targetDir}`);
+            res.json({
+              success: true,
+              path: filePath,
+              message: `Saved to ${filePath}`,
             });
           } catch (error) {
             console.error('[TilesetViewer] Save error:', error);

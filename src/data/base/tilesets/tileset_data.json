@@ -1,0 +1,1483 @@
+{
+  "version": "1.0.0",
+  "tilesetWidth": 49,
+  "tilesetHeight": 22,
+  "tiles": {
+    "0": {
+      "index": 0,
+      "name": "VOID",
+      "alternateNames": [
+        "NULL",
+        "NOTHING"
+      ],
+      "categories": [
+        7
+      ],
+      "subcategories": [
+        34
+      ],
+      "isDocumented": true
+    },
+    "1": {
+      "index": 1,
+      "name": "FLOOR_ROCK",
+      "categories": [
+        0
+      ],
+      "subcategories": [
+        0
+      ],
+      "isDocumented": true
+    },
+    "2": {
+      "index": 2,
+      "name": "FLOOR_STONE",
+      "alternateNames": [
+        "FLOOR",
+        "GROUND"
+      ],
+      "categories": [
+        0
+      ],
+      "subcategories": [
+        0
+      ],
+      "isDocumented": true
+    },
+    "3": {
+      "index": 3,
+      "name": "FLOOR_STONE_2",
+      "categories": [
+        0
+      ],
+      "subcategories": [
+        0
+      ],
+      "isDocumented": true
+    },
+    "4": {
+      "index": 4,
+      "name": "FLOOR_STONE_3",
+      "categories": [
+        0
+      ],
+      "subcategories": [
+        0
+      ],
+      "isDocumented": true
+    },
+    "5": {
+      "index": 5,
+      "name": "FLOOR_GRASS",
+      "categories": [
+        0
+      ],
+      "subcategories": [
+        0
+      ],
+      "isDocumented": true
+    },
+    "6": {
+      "index": 6,
+      "name": "FLOOR_FLOWERS",
+      "categories": [
+        0
+      ],
+      "subcategories": [
+        0
+      ],
+      "isDocumented": true
+    },
+    "7": {
+      "index": 7,
+      "name": "FLOOR_LEAVES",
+      "categories": [
+        0
+      ],
+      "subcategories": [
+        0
+      ],
+      "isDocumented": true
+    },
+    "24": {
+      "index": 24,
+      "name": "CHAR_1",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "25": {
+      "index": 25,
+      "name": "CHAR_2",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "26": {
+      "index": 26,
+      "name": "CHAR_3",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "27": {
+      "index": 27,
+      "name": "CHAR_4",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "28": {
+      "index": 28,
+      "name": "CHAR_5",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "29": {
+      "index": 29,
+      "name": "CHAR_6",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "30": {
+      "index": 30,
+      "name": "CHAR_7",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "31": {
+      "index": 31,
+      "name": "CHAR_8",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "32": {
+      "index": 32,
+      "name": "ARMOR_HELMET",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "33": {
+      "index": 33,
+      "name": "ARMOR_HELMET_2",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "34": {
+      "index": 34,
+      "name": "ARMOR_HELMET_3",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "35": {
+      "index": 35,
+      "name": "ARMOR_HELMET_4",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "36": {
+      "index": 36,
+      "name": "ARMOR_HELMET_5",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "37": {
+      "index": 37,
+      "name": "ARMOR_HELMET_6",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "38": {
+      "index": 38,
+      "name": "ARMOR_HELMET_7",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "39": {
+      "index": 39,
+      "name": "ARMOR_FEET",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "40": {
+      "index": 40,
+      "name": "ARMOR_FEET_2",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "41": {
+      "index": 41,
+      "name": "ARMOR_HANDS",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "42": {
+      "index": 42,
+      "name": "ARMOR_HANDS_1",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "49": {
+      "index": 49,
+      "name": "PROP_TREE",
+      "alternateNames": [
+        "PROP_TREE_1"
+      ],
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "50": {
+      "index": 50,
+      "name": "PROP_TREE_2",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "51": {
+      "index": 51,
+      "name": "PROP_TREE_3",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "52": {
+      "index": 52,
+      "name": "PROP_TREES",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "53": {
+      "index": 53,
+      "name": "PROP_TREE_4",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "54": {
+      "index": 54,
+      "name": "PROP_TREE_5",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "55": {
+      "index": 55,
+      "name": "PROP_CACTUS",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "56": {
+      "index": 56,
+      "name": "PROP_CACTI",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "73": {
+      "index": 73,
+      "name": "CHAR_9",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "74": {
+      "index": 74,
+      "name": "CHAR_10",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "75": {
+      "index": 75,
+      "name": "CHAR_11",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "76": {
+      "index": 76,
+      "name": "CHAR_12",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "77": {
+      "index": 77,
+      "name": "CHAR_13",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "78": {
+      "index": 78,
+      "name": "CHAR_14",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "79": {
+      "index": 79,
+      "name": "CHAR_15",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "80": {
+      "index": 80,
+      "name": "CHAR_16",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "81": {
+      "index": 81,
+      "name": "ARMOR_BODY",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "82": {
+      "index": 82,
+      "name": "ARMOR_BODY_2",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "83": {
+      "index": 83,
+      "name": "ARMOR_BODY_3",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "84": {
+      "index": 84,
+      "name": "ARMOR_BODY_4",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "85": {
+      "index": 85,
+      "name": "ARMOR_BODY_5",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "86": {
+      "index": 86,
+      "name": "ARMOR_BODY_6",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "87": {
+      "index": 87,
+      "name": "ARMOR_BODY_7",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "88": {
+      "index": 88,
+      "name": "ARMOR_FEET_3",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "89": {
+      "index": 89,
+      "name": "ARMOR_FEET_4",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "90": {
+      "index": 90,
+      "name": "ARMOR_HANDS_3",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "91": {
+      "index": 91,
+      "name": "ARMOR_HANDS_4",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        12
+      ],
+      "isDocumented": true
+    },
+    "98": {
+      "index": 98,
+      "name": "PROP_TALL_GRASS",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "99": {
+      "index": 99,
+      "name": "PROP_VINE",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "100": {
+      "index": 100,
+      "name": "PROP_VINE_2",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "101": {
+      "index": 101,
+      "name": "PROP_TREES_2",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "102": {
+      "index": 102,
+      "name": "PROP_TREE_6",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "103": {
+      "index": 103,
+      "name": "FLOOR_PUDDLE",
+      "categories": [],
+      "subcategories": [
+        0,
+        4
+      ],
+      "isDocumented": true
+    },
+    "104": {
+      "index": 104,
+      "name": "PROP_VINE_3",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "105": {
+      "index": 105,
+      "name": "PROP_PALM_TREE",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        9
+      ],
+      "isDocumented": true
+    },
+    "122": {
+      "index": 122,
+      "name": "CHAR_17",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "123": {
+      "index": 123,
+      "name": "CHAR_18",
+      "alternateNames": [
+        "CHAR_GOBLIN",
+        "ENEMY_GOBLIN"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "124": {
+      "index": 124,
+      "name": "CHAR_19",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "125": {
+      "index": 125,
+      "name": "CHAR_20",
+      "alternateNames": [
+        "CHAR_DOGMAN",
+        "ENEMY_DOGMAN"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "126": {
+      "index": 126,
+      "name": "CHAR_21",
+      "alternateNames": [
+        "CHAR_4EYES",
+        "ENEMY_4EYES"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "127": {
+      "index": 127,
+      "name": "CHAR_22",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "128": {
+      "index": 128,
+      "name": "CHAR_23",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "129": {
+      "index": 129,
+      "name": "CHAR_24",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "171": {
+      "index": 171,
+      "name": "CHAR_26",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "202": {
+      "index": 202,
+      "name": "FLOOR_BRIDGE_ARCHED",
+      "categories": [
+        0
+      ],
+      "subcategories": [
+        0
+      ],
+      "isDocumented": true
+    },
+    "203": {
+      "index": 203,
+      "name": "FLOOR_STONE_BRIDGE",
+      "alternateNames": [
+        "FLOOR_BRIDGE"
+      ],
+      "categories": [
+        0
+      ],
+      "subcategories": [
+        0
+      ],
+      "isDocumented": true
+    },
+    "220": {
+      "index": 220,
+      "name": "CHAR_35",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "251": {
+      "index": 251,
+      "name": "FLOOR_BRIDGE_WOODEN_ARCHED",
+      "categories": [
+        0
+      ],
+      "subcategories": [
+        0
+      ],
+      "isDocumented": true
+    },
+    "252": {
+      "index": 252,
+      "name": "FLOOR_WOODEN_BRIDGE",
+      "categories": [
+        0
+      ],
+      "subcategories": [
+        0
+      ],
+      "isDocumented": true
+    },
+    "269": {
+      "index": 269,
+      "name": "CHAR_44",
+      "alternateNames": [
+        "CHAR_LOBSTER",
+        "MONSTER_LOBSTER"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25,
+        27
+      ],
+      "isDocumented": true
+    },
+    "270": {
+      "index": 270,
+      "name": "CHAR_45",
+      "alternateNames": [
+        "CHAR_CRAB",
+        "MONSTER_CRAB"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25,
+        27
+      ],
+      "isDocumented": true
+    },
+    "271": {
+      "index": 271,
+      "name": "CHAR_46",
+      "alternateNames": [
+        "CHAR_WASP",
+        "MONSTER_WASP"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25,
+        27
+      ],
+      "isDocumented": true
+    },
+    "272": {
+      "index": 272,
+      "name": "CHAR_47",
+      "alternateNames": [
+        "CHAR_TURTLE",
+        "MONSTER_TURTLE"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25,
+        27
+      ],
+      "isDocumented": true
+    },
+    "273": {
+      "index": 273,
+      "name": "CHAR_48",
+      "alternateNames": [
+        "CHAR_SPIDER",
+        "MONSTER_SPIDER"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25,
+        27
+      ],
+      "isDocumented": true
+    },
+    "274": {
+      "index": 274,
+      "name": "CHAR_49",
+      "alternateNames": [
+        "CHAR_SPIDER_2",
+        "MONSTER_SPIDER_2"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25,
+        27
+      ],
+      "isDocumented": true
+    },
+    "275": {
+      "index": 275,
+      "name": "CHAR_50",
+      "alternateNames": [
+        "CHAR_SPIDER_3",
+        "MONSTER_SPIDER_3"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25,
+        27
+      ],
+      "isDocumented": true
+    },
+    "276": {
+      "index": 276,
+      "name": "CHAR_51",
+      "alternateNames": [
+        "CHAR_FLY",
+        "MONSTER_FLY"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25,
+        27
+      ],
+      "isDocumented": true
+    },
+    "296": {
+      "index": 296,
+      "name": "STAIRS_UP",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        3
+      ],
+      "isDocumented": true
+    },
+    "297": {
+      "index": 297,
+      "name": "STAIRS_DOWN",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        3
+      ],
+      "isDocumented": true
+    },
+    "299": {
+      "index": 299,
+      "name": "OBJ_BOOKCASE",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        7,
+        8
+      ],
+      "isDocumented": true
+    },
+    "302": {
+      "index": 302,
+      "name": "CHEST_CLOSED",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        7
+      ],
+      "isDocumented": true
+    },
+    "303": {
+      "index": 303,
+      "name": "CHEST_OPEN",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        7
+      ],
+      "isDocumented": true
+    },
+    "304": {
+      "index": 304,
+      "name": "CHEST_EMPTY",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        7
+      ],
+      "isDocumented": true
+    },
+    "305": {
+      "index": 305,
+      "name": "CHEST_OPEN_2",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        7
+      ],
+      "isDocumented": true
+    },
+    "318": {
+      "index": 318,
+      "name": "CHAR_53",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "319": {
+      "index": 319,
+      "name": "CHAR_54",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "320": {
+      "index": 320,
+      "name": "CHAR_55",
+      "alternateNames": [
+        "CHAR_GHOST",
+        "MONSTER_GHOST"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "isDocumented": true
+    },
+    "321": {
+      "index": 321,
+      "name": "CHAR_56",
+      "alternateNames": [
+        "CHAR_GHOST_2",
+        "MONSTER_GHOST_2"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "isDocumented": true
+    },
+    "322": {
+      "index": 322,
+      "name": "CHAR_57",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "323": {
+      "index": 323,
+      "name": "CHAR_58",
+      "alternateNames": [
+        "CHAR_SKELETON",
+        "MONSTER_SKELETON"
+      ],
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "isDocumented": true
+    },
+    "343": {
+      "index": 343,
+      "name": "OBJ_SIGN",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        10
+      ],
+      "isDocumented": true
+    },
+    "344": {
+      "index": 344,
+      "name": "OBJ_SIGN_2",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        10
+      ],
+      "isDocumented": true
+    },
+    "345": {
+      "index": 345,
+      "name": "OBJ_SIGN_3",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        10
+      ],
+      "isDocumented": true
+    },
+    "367": {
+      "index": 367,
+      "name": "CHAR_62",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "392": {
+      "index": 392,
+      "name": "PROP_MIRROR_TABLE",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        8
+      ],
+      "isDocumented": true
+    },
+    "416": {
+      "index": 416,
+      "name": "CHAR_71",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    },
+    "441": {
+      "index": 441,
+      "name": "DOOR_LOCKED",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        2
+      ],
+      "isDocumented": true
+    },
+    "442": {
+      "index": 442,
+      "name": "DOOR_UNLOCKED",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        2
+      ],
+      "isDocumented": true
+    },
+    "443": {
+      "index": 443,
+      "name": "DOOR_OPEN",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        2
+      ],
+      "isDocumented": true
+    },
+    "444": {
+      "index": 444,
+      "name": "DOOR_CLOSED",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        2
+      ],
+      "isDocumented": true
+    },
+    "445": {
+      "index": 445,
+      "name": "DOOR_CLOSED_2",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        2
+      ],
+      "isDocumented": true
+    },
+    "446": {
+      "index": 446,
+      "name": "DOOR_CLOSED_3",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        2
+      ],
+      "isDocumented": true
+    },
+    "447": {
+      "index": 447,
+      "name": "DOOR_OPEN_2",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        2
+      ],
+      "isDocumented": true
+    },
+    "448": {
+      "index": 448,
+      "name": "DOOR_CLOSED_4",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        2
+      ],
+      "isDocumented": true
+    },
+    "449": {
+      "index": 449,
+      "name": "DOOR_CLOSED_5",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        2
+      ],
+      "isDocumented": true
+    },
+    "450": {
+      "index": 450,
+      "name": "DOOR_OPEN_3",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        2
+      ],
+      "isDocumented": true
+    },
+    "451": {
+      "index": 451,
+      "name": "DOOR_CLOSED_6",
+      "categories": [
+        3
+      ],
+      "subcategories": [
+        2
+      ],
+      "isDocumented": true
+    },
+    "465": {
+      "index": 465,
+      "name": "CHAR_80",
+      "categories": [
+        1
+      ],
+      "subcategories": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "isDocumented": true
+    }
+  },
+  "lastModified": "2025-11-22T16:08:30.230Z"
+}
