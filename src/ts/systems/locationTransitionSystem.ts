@@ -35,8 +35,9 @@ export enum TransitionDirection {
 /**
  * Location Transition System - Handles moving between adjacent world locations
  *
- * Detects when player crosses the edge of the current location and transitions
- * to the adjacent location in the world grid.
+ * Detects when entities cross the edge of their current location and transitions
+ * them to the adjacent location in the world grid. Handles both player and non-player
+ * entities (enemies, NPCs, etc.).
  *
  * Should be called after movement systems in the update loop.
  *
@@ -47,20 +48,20 @@ export enum TransitionDirection {
  * function gameUpdate() {
  *   inputSystem(ecs);
  *   playerMovementSystem(ecs);
- *   locationTransitionSystem(ecs); // Handle edge transitions
+ *   locationTransitionSystem(ecs); // Handle edge transitions for all entities
  *   aiSystem(ecs, playerId);
  * }
  * ```
  */
 export function locationTransitionSystem(ecs: ECS): void {
   const game = Game.getInstance();
-  const location = game.getCurrentLocation();
-  if (!location) return;
+  const currentLocation = game.getCurrentLocation();
+  if (!currentLocation) return;
 
-  // Query all player entities
-  const playerEntities = ecs.query('player', 'position', 'location');
+  // Query all entities with position and location (player and non-player)
+  const entities = ecs.query('position', 'location');
 
-  for (const entityId of playerEntities) {
+  for (const entityId of entities) {
     const pos = ecs.getComponent<PositionComponent>(entityId, 'position');
     const locationComp = ecs.getComponent<LocationComponent>(
       entityId,
@@ -69,11 +70,32 @@ export function locationTransitionSystem(ecs: ECS): void {
 
     if (!pos || !locationComp) continue;
 
-    // Check which edge (if any) the player crossed
-    const direction = detectEdgeCrossing(pos, location.width, location.height);
+    // Only process entities in the current active location
+    if (
+      locationComp.worldX !== currentLocation.worldPosition.x ||
+      locationComp.worldY !== currentLocation.worldPosition.y
+    ) {
+      continue;
+    }
+
+    // Get the location this entity is in
+    const world = game.getWorld();
+    const entityLocation = world.getLocation(
+      locationComp.worldX,
+      locationComp.worldY
+    );
+    if (!entityLocation) continue;
+
+    // Check which edge (if any) the entity crossed
+    const direction = detectEdgeCrossing(
+      pos,
+      entityLocation.width,
+      entityLocation.height
+    );
 
     if (direction !== TransitionDirection.NONE) {
-      handleTransition(ecs, entityId, direction, game);
+      const isPlayer = ecs.hasComponent(entityId, 'player');
+      handleTransition(ecs, entityId, direction, game, isPlayer);
     }
   }
 }
@@ -102,15 +124,17 @@ function detectEdgeCrossing(
 /**
  * Handle transition to adjacent location
  * @param ecs - ECS instance
- * @param entityId - Player entity ID
+ * @param entityId - Entity ID (player or non-player)
  * @param direction - Direction of transition
  * @param game - Game instance
+ * @param isPlayer - Whether this entity is the player
  */
 function handleTransition(
   ecs: ECS,
   entityId: number,
   direction: TransitionDirection,
-  game: Game
+  game: Game,
+  isPlayer: boolean
 ): void {
   const pos = ecs.getComponent<PositionComponent>(entityId, 'position');
   const locationComp = ecs.getComponent<LocationComponent>(
@@ -142,11 +166,16 @@ function handleTransition(
   // Check if new world position is valid
   const world = game.getWorld();
   if (!world.isInBounds(newWorldX, newWorldY)) {
-    console.warn(
-      `Cannot transition to (${newWorldX}, ${newWorldY}) - out of world bounds`
-    );
+    if (Game.isDebug) {
+      console.warn(
+        `Cannot transition entity ${entityId} to (${newWorldX}, ${newWorldY}) - out of world bounds`
+      );
+    }
     // Clamp position to current location edge
-    const currentLocation = game.getCurrentLocation();
+    const currentLocation = world.getLocation(
+      locationComp.worldX,
+      locationComp.worldY
+    );
     if (currentLocation) {
       pos.x = Math.max(0, Math.min(pos.x, currentLocation.width - 1));
       pos.y = Math.max(0, Math.min(pos.y, currentLocation.height - 1));
@@ -154,16 +183,15 @@ function handleTransition(
     return;
   }
 
-  // Transition to new location
-  game.changeLocation(newWorldX, newWorldY);
-
-  // Calculate new position in new location (wrap to opposite edge)
-  const newLocation = game.getCurrentLocation();
-  if (!newLocation) {
-    console.error('Failed to load new location after transition');
-    return;
+  // If this is the player, change the game's active location
+  if (isPlayer) {
+    game.changeLocation(newWorldX, newWorldY);
   }
 
+  // Get or create the new location
+  const newLocation = world.getOrCreateLocation(newWorldX, newWorldY);
+
+  // Calculate new position in new location (wrap to opposite edge)
   switch (direction) {
     case TransitionDirection.NORTH:
       pos.y = newLocation.height - 1; // Bottom edge of new location
@@ -183,12 +211,15 @@ function handleTransition(
   locationComp.worldX = newWorldX;
   locationComp.worldY = newWorldY;
 
-  // Update camera to follow player
-  LJS.setCameraPos(LJS.vec2(pos.x, pos.y));
+  // Update camera only for player
+  if (isPlayer) {
+    LJS.setCameraPos(LJS.vec2(pos.x, pos.y));
+  }
 
   if (Game.isDebug) {
+    const entityType = isPlayer ? 'Player' : `Entity ${entityId}`;
     console.log(
-      `[Transition] Player moved ${direction} to world (${newWorldX}, ${newWorldY}), local pos (${pos.x}, ${pos.y})`
+      `[Transition] ${entityType} moved ${direction} to world (${newWorldX}, ${newWorldY}), local pos (${pos.x}, ${pos.y})`
     );
   }
 }
