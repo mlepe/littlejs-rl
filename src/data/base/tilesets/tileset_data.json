@@ -867,6 +867,61 @@
       ],
       "isDocumented": true
     },
+    "130": {
+      "index": 130,
+      "name": "WEAPON",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "131": {
+      "index": 131,
+      "name": "WEAPON_2",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "132": {
+      "index": 132,
+      "name": "WEAPON_3",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "133": {
+      "index": 133,
+      "name": "WEAPON_4",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "134": {
+      "index": 134,
+      "name": "WEAPON_5",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
     "171": {
       "index": 171,
       "name": "CHAR_26",
@@ -878,6 +933,61 @@
         23,
         24,
         25
+      ],
+      "isDocumented": true
+    },
+    "179": {
+      "index": 179,
+      "name": "WEAPON_6",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "180": {
+      "index": 180,
+      "name": "WEAPON_7",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "181": {
+      "index": 181,
+      "name": "WEAPON_8",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "182": {
+      "index": 182,
+      "name": "WEAPON_9",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "183": {
+      "index": 183,
+      "name": "WEAPON_10",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
       ],
       "isDocumented": true
     },
@@ -917,6 +1027,61 @@
         23,
         24,
         25
+      ],
+      "isDocumented": true
+    },
+    "228": {
+      "index": 228,
+      "name": "WEAPON_11",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "229": {
+      "index": 229,
+      "name": "WEAPON_12",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "230": {
+      "index": 230,
+      "name": "WEAPON_13",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "231": {
+      "index": 231,
+      "name": "WEAPON_14",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "232": {
+      "index": 232,
+      "name": "WEAPON_15",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
       ],
       "isDocumented": true
     },
@@ -1093,6 +1258,149 @@
         27
       ],
       "isDocumented": true
+    },
+    "277": {
+      "index": 277,
+      "name": "WEAPON_16",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "278": {
+      "index": 278,
+      "name": "WEAPON_17",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "279": {
+      "index": 279,
+      "name": "WEAPON_18",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "280": {
+      "index": 280,
+      "name": "WEAPON_19",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "281": {
+      "index": 281,
+      "name": "WEAPON_20",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": true
+    },
+    "282": {
+      "index": 282,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "283": {
+      "index": 283,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "284": {
+      "index": 284,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "285": {
+      "index": 285,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "286": {
+      "index": 286,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "287": {
+      "index": 287,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "288": {
+      "index": 288,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "289": {
+      "index": 289,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
     },
     "296": {
       "index": 296,
@@ -1271,6 +1579,61 @@
       ],
       "isDocumented": true
     },
+    "326": {
+      "index": 326,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "327": {
+      "index": 327,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "328": {
+      "index": 328,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "329": {
+      "index": 329,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "330": {
+      "index": 330,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
     "343": {
       "index": 343,
       "name": "OBJ_SIGN",
@@ -1318,6 +1681,127 @@
       ],
       "isDocumented": true
     },
+    "375": {
+      "index": 375,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "376": {
+      "index": 376,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "377": {
+      "index": 377,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "378": {
+      "index": 378,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "379": {
+      "index": 379,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "380": {
+      "index": 380,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "381": {
+      "index": 381,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "382": {
+      "index": 382,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "383": {
+      "index": 383,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "384": {
+      "index": 384,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "385": {
+      "index": 385,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
     "392": {
       "index": 392,
       "name": "PROP_MIRROR_TABLE",
@@ -1342,6 +1826,127 @@
         25
       ],
       "isDocumented": true
+    },
+    "424": {
+      "index": 424,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "425": {
+      "index": 425,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "426": {
+      "index": 426,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "427": {
+      "index": 427,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "428": {
+      "index": 428,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "429": {
+      "index": 429,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "430": {
+      "index": 430,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "431": {
+      "index": 431,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "432": {
+      "index": 432,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "433": {
+      "index": 433,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "434": {
+      "index": 434,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
     },
     "441": {
       "index": 441,
@@ -1477,7 +2082,139 @@
         25
       ],
       "isDocumented": true
+    },
+    "473": {
+      "index": 473,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "474": {
+      "index": 474,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "475": {
+      "index": 475,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "476": {
+      "index": 476,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "477": {
+      "index": 477,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "478": {
+      "index": 478,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "479": {
+      "index": 479,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "480": {
+      "index": 480,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "481": {
+      "index": 481,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "482": {
+      "index": 482,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "483": {
+      "index": 483,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
+    },
+    "484": {
+      "index": 484,
+      "name": "",
+      "categories": [
+        2
+      ],
+      "subcategories": [
+        11
+      ],
+      "isDocumented": false
     }
   },
-  "lastModified": "2025-11-22T16:22:19.899Z"
+  "lastModified": "2025-11-22T16:35:33.012Z"
 }

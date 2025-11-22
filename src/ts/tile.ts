@@ -112,7 +112,7 @@ const TILE_PROPERTIES: Record<TileType, TileProperties> = {
     baseColor: BaseColor.LIGHT_GRAY,
   },
   [TileType.WATER]: {
-    walkable: false,
+    walkable: true,
     transparent: true,
     collisionValue: 0,
     baseColor: BaseColor.WATER,
