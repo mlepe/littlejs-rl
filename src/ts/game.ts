@@ -558,6 +558,8 @@ export default class Game {
       `FPS: ${LJS.frame}`,
       `View: ${viewModeText}`,
       `Location: ${location?.name || 'None'}`,
+      `Type: ${location?.metadata?.locationType || 'None'}`,
+      `Biome: ${location?.metadata?.biome || 'None'}`,
       `Player: (${playerPos?.x ?? '?'}, ${playerPos?.y ?? '?'})`,
       `Entities: ${this.ecs.query('position').length}`,
       `Loaded Locations: ${this.world.getLoadedLocationCount()}`,
