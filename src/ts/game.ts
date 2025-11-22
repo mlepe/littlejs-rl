@@ -49,7 +49,11 @@ import { DataLoader } from './data/dataLoader';
 import ECS from './ecs';
 import { ItemComponent } from './components/item';
 import { ViewMode } from './components/viewMode';
-import { ViewModeComponent } from './components';
+import {
+  PositionComponent,
+  RenderComponent,
+  ViewModeComponent,
+} from './components';
 import World from './world';
 import WorldMap from './worldMap';
 import { dropItemAtPosition } from './systems/lootSystem';
@@ -479,15 +483,38 @@ export default class Game {
     );
     const currentViewMode = viewModeComp?.mode || ViewMode.LOCATION;
 
-    // Only render entities when in LOCATION or EXAMINE mode (not in WORLD_MAP or INVENTORY)
+    // Render entities based on view mode
     if (
       currentViewMode === ViewMode.LOCATION ||
       currentViewMode === ViewMode.EXAMINE
     ) {
+      // In location/examine mode: render all entities in current location
       renderSystem(this.ecs, {
         x: this.currentWorldPos.x,
         y: this.currentWorldPos.y,
       });
+    } else if (currentViewMode === ViewMode.WORLD_MAP) {
+      // In world map mode: only render the player
+      const playerPos = this.ecs.getComponent<PositionComponent>(
+        this.playerId,
+        'position'
+      );
+      const playerRender = this.ecs.getComponent<RenderComponent>(
+        this.playerId,
+        'render'
+      );
+
+      if (playerPos && playerRender) {
+        const position = LJS.vec2(playerPos.x + 0.5, playerPos.y + 0.5);
+        LJS.drawTile(
+          position,
+          playerRender.size,
+          playerRender.tileInfo,
+          playerRender.color,
+          playerRender.angle || 0,
+          playerRender.mirror || false
+        );
+      }
     }
 
     // Render examine mode UI overlays
