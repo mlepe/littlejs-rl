@@ -92,13 +92,30 @@ export function playerMovementSystem(ecs: ECS): void {
       const game = Game.getInstance();
       const location = game.getCurrentLocation();
 
-      if (location && location.isWalkable(newX, newY)) {
-        // Move to new position (tile-based, integer coordinates)
+      // Allow movement beyond location bounds for edge transitions
+      // locationTransitionSystem will handle wrapping to next location
+      const isWithinBounds =
+        location &&
+        newX >= 0 &&
+        newX < location.width &&
+        newY >= 0 &&
+        newY < location.height;
+
+      if (isWithinBounds && location) {
+        // Check walkability only if within bounds
+        if (location.isWalkable(newX, newY)) {
+          // Move to new position (tile-based, integer coordinates)
+          pos.x = newX;
+          pos.y = newY;
+        } else {
+          // Couldn't move (wall/obstacle)
+          removeState(ecs, entityId, EntityState.MOVING);
+        }
+      } else {
+        // Moving beyond location bounds - allow it for edge transition
+        // locationTransitionSystem will handle moving to adjacent location
         pos.x = newX;
         pos.y = newY;
-      } else {
-        // Couldn't move (wall/obstacle)
-        removeState(ecs, entityId, EntityState.MOVING);
       }
     } else {
       // Not moving this frame - remove MOVING state
