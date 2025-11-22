@@ -472,18 +472,23 @@ export default class Game {
       return;
     }
 
-    // Render all entities in current location (AFTER tile layers, so they appear on top)
-    renderSystem(this.ecs, {
-      x: this.currentWorldPos.x,
-      y: this.currentWorldPos.y,
-    });
-
-    // Check player view mode for examine rendering
+    // Check player view mode for rendering decisions
     const viewModeComp = this.ecs.getComponent<ViewModeComponent>(
       this.playerId,
       'viewMode'
     );
     const currentViewMode = viewModeComp?.mode || ViewMode.LOCATION;
+
+    // Only render entities when in LOCATION or EXAMINE mode (not in WORLD_MAP or INVENTORY)
+    if (
+      currentViewMode === ViewMode.LOCATION ||
+      currentViewMode === ViewMode.EXAMINE
+    ) {
+      renderSystem(this.ecs, {
+        x: this.currentWorldPos.x,
+        y: this.currentWorldPos.y,
+      });
+    }
 
     // Render examine mode UI overlays
     if (currentViewMode === ViewMode.EXAMINE && viewModeComp) {
