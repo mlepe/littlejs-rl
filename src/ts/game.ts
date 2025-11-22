@@ -472,8 +472,11 @@ export default class Game {
       return;
     }
 
-    // Render all entities (AFTER tile layers, so they appear on top)
-    renderSystem(this.ecs);
+    // Render all entities in current location (AFTER tile layers, so they appear on top)
+    renderSystem(this.ecs, {
+      x: this.currentWorldPos.x,
+      y: this.currentWorldPos.y,
+    });
 
     // Check player view mode for examine rendering
     const viewModeComp = this.ecs.getComponent<ViewModeComponent>(

@@ -12,7 +12,11 @@
 
 import * as LJS from 'littlejsengine';
 
-import { PositionComponent, RenderComponent } from '../components';
+import {
+  LocationComponent,
+  PositionComponent,
+  RenderComponent,
+} from '../components';
 import { VisualEffectComponent } from '../components/visualEffect';
 
 import ECS from '../ecs';
@@ -25,131 +29,152 @@ import { BaseColor, getColor } from '../colorPalette';
  * Processes all entities with 'position' and 'render' components.
  * Uses LittleJS drawTile to render each entity.
  *
+ * Only renders entities in the current location (when currentLocation is provided).
+ *
  * Note: TileLayer and TileCollisionLayer are automatically rendered by LittleJS.
  * Manual tile rendering is not needed - tiles redraw when modified.
  *
  * Should be called in the gameRender() callback.
  *
  * @param ecs - The ECS instance
+ * @param currentLocation - Optional current location coordinates {x, y} to filter entities
  *
  * @example
  * ```typescript
  * function gameRender() {
- *   renderSystem(ecs); // Render all entities (tiles auto-render)
+ *   // Render only entities in current location
+ *   renderSystem(ecs, { x: worldX, y: worldY });
  * }
  * ```
  */
-export function renderSystem(ecs: ECS): void {
+export function renderSystem(
+  ecs: ECS,
+  currentLocation?: { x: number; y: number }
+): void {
   const entities = ecs.query('position', 'render');
 
   for (const id of entities) {
     const pos = ecs.getComponent<PositionComponent>(id, 'position');
     const render = ecs.getComponent<RenderComponent>(id, 'render');
 
-    if (pos && render) {
-      // Get visual effects if present
-      const vfx = ecs.getComponent<VisualEffectComponent>(id, 'visualEffect');
+    if (!pos || !render) continue;
 
-      // Calculate base position (centered on tile)
-      let position = LJS.vec2(pos.x + 0.5, pos.y + 0.5);
+    // Filter by location if specified
+    if (currentLocation) {
+      const loc = ecs.getComponent<LocationComponent>(id, 'location');
 
-      // Apply visual effect offset
-      if (vfx?.currentOffset) {
-        position = position.add(vfx.currentOffset);
+      // Skip entities not in current location
+      if (
+        !loc ||
+        loc.worldX !== currentLocation.x ||
+        loc.worldY !== currentLocation.y
+      ) {
+        continue;
       }
+    }
 
-      // Apply visual effect scale
-      let size = render.size;
-      if (vfx?.currentScale) {
-        size = LJS.vec2(
-          render.size.x * vfx.currentScale.x,
-          render.size.y * vfx.currentScale.y
-        );
-      }
+    // Get visual effects if present
+    const vfx = ecs.getComponent<VisualEffectComponent>(id, 'visualEffect');
 
-      // Apply visual effect rotation
-      let angle = render.angle || 0;
-      if (vfx?.currentRotation) {
-        angle += vfx.currentRotation;
-      }
+    // Calculate base position (centered on tile)
+    let position = LJS.vec2(pos.x + 0.5, pos.y + 0.5);
 
-      // Draw outline if specified (for enemies, special entities)
-      if (render.outlineColor && render.outlineWidth) {
-        const outlineWidth = render.outlineWidth;
-        const outlineSize = size.add(
-          LJS.vec2(outlineWidth * 2, outlineWidth * 2)
-        );
+    // Apply visual effect offset
+    if (vfx?.currentOffset) {
+      position = position.add(vfx.currentOffset);
+    }
 
-        // Draw outline rectangle behind sprite
-        //LJS.drawRect(position, outlineSize, render.outlineColor, angle);
+    // Apply visual effect scale
+    let size = render.size;
+    if (vfx?.currentScale) {
+      size = LJS.vec2(
+        render.size.x * vfx.currentScale.x,
+        render.size.y * vfx.currentScale.y
+      );
+    }
 
-        // Draw outline behind sprite
-        LJS.drawTile(
-          position,
-          outlineSize,
-          render.tileInfo,
-          render.outlineColor,
-          angle,
-          render.mirror || false
-        );
-      }
+    // Apply visual effect rotation
+    let angle = render.angle || 0;
+    if (vfx?.currentRotation) {
+      angle += vfx.currentRotation;
+    }
 
-      // Determine sprite color
-      let spriteColor = render.color;
+    // Draw outline if specified (for enemies, special entities)
+    if (render.outlineColor && render.outlineWidth) {
+      const outlineWidth = render.outlineWidth;
+      const outlineSize = size.add(
+        LJS.vec2(outlineWidth * 2, outlineWidth * 2)
+      );
 
-      // Apply flash effect (overrides damage flash)
-      if (vfx?.flashColor) {
-        // Blend flash color with sprite color
-        const flashAlpha = vfx.flashColor.a;
-        spriteColor = new LJS.Color(
-          spriteColor.r * (1 - flashAlpha) + vfx.flashColor.r * flashAlpha,
-          spriteColor.g * (1 - flashAlpha) + vfx.flashColor.g * flashAlpha,
-          spriteColor.b * (1 - flashAlpha) + vfx.flashColor.b * flashAlpha,
-          spriteColor.a
-        );
-      }
-      // Legacy damage flash (kept for backward compatibility)
-      else if (render.damageFlashTimer && render.damageFlashTimer > 0) {
-        // Flash white when damaged
-        spriteColor = getColor(BaseColor.WHITE);
-        // Decrement timer (use engine time delta)
-        render.damageFlashTimer -= LJS.timeDelta;
-        if (render.damageFlashTimer < 0) render.damageFlashTimer = 0;
-      }
+      // Draw outline rectangle behind sprite
+      //LJS.drawRect(position, outlineSize, render.outlineColor, angle);
 
-      // Draw main sprite
+      // Draw outline behind sprite
       LJS.drawTile(
         position,
-        size,
+        outlineSize,
         render.tileInfo,
-        spriteColor,
+        render.outlineColor,
         angle,
         render.mirror || false
       );
+    }
 
-      // Draw floating damage number if present
-      if (render.floatingDamage && render.floatingDamage.timer > 0) {
-        const dmg = render.floatingDamage;
-        const damagePos = LJS.vec2(pos.x + 0.5, pos.y + 2 + dmg.offsetY);
-        //const damageColor = new LJS.Color(1, 0.2, 0.2, dmg.timer / 0.5); // Fade out
-        const damageColor = getColor(BaseColor.RED, dmg.timer / 0.5); // Fade out
-        LJS.drawText(
-          dmg.amount.toString(),
-          damagePos,
-          1, // Font size
-          damageColor,
-          0, // Outline size
-          undefined, // Outline color
-          'center' // Text align
-        );
+    // Determine sprite color
+    let spriteColor = render.color;
 
-        // Update floating animation
-        dmg.timer -= LJS.timeDelta / 2;
-        dmg.offsetY += (2.0 * LJS.timeDelta) / 2; // Float upward
+    // Apply flash effect (overrides damage flash)
+    if (vfx?.flashColor) {
+      // Blend flash color with sprite color
+      const flashAlpha = vfx.flashColor.a;
+      spriteColor = new LJS.Color(
+        spriteColor.r * (1 - flashAlpha) + vfx.flashColor.r * flashAlpha,
+        spriteColor.g * (1 - flashAlpha) + vfx.flashColor.g * flashAlpha,
+        spriteColor.b * (1 - flashAlpha) + vfx.flashColor.b * flashAlpha,
+        spriteColor.a
+      );
+    }
+    // Legacy damage flash (kept for backward compatibility)
+    else if (render.damageFlashTimer && render.damageFlashTimer > 0) {
+      // Flash white when damaged
+      spriteColor = getColor(BaseColor.WHITE);
+      // Decrement timer (use engine time delta)
+      render.damageFlashTimer -= LJS.timeDelta;
+      if (render.damageFlashTimer < 0) render.damageFlashTimer = 0;
+    }
 
-        if (dmg.timer <= 0) {
-          render.floatingDamage = undefined; // Remove when done
-        }
+    // Draw main sprite
+    LJS.drawTile(
+      position,
+      size,
+      render.tileInfo,
+      spriteColor,
+      angle,
+      render.mirror || false
+    );
+
+    // Draw floating damage number if present
+    if (render.floatingDamage && render.floatingDamage.timer > 0) {
+      const dmg = render.floatingDamage;
+      const damagePos = LJS.vec2(pos.x + 0.5, pos.y + 2 + dmg.offsetY);
+      //const damageColor = new LJS.Color(1, 0.2, 0.2, dmg.timer / 0.5); // Fade out
+      const damageColor = getColor(BaseColor.RED, dmg.timer / 0.5); // Fade out
+      LJS.drawText(
+        dmg.amount.toString(),
+        damagePos,
+        1, // Font size
+        damageColor,
+        0, // Outline size
+        undefined, // Outline color
+        'center' // Text align
+      );
+
+      // Update floating animation
+      dmg.timer -= LJS.timeDelta / 2;
+      dmg.offsetY += (2.0 * LJS.timeDelta) / 2; // Float upward
+
+      if (dmg.timer <= 0) {
+        render.floatingDamage = undefined; // Remove when done
       }
     }
   }
