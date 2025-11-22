@@ -109,9 +109,22 @@ export enum TileSprite {
   CHAR_9 = 73,
 }
 
-/** AutoTileSprite
- * AI-generated comprehensive enum of all tiles in the tileset
- * Each value represents the linear index of a 16x16 pixel tile in the tileset image
+/**
+ * AutoTileSprite - AI-generated tile sprite enum
+ *
+ * @deprecated This enum is deprecated in favor of CuratedTileSprite.
+ * Use CuratedTileSprite for hand-documented tiles with aliases and categories.
+ *
+ * Migration path:
+ * 1. Use CuratedTileSprite for documented tiles (115 tiles)
+ * 2. Use resolveTileInfo() with string names for runtime resolution
+ * 3. Fallback to numeric indices for tiles not in curated set
+ *
+ * The TileSpriteResolver still supports this enum as a fallback,
+ * but will log deprecation warnings when used.
+ *
+ * @see CuratedTileSprite for the recommended replacement
+ * @see resolveTileInfo() for dynamic sprite name resolution
  */
 export enum AutoTileSprite {
   // ============================================================================

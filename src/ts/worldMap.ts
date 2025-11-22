@@ -17,7 +17,7 @@ import { BiomeType, getBiomeConfig } from './biomeConfig';
 import { getColor, BaseColor } from './colorPalette';
 
 import Global from './global';
-import { AutoTileSprite } from './tileConfig';
+import { CuratedTileSprite } from './tileConfig';
 import World from './world';
 
 /**
@@ -240,28 +240,28 @@ export default class WorldMap {
    * Get tile sprite for a biome
    * @private
    */
-  private getBiomeTileSprite(biome: BiomeType): AutoTileSprite {
+  private getBiomeTileSprite(biome: BiomeType): number {
     switch (biome) {
       case BiomeType.FOREST:
-        return AutoTileSprite.FLOOR_GRASS;
+        return CuratedTileSprite.FLOOR_GRASS;
       case BiomeType.MOUNTAIN:
-        return AutoTileSprite.FLOOR_MOUNTAIN;
+        return 146; // FLOOR_MOUNTAIN not in curated set
       case BiomeType.SNOWY:
-        return AutoTileSprite.FLOOR_SNOW;
+        return 195; // FLOOR_SNOW not in curated set
       case BiomeType.BARREN:
-        return AutoTileSprite.FLOOR_BARREN;
+        return 244; // FLOOR_BARREN not in curated set
       case BiomeType.DESERT:
-        return AutoTileSprite.FLOOR_DESERT;
+        return 293; // FLOOR_DESERT not in curated set
       case BiomeType.BEACH:
-        return AutoTileSprite.FLOOR_BEACH;
+        return 342; // FLOOR_BEACH not in curated set
       case BiomeType.WATER:
-        return AutoTileSprite.WATER_DEEP;
+        return CuratedTileSprite.FLOOR_PUDDLE; // Closest match
       case BiomeType.VOLCANIC:
-        return AutoTileSprite.FLOOR_VOLCANIC_ROCK;
+        return 440; // FLOOR_VOLCANIC_ROCK not in curated set
       case BiomeType.SWAMP:
-        return AutoTileSprite.FLOOR_SWAMP;
+        return 489; // FLOOR_SWAMP not in curated set
       default:
-        return AutoTileSprite.FLOOR_STONE;
+        return CuratedTileSprite.FLOOR_STONE;
     }
   }
 
